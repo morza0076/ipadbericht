@@ -62,6 +62,59 @@
         button { padding: 12px; background: var(--accent); color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 11px; }
         button.secondary { background: #444; }
 
+        /* Mobile-Optimierung für Smartphones (z.B. Samsung S23) */
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 4px;
+                background: #e5e2d8;
+            }
+            .page {
+                width: 100%;
+                min-height: auto;
+                margin: 0 0 12px 0;
+                padding: 10px 8px 16px 8px;
+                box-shadow: none;
+                border-radius: 0;
+            }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+            .header-right {
+                text-align: left;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            #controls {
+                position: sticky;
+                top: 0;
+                right: auto;
+                left: 0;
+                width: 100%;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 6px;
+                padding: 4px;
+                background: rgba(244, 241, 232, 0.95);
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            #controls button {
+                flex: 1 1 45%;
+                min-width: 120px;
+            }
+            .sketch-box {
+                height: 60vh;
+            }
+            .photo-grid {
+                grid-template-columns: 1fr;
+            }
+            .img-container {
+                height: 220px;
+            }
+        }
+
         @media print { 
             body { background: white; padding: 0; margin: 0; }
             #controls, .toolbar, .no-print, #photoInput { display: none !important; } 
@@ -147,9 +200,10 @@
         <div style="margin-top:6px">
             <span class="label">Einsatzadresse</span>
             <input type="text" id="adresse" placeholder="Straße / Hausnummer">
-            <div class="grid" style="margin-top:6px; grid-template-columns: 80px 1fr;">
+            <div class="grid" style="margin-top:6px; grid-template-columns: 80px 1fr 1.2fr;">
                 <input type="text" id="plz" placeholder="PLZ">
                 <input type="text" id="ort" placeholder="Ort">
+                <input type="text" id="telefon" placeholder="Telefonnummer">
             </div>
         </div>
     </div>
@@ -166,20 +220,10 @@
                 <label class="checkbox-item"><input type="checkbox"> <span>Trocknung</span></label>
                 <label class="checkbox-item"><input type="checkbox"> <span>Sanierung</span></label>
                 <label class="checkbox-item"><input type="checkbox"> <span>Verstopfungsbehebung</span></label>
-                <label class="checkbox-item"><input type="checkbox"> <span>Reparatur</span></label>
+                <label class="checkbox-item"><input type="checkbox" id="checkReparatur"> <span>Reparatur</span></label>
                 <label class="checkbox-item"><input type="checkbox" id="checkSonstiges" onclick="toggleSonstiges()"> <span>Sonstiges</span></label>
             </div>
             <input type="text" id="inputSonstiges" placeholder="..." style="display:none; margin-top:6px;">
-        </div>
-        <div>
-            <h2>Leistungen</h2>
-            <div class="checkbox-group">
-                <label class="checkbox-item"><input type="checkbox"> <span>LO Pauschale</span></label>
-                <label class="checkbox-item"><input type="checkbox"> <span>opt. Leckortung</span></label>
-                <label class="checkbox-item"><input type="checkbox"> <span>Thermografie</span></label>
-                <label class="checkbox-item"><input type="checkbox" id="checkFlachdach"> <span>Flachdach-Prüf.</span></label>
-                <label class="checkbox-item"><input type="checkbox"> <span>Pool LO</span></label>
-            </div>
             <!-- Auswahl der Standardtexte für Flachdachfälle (nur sichtbar bei aktivierter Flachdach-Prüfung) -->
             <div id="flachdachTextOptions" class="no-print" style="margin-top:6px; display:none;">
                 <span class="label">Textvorlage für Befund</span>
@@ -189,9 +233,22 @@
                     <option value="roofscan">RoofScan</option>
                 </select>
             </div>
-            <div class="grid" style="margin-top:8px;">
-                <div><span class="label">Arbeitszeit (Std)</span><input type="number" step="0.5" placeholder="0.0"></div>
-                <div><span class="label">Fahrzeit (Std)</span><input type="number" step="0.5" placeholder="0.0"></div>
+        </div>
+        <div>
+            <h2>Leistungen</h2>
+            <div class="checkbox-group">
+                <label class="checkbox-item"><input type="checkbox"> <span>LO Pauschale</span></label>
+                <label class="checkbox-item"><input type="checkbox" id="checkLeckortung"> <span>Leckortung</span></label>
+                <label class="checkbox-item"><input type="checkbox"> <span>opt. Leckortung</span></label>
+                <label class="checkbox-item"><input type="checkbox"> <span>Thermografie</span></label>
+                <label class="checkbox-item"><input type="checkbox" id="checkFlachdach"> <span>Flachdach-Prüf.</span></label>
+                <label class="checkbox-item"><input type="checkbox"> <span>Pool LO</span></label>
+            </div>
+            <div id="zeitContainer" style="margin-top:8px; display:none;">
+                <div class="grid">
+                    <div><span class="label">Arbeitszeit (Std)</span><input type="number" step="0.5" placeholder="0.0"></div>
+                    <div><span class="label">Fahrzeit (Std)</span><input type="number" step="0.5" placeholder="0.0"></div>
+                </div>
             </div>
             <div class="grid" style="margin-top:6px;">
                 <div><span class="label">Fahrzone</span><select><option value="">- wählen -</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
@@ -202,7 +259,7 @@
 
     <div class="section" id="reparaturSection">
         <h2>Reparatur & Prüfdetails</h2>
-        <div style="margin-bottom: 6px;">
+        <div id="reparaturWorks" style="margin-bottom: 6px; display:none;">
             <span class="label">Erforderliche Reparaturarbeiten</span>
             <textarea id="reparatur" placeholder="..."></textarea>
         </div>
@@ -321,6 +378,15 @@
     const flachdachTextOptions = document.getElementById('flachdachTextOptions');
     const flachdachTemplateSelect = document.getElementById('flachdachTemplate');
 
+    // Reparatur-Checkbox steuert Einblendung "Erforderliche Reparaturarbeiten"
+    const checkReparatur = document.getElementById('checkReparatur');
+    const reparaturWorks = document.getElementById('reparaturWorks');
+
+    function applyReparaturState() {
+        if (!checkReparatur || !reparaturWorks) return;
+        reparaturWorks.style.display = checkReparatur.checked ? '' : 'none';
+    }
+
     const FLACHDACH_TEXT_FUNKENSCHLAG =
 `Überprüfung der Kunststoff Flachdachabdichtung des Hauptdaches mittels Funkenschlagverfahren.
 
@@ -407,6 +473,28 @@ Da eine punktuelle Lokalisierung der Undichtheit aufgrund der Witterung nicht m�
             autoResize.call(befundTextarea);
         });
     }
+
+    // Leckortung-Checkbox steuert Einblendung Arbeitszeit/Fahrzeit
+    const checkLeckortung = document.getElementById('checkLeckortung');
+    const zeitContainer = document.getElementById('zeitContainer');
+
+    function applyLeckortungState() {
+        if (!checkLeckortung || !zeitContainer) return;
+        zeitContainer.style.display = checkLeckortung.checked ? '' : 'none';
+    }
+
+    if (checkLeckortung) {
+        checkLeckortung.addEventListener('change', applyLeckortungState);
+        applyLeckortungState();
+    }
+
+    // Reparatur-Checkbox-Listener registrieren
+    if (checkReparatur) {
+        checkReparatur.addEventListener('change', applyReparaturState);
+    }
+
+    // Initial Reparatur-Block Zustand setzen
+    applyReparaturState();
 
     function initDrawing(canvasId) {
         const canvas = document.getElementById(canvasId);
