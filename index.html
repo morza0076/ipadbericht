@@ -172,7 +172,7 @@
 
 <div id="controls" class="no-print">
     <button class="secondary" onclick="window.print()">DRUCKEN</button>
-    <button class="secondary" onclick="window.print()">ALS PDF SPEICHERN</button>
+    <button class="secondary" onclick="sendEmail()">EMAIL SENDEN</button>
     <button class="secondary" onclick="clearSketch()">SKIZZE LÖSCHEN</button>
     <input type="file" id="photoInput" multiple accept="image/*" style="display:none" onchange="handlePhotos(this)">
     <button class="secondary" onclick="document.getElementById('photoInput').click()">FOTOS HINZUFÜGEN</button>
@@ -224,22 +224,20 @@
                 <label class="checkbox-item"><input type="checkbox" id="checkSonstiges" onclick="toggleSonstiges()"> <span>Sonstiges</span></label>
             </div>
             <input type="text" id="inputSonstiges" placeholder="..." style="display:none; margin-top:6px;">
-            <!-- Auswahl der Standardtexte für Flachdachfälle (nur sichtbar bei aktivierter Flachdach-Prüfung) -->
+            <!-- Auswahl der Standardtexte für Befund (sichtbar bei aktivierter Flachdach-/Leckortungs-Option) -->
             <div id="flachdachTextOptions" class="no-print" style="margin-top:6px; display:none;">
                 <span class="label">Textvorlage für Befund</span>
                 <select id="flachdachTemplate">
                     <option value="">- wählen -</option>
-                    <option value="funkenschlag">Funkenschlag</option>
-                    <option value="roofscan">RoofScan</option>
                 </select>
             </div>
         </div>
         <div>
             <h2>Leistungen</h2>
             <div class="checkbox-group">
-                <label class="checkbox-item"><input type="checkbox"> <span>LO Pauschale</span></label>
+                <label class="checkbox-item"><input type="checkbox" id="checkLOPauschale"> <span>LO Pauschale</span></label>
                 <label class="checkbox-item"><input type="checkbox" id="checkLeckortung"> <span>Leckortung</span></label>
-                <label class="checkbox-item"><input type="checkbox"> <span>opt. Leckortung</span></label>
+                <label class="checkbox-item"><input type="checkbox" id="checkOptLeckortung"> <span>opt. Leckortung</span></label>
                 <label class="checkbox-item"><input type="checkbox"> <span>Thermografie</span></label>
                 <label class="checkbox-item"><input type="checkbox" id="checkFlachdach"> <span>Flachdach-Prüf.</span></label>
                 <label class="checkbox-item"><input type="checkbox"> <span>Pool LO</span></label>
@@ -387,6 +385,60 @@
         reparaturWorks.style.display = checkReparatur.checked ? '' : 'none';
     }
 
+    // Bericht per E-Mail versenden (öffnet Mail-Client mit vorbefülltem Text)
+    function sendEmail() {
+        const nameEl = document.getElementById('name');
+        const datumEl = document.getElementById('datum');
+        const adresseEl = document.getElementById('adresse');
+        const plzEl = document.getElementById('plz');
+        const ortEl = document.getElementById('ort');
+        const telEl = document.getElementById('telefon');
+        const befundEl = document.getElementById('befund');
+        const reparaturEl = document.getElementById('reparatur');
+
+        const name = nameEl?.value || '';
+        const datum = datumEl?.value || '';
+        const adresse = adresseEl?.value || '';
+        const plz = plzEl?.value || '';
+        const ort = ortEl?.value || '';
+        const tel = telEl?.value || '';
+        const befund = befundEl?.value || '';
+        const reparatur = reparaturEl?.value || '';
+
+        const subjectParts = ['Leckortungsbericht'];
+        const adrParts = [plz, ort, adresse].filter(Boolean).join(' ');
+        if (adrParts) subjectParts.push(adrParts);
+        if (name) subjectParts.push(`(${name})`);
+        const subject = subjectParts.join(' - ');
+
+        let body = '';
+        body += 'Leckortungsbericht\n';
+        body += '-------------------\n\n';
+        if (name) body += `Kunde / Name: ${name}\n`;
+        if (datum) body += `Datum: ${datum}\n`;
+        if (adresse || plz || ort) {
+            body += 'Einsatzadresse:\n';
+            body += `  ${adresse}\n`;
+            body += `  ${plz} ${ort}\n`;
+        }
+        if (tel) body += `Telefon: ${tel}\n`;
+        body += '\n';
+
+        if (befund) {
+            body += 'Schadensanalyse & Befund:\n';
+            body += befund + '\n\n';
+        }
+        if (reparatur) {
+            body += 'Erforderliche Reparaturarbeiten:\n';
+            body += reparatur + '\n\n';
+        }
+
+        body += '\n---\nGesendet vom Leckortungsbericht-Formular.';
+
+        const mailto = `mailto:kanal@brugger-entfeuchtung.at?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        window.location.href = mailto;
+    }
+
     const FLACHDACH_TEXT_FUNKENSCHLAG =
 `Überprüfung der Kunststoff Flachdachabdichtung des Hauptdaches mittels Funkenschlagverfahren.
 
@@ -421,6 +473,35 @@ Es wurde zum Zeitpunkt der Überprüfung ein Verdachtsbereich V1 ermittelt.
 Der Verdachtsbereich befindet sich ca. 3 m neben dem betroffenen Gully.
 Da eine punktuelle Lokalisierung der Undichtheit aufgrund der Witterung nicht möglich ist, wird empfohlen, die gesamte Flachdachfläche nach einem Niederschlag nochmals zu prüfen.`;
 
+    const TEXT_HEIZUNG =
+`Es wurde ein Wasserverlust auf der Heizungsanlage festgestellt.
+Es wurden Druckproben auf den einzelnen Kreisen der Heizungsanlage durchgeführt.
+Es wurde ein Druckverlust auf dem Heizkreis zum Gastraum festgestellt.
+
+Die Heizungsleitungen zum Gastraum wurden entleert und mit Ortungsgas befüllt.
+Es wurde ein Gasaustritt in der Heizungsleitung im Bereich des Gastraums festgestellt.`;
+
+    const TEXT_BLEI_WOHNUNG =
+`An den Wänden zum Badezimmer wurden Vernässungen festgestellt.
+Es erfolgte die Überprüfung der Druck- und Ablaufleitungen im Schadensbereich.
+
+Bei den Druckleitungen wurde zum Zeitpunkt der Überprüfung keine Undichtheit festgestellt.
+Bei der Überprüfung der Ablaufleitungen wurden Undichtheiten in der Bleileitung des Waschtisches in der Wand und im Fußbodenaufbau sowie Undichtheiten in der Bleileitung zum Gully festgestellt.`;
+
+    const TEXT_SILIKONFUGE =
+`An einer Wand zum Badezimmer wurden Vernässungen festgestellt.
+Es erfolgte die Überprüfung der Druck- und Ablaufleitungen in der gesamten Wohnung.
+Zum Zeitpunkt der Überprüfung wurde keine Undichtheit an den Druck- und Ablaufleitungen festgestellt.
+
+Es wurden Undichtheiten in der Silikonabdichtung der Badewanne festgestellt.`;
+
+    const TEXT_GASAUSTritt_WHG =
+`Es wurden an der Wand vom Kinderzimmer zum Badezimmer Vernässungen festgestellt.
+Es erfolgte die Überprüfung der Druck- und Ablaufleitungen in der Wohnung.
+Die Druckleitungen wurden abgesperrt, entleert und mit Ortungsgas befüllt.
+
+Es wurde ein Gasaustritt in der Warmwasserleitung in der Wand zur Duscharmatur festgestellt.`;
+
     // Checkbox: steuert, ob Skizzenseite beim Drucken verwendet wird
     const toggleSketch = document.getElementById('toggleSketch');
     const sketchPage = document.getElementById('sketchPage');
@@ -437,11 +518,64 @@ Da eine punktuelle Lokalisierung der Undichtheit aufgrund der Witterung nicht m�
         });
     }
 
+    function setTemplateOptions(mode) {
+        if (!flachdachTemplateSelect) return;
+        const prev = flachdachTemplateSelect.value;
+        const base = `<option value="">- wählen -</option>`;
+        let opts = '';
+
+        if (mode === 'flachdach') {
+            opts = `
+                <option value="funkenschlag">Funkenschlag</option>
+                <option value="roofscan">RoofScan</option>
+            `;
+        } else if (mode === 'leckortung') {
+            opts = `
+                <option value="heizung">Heizung</option>
+                <option value="blei">Blei Wohnung</option>
+                <option value="silikonfuge">Silikonfuge</option>
+                <option value="gasaustritt">Gasaustritt Whg</option>
+            `;
+        } else {
+            flachdachTemplateSelect.innerHTML = base;
+            flachdachTemplateSelect.value = '';
+            return;
+        }
+
+        flachdachTemplateSelect.innerHTML = base + opts;
+
+        // Auswahl beibehalten, wenn noch vorhanden – sonst zurücksetzen
+        const stillExists = Array.from(flachdachTemplateSelect.options).some(o => o.value === prev);
+        flachdachTemplateSelect.value = stillExists ? prev : '';
+    }
+
+    // Textvorlagen-Feld anzeigen und Optionen je nach Kontext setzen
+    function applyTemplateVisibility() {
+        if (!flachdachTextOptions) return;
+        const cf = document.getElementById('checkFlachdach');
+        const cl = document.getElementById('checkLeckortung');
+        const clo = document.getElementById('checkLOPauschale');
+        const co = document.getElementById('checkOptLeckortung');
+
+        const flachdachOn = !!(cf && cf.checked);
+        const leckOn = !!((cl && cl.checked) || (clo && clo.checked) || (co && co.checked));
+
+        if (flachdachOn) {
+            flachdachTextOptions.style.display = 'block';
+            setTemplateOptions('flachdach');
+        } else if (leckOn) {
+            flachdachTextOptions.style.display = 'block';
+            setTemplateOptions('leckortung');
+        } else {
+            flachdachTextOptions.style.display = 'none';
+            setTemplateOptions(null);
+        }
+    }
+
     function applyFlachdachState() {
         if (!checkFlachdach) return;
         if (checkFlachdach.checked) {
             if (reparaturSection) reparaturSection.style.display = 'none';
-            if (flachdachTextOptions) flachdachTextOptions.style.display = 'block';
             // Skizzenseite komplett ausblenden und Checkbox deaktivieren
             if (sketchPage) sketchPage.style.display = 'none';
             if (toggleSketch) {
@@ -450,9 +584,9 @@ Da eine punktuelle Lokalisierung der Undichtheit aufgrund der Witterung nicht m�
             }
         } else {
             if (reparaturSection) reparaturSection.style.display = '';
-            if (flachdachTextOptions) flachdachTextOptions.style.display = 'none';
             if (sketchPage) sketchPage.style.display = '';
         }
+        applyTemplateVisibility();
     }
 
     if (checkFlachdach) {
@@ -463,10 +597,19 @@ Da eine punktuelle Lokalisierung der Undichtheit aufgrund der Witterung nicht m�
 
     if (flachdachTemplateSelect && befundTextarea) {
         flachdachTemplateSelect.addEventListener('change', () => {
-            if (flachdachTemplateSelect.value === 'funkenschlag') {
+            const v = flachdachTemplateSelect.value;
+            if (v === 'funkenschlag') {
                 befundTextarea.value = FLACHDACH_TEXT_FUNKENSCHLAG;
-            } else if (flachdachTemplateSelect.value === 'roofscan') {
+            } else if (v === 'roofscan') {
                 befundTextarea.value = FLACHDACH_TEXT_ROOFSCAN;
+            } else if (v === 'heizung') {
+                befundTextarea.value = TEXT_HEIZUNG;
+            } else if (v === 'blei') {
+                befundTextarea.value = TEXT_BLEI_WOHNUNG;
+            } else if (v === 'silikonfuge') {
+                befundTextarea.value = TEXT_SILIKONFUGE;
+            } else if (v === 'gasaustritt') {
+                befundTextarea.value = TEXT_GASAUSTritt_WHG;
             } else {
                 return;
             }
@@ -481,12 +624,25 @@ Da eine punktuelle Lokalisierung der Undichtheit aufgrund der Witterung nicht m�
     function applyLeckortungState() {
         if (!checkLeckortung || !zeitContainer) return;
         zeitContainer.style.display = checkLeckortung.checked ? '' : 'none';
+        applyTemplateVisibility();
     }
 
     if (checkLeckortung) {
         checkLeckortung.addEventListener('change', applyLeckortungState);
         applyLeckortungState();
     }
+
+    // LO Pauschale / opt. Leckortung beeinflussen ebenfalls die Anzeige der Textvorlagen
+    const checkLOPauschale = document.getElementById('checkLOPauschale');
+    const checkOptLeckortung = document.getElementById('checkOptLeckortung');
+    if (checkLOPauschale) {
+        checkLOPauschale.addEventListener('change', applyTemplateVisibility);
+    }
+    if (checkOptLeckortung) {
+        checkOptLeckortung.addEventListener('change', applyTemplateVisibility);
+    }
+    // Initial Sichtbarkeit der Textvorlagen setzen
+    applyTemplateVisibility();
 
     // Reparatur-Checkbox-Listener registrieren
     if (checkReparatur) {
