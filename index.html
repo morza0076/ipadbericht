@@ -65,17 +65,28 @@
         @media print { 
             body { background: white; padding: 0; margin: 0; }
             #controls, .toolbar, .no-print, #photoInput { display: none !important; } 
+            /* Skizzenseite nur drucken, wenn Checkbox aktiv (Klasse auf body) */
+            body:not(.sketch-enabled) #sketchPage { display: none !important; }
             .page { 
                 margin: 0 !important; 
                 box-shadow: none !important; 
                 border: none !important; 
-                width: 190mm;        /* etwas kleiner als A4-Breite */
-                min-height: auto;    /* feste Höhe/Min-Höhe für Druck entfernen */
+                width: 190mm;              /* etwas kleiner als A4-Breite */
+                min-height: auto;          /* feste Höhe/Min-Höhe für Druck entfernen */
                 height: auto;
+                padding: 8mm 10mm 14mm 10mm; /* etwas weniger oben, mehr unten für Footer */
                 page-break-after: always;
                 page-break-inside: avoid;
                 break-after: page;
                 break-inside: avoid;
+            }
+            /* Footer beim Druck nicht absolut positionieren, damit nichts abgeschnitten wird */
+            .footer {
+                position: static;
+                margin-top: 6mm;
+                left: auto;
+                right: auto;
+                bottom: auto;
             }
             .page:last-of-type {
                 page-break-after: auto;
@@ -166,8 +177,17 @@
                 <label class="checkbox-item"><input type="checkbox"> <span>LO Pauschale</span></label>
                 <label class="checkbox-item"><input type="checkbox"> <span>opt. Leckortung</span></label>
                 <label class="checkbox-item"><input type="checkbox"> <span>Thermografie</span></label>
-                <label class="checkbox-item"><input type="checkbox"> <span>Flachdach-Prüf.</span></label>
+                <label class="checkbox-item"><input type="checkbox" id="checkFlachdach"> <span>Flachdach-Prüf.</span></label>
                 <label class="checkbox-item"><input type="checkbox"> <span>Pool LO</span></label>
+            </div>
+            <!-- Auswahl der Standardtexte für Flachdachfälle (nur sichtbar bei aktivierter Flachdach-Prüfung) -->
+            <div id="flachdachTextOptions" class="no-print" style="margin-top:6px; display:none;">
+                <span class="label">Textvorlage für Befund</span>
+                <select id="flachdachTemplate">
+                    <option value="">- wählen -</option>
+                    <option value="funkenschlag">Funkenschlag</option>
+                    <option value="roofscan">RoofScan</option>
+                </select>
             </div>
             <div class="grid" style="margin-top:8px;">
                 <div><span class="label">Arbeitszeit (Std)</span><input type="number" step="0.5" placeholder="0.0"></div>
@@ -180,7 +200,7 @@
         </div>
     </div>
 
-    <div class="section">
+    <div class="section" id="reparaturSection">
         <h2>Reparatur & Prüfdetails</h2>
         <div style="margin-bottom: 6px;">
             <span class="label">Erforderliche Reparaturarbeiten</span>
@@ -208,6 +228,14 @@
             <label class="checkbox-item"><input type="checkbox" id="checkSonstigesReparatur" onclick="toggleSonstigesReparatur()"> <span>Sonstiges</span></label>
         </div>
         <input type="text" id="inputSonstigesReparatur" placeholder="..." style="display:none; margin-top:6px;">
+    </div>
+
+    <!-- Steuerung, ob Skizzenseite mitgedruckt werden soll -->
+    <div class="section no-print">
+        <label class="checkbox-item">
+            <input type="checkbox" id="toggleSketch">
+            <span>Skizzenseite (Seite 2) beim Bericht verwenden</span>
+        </label>
     </div>
     <div class="footer"><span>Brugger GmbH</span><span>Seite 1</span></div>
 </div>
@@ -284,6 +312,100 @@
     if (adresseInput) {
         adresseInput.addEventListener('input', updateTitleWithAddress);
         updateTitleWithAddress();
+    }
+
+    // Flachdach-Prüfung: Reparatur-Block ausblenden, Skizzenseite ausblenden, Textvorlagen anbieten
+    const checkFlachdach = document.getElementById('checkFlachdach');
+    const reparaturSection = document.getElementById('reparaturSection');
+    const befundTextarea = document.getElementById('befund');
+    const flachdachTextOptions = document.getElementById('flachdachTextOptions');
+    const flachdachTemplateSelect = document.getElementById('flachdachTemplate');
+
+    const FLACHDACH_TEXT_FUNKENSCHLAG =
+`Überprüfung der Kunststoff Flachdachabdichtung des Hauptdaches mittels Funkenschlagverfahren.
+
+Die Leckageortung mit dem Funkenschlagverfahren (Trockenortungsverfahren) ist für das Auffinden von Löchern und Rissen auf nicht leitfähigen Beschichtungen oder Abdichtungen ohne Auflastung geeignet.
+Das Hochspannung-Verfahren spürt feinste kapillare Undichtigkeiten auf. Beim Funkenschlagverfahren wird Hochspannung verwendet, die über eine Kupferbürste auf die zu prüfende Abdichtung übertragen wird.
+Mit dem Funkenschlagverfahren können auch Punkt- und Nahtortungen durchgeführt werden.
+Die Höhe der elektrischen Spannung richtet sich nach der Schichtdicke des zu prüfenden Materials.
+Damit können Leckagen durch Funkenentladung, sowie durch optische und akustische Anzeige, sichtbar gemacht und punktgenau geortet werden.
+
+Bei der Überprüfung der Flachdachfläche des Hauptdaches wurden 24 Verdachtsbereiche festgestellt.`;
+
+    const FLACHDACH_TEXT_ROOFSCAN =
+`1. Ausgangssituation:
+An der Decke im 1. Untergeschoss wurde ein Wassereintritt im Bereich eines Gullys festgestellt.
+Darüber befindet sich die Flachdachabdichtung der Terrasse.
+
+Der Aufbau des Flachdaches stellt sich wie folgt dar:
+- Stahlbetondecke
+- Abdichtung
+- Isolierung
+- Kies
+- Betonplatten
+
+Zur Lokalisierung der Wasserdurchtritte wurden Untersuchungen mittels einer Potential-Differenzmessung durchgeführt.
+Es wurde nur ein Teilbereich der Terrasse überprüft.
+
+2. Durchführung der Messung und vorbereitende Maßnahmen:
+Zur Charakterisierung von möglichen Leckagen im Abdichtungssystem wurden gerichtete elektrische Felder zwischen der Einspeisung an der Schadstelle und einem mobilen Sensor im Messbereich erzeugt. Wegsamkeitsbereiche durch das Abdichtungssystem äußern sich durch erhöhte Energiedurchtritte des Tracersignals.
+
+3. Untersuchungsergebnisse:
+Es wurde zum Zeitpunkt der Überprüfung ein Verdachtsbereich V1 ermittelt.
+Der Verdachtsbereich befindet sich ca. 3 m neben dem betroffenen Gully.
+Da eine punktuelle Lokalisierung der Undichtheit aufgrund der Witterung nicht möglich ist, wird empfohlen, die gesamte Flachdachfläche nach einem Niederschlag nochmals zu prüfen.`;
+
+    // Checkbox: steuert, ob Skizzenseite beim Drucken verwendet wird
+    const toggleSketch = document.getElementById('toggleSketch');
+    const sketchPage = document.getElementById('sketchPage');
+    if (toggleSketch) {
+        // Standard: Skizzenseite NICHT verwenden, bis explizit angehakt
+        document.body.classList.remove('sketch-enabled');
+        toggleSketch.addEventListener('change', () => {
+            if (toggleSketch.checked) {
+                document.body.classList.add('sketch-enabled');
+                if (sketchPage) sketchPage.style.display = '';
+            } else {
+                document.body.classList.remove('sketch-enabled');
+            }
+        });
+    }
+
+    function applyFlachdachState() {
+        if (!checkFlachdach) return;
+        if (checkFlachdach.checked) {
+            if (reparaturSection) reparaturSection.style.display = 'none';
+            if (flachdachTextOptions) flachdachTextOptions.style.display = 'block';
+            // Skizzenseite komplett ausblenden und Checkbox deaktivieren
+            if (sketchPage) sketchPage.style.display = 'none';
+            if (toggleSketch) {
+                toggleSketch.checked = false;
+                document.body.classList.remove('sketch-enabled');
+            }
+        } else {
+            if (reparaturSection) reparaturSection.style.display = '';
+            if (flachdachTextOptions) flachdachTextOptions.style.display = 'none';
+            if (sketchPage) sketchPage.style.display = '';
+        }
+    }
+
+    if (checkFlachdach) {
+        checkFlachdach.addEventListener('change', applyFlachdachState);
+        // Zustand initial anwenden (falls beim Laden schon angehakt)
+        applyFlachdachState();
+    }
+
+    if (flachdachTemplateSelect && befundTextarea) {
+        flachdachTemplateSelect.addEventListener('change', () => {
+            if (flachdachTemplateSelect.value === 'funkenschlag') {
+                befundTextarea.value = FLACHDACH_TEXT_FUNKENSCHLAG;
+            } else if (flachdachTemplateSelect.value === 'roofscan') {
+                befundTextarea.value = FLACHDACH_TEXT_ROOFSCAN;
+            } else {
+                return;
+            }
+            autoResize.call(befundTextarea);
+        });
     }
 
     function initDrawing(canvasId) {
