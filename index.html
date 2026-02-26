@@ -1,23 +1,15 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>iPad Bericht</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
-    <h1>Your iPad Bericht</h1>
-    <div id="content">
-        <!-- Content goes here -->
-    </div>
-    <button id="exportBtn">Export as PDF</button>
-    <script>
-        document.getElementById('exportBtn').addEventListener('click', function() {
-            const plz = '12345'; // Placeholder for postal code
-            const ort = 'Town'; // Placeholder for city
-            const strasse = 'Main Street'; // Placeholder for street
-            const filename = `${plz}_${ort}_${strasse}.pdf`;
-            const element = document.getElementById('content');
-            html2pdf().from(element).save(filename);
-        });
-    </script>
+    <h1>Welcome to iPad Bericht</h1>
+    <p>This is the main content of the page. Example content goes here.</p>
+    
+    <!-- Remove the service worker related code -->
+    
 </body>
 </html>
