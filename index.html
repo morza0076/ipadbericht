@@ -99,7 +99,6 @@
 </head>
 <body>
 
-<!-- Steuerleiste -->
 <div id="controls" class="no-print">
     <button class="secondary" onclick="window.print()">DRUCKEN</button>
     <button class="secondary" onclick="sendEmail()">EMAIL SENDEN</button>
@@ -108,13 +107,11 @@
     <input type="file" id="photoInput" multiple accept="image/*" style="display:none" onchange="handlePhotos(this)">
     <button class="secondary" onclick="document.getElementById('photoInput').click()">FOTOS HINZUFÜGEN</button>
 
-    <!-- Vollständiges Speichern/Laden -->
     <button class="secondary" onclick="exportFullReport()">BERICHT SPEICHERN</button>
     <button class="secondary" onclick="document.getElementById('importFile').click()">BERICHT LADEN</button>
     <input type="file" id="importFile" accept=".lok,application/json" style="display:none" onchange="importFullReport(this)">
 </div>
 
-<!-- Seite 1 -->
 <div class="page" id="mainPage">
     <div class="header">
         <div class="header-left">
@@ -228,11 +225,11 @@
         </label>
     </div>
     <div class="footer"><span>Brugger GmbH</span><span>Seite 1</span></div>
-</div><!-- Skizzenseite -->
+</div>
+
 <div class="page" id="sketchPage">
     <div class="header">
         <div class="header-left">
-            <!-- Optional: <img src="Logo.PNG" alt="Brugger Logo" class="logo" onerror="this.style.display='none'"> -->
             <h1>Skizze / Grundriss</h1>
         </div>
     </div>
@@ -250,7 +247,6 @@
     <div class="footer"><span>Brugger GmbH</span><span>Seite 2</span></div>
 </div>
 
-<!-- Fotoseiten -->
 <div id="photoPagesContainer"></div>
 
 <script>
@@ -565,9 +561,8 @@ function handlePhotos(input) {
         files.slice(i, i + 4).forEach((file) => {
             const reader = new FileReader();
             reader.onload = (e) => {
-                // Optional: beim Import verkleinern (für sehr große Handyfotos)
-                // scaleAndInsertPhoto(e.target.result, `grid-${i}`);
-                insertPhotoBox(e.target.result, `grid-${i}`);
+                // Aktiviert die Komprimierung vor dem Einfügen
+                scaleAndInsertPhoto(e.target.result, `grid-${i}`);
             };
             reader.readAsDataURL(file);
         });
@@ -632,12 +627,13 @@ function insertPhotoBox(imgSrc, gridId, descText = '', arrowPos = null) {
     }
 }
 
-// Optionales Downsizing beim Import (für sehr große Bilder)
+// Aktives Downsizing beim Import (komprimiert Bilder drastisch)
 function scaleAndInsertPhoto(dataUrl, gridId) {
     const img = new Image();
     img.onload = () => {
-        const maxSide = 1600;
+        const maxSide = 1000;
         let { width, height } = img;
+        
         if (width > height && width > maxSide) {
             height = Math.round(height * (maxSide / width));
             width = maxSide;
@@ -645,15 +641,21 @@ function scaleAndInsertPhoto(dataUrl, gridId) {
             width = Math.round(width * (maxSide / height));
             height = maxSide;
         }
+        
         const c = document.createElement('canvas');
-        c.width = width; c.height = height;
+        c.width = width; 
+        c.height = height;
         const cx = c.getContext('2d');
         cx.drawImage(img, 0, 0, width, height);
-        const scaledDataUrl = cx.canvas.toDataURL('image/jpeg', 0.75);
+        
+        // Komprimiert als JPEG mit 70% Qualität (spart enorm viel Speicherplatz im PDF)
+        const scaledDataUrl = cx.canvas.toDataURL('image/jpeg', 0.7);
         insertPhotoBox(scaledDataUrl, gridId);
     };
     img.src = dataUrl;
-}/* =========================
+}
+
+/* =========================
    Mailto (ohne Anhang) – Betreff = automatischer Dateiname
    ========================= */
 function sendEmail() {
