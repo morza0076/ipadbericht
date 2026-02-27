@@ -41,7 +41,16 @@
         .checkbox-item { display:flex; align-items:center; gap:4px; cursor:pointer; }
         .checkbox-item input { width:auto; margin:0; }
 
-        .drawing-area { border:1px solid var(--border); background:#fafafa; cursor:crosshair; touch-action:none; position:relative; width:100%; border-radius:4px; }
+        /* HIER IST DIE ÄNDERUNG FÜR DEN KARIERTEN RASTER */
+        .drawing-area {
+            border:1px solid var(--border);
+            cursor:crosshair; touch-action:none; position:relative; width:100%; border-radius:4px;
+            /* Karierter Hintergrund mittels CSS-Verlauf */
+            background-color: #ffffff;
+            background-image: linear-gradient(#e0e0e0 1px, transparent 1px), linear-gradient(90deg, #e0e0e0 1px, transparent 1px);
+            background-size: 20px 20px; /* Größe der Kästchen */
+            background-position: -1px -1px; /* Leichter Versatz, damit es nicht direkt am Rand klebt */
+        }
         .sketch-box { height:450px; margin-top:10px; }
 
         .toolbar { display:flex; gap:10px; margin-bottom:10px; align-items:center; background:#eee; padding:8px; border-radius:5px; }
@@ -94,6 +103,7 @@
             .sketch-box { height:180mm !important; }
             .img-container { height:55mm !important; }
             .photo-box { border-color:#000 !important; }
+            #ueberpruefteBauteileContainer, #poolBauteileContainer { border-color:#000 !important; background:transparent !important; padding:4px !important; margin-bottom:8px !important; }
         }
     </style>
 </head>
@@ -173,7 +183,7 @@
                 <label class="checkbox-item"><input type="checkbox" id="checkOptLeckortung"> <span>opt. Leckortung</span></label>
                 <label class="checkbox-item"><input type="checkbox"> <span>Thermografie</span></label>
                 <label class="checkbox-item"><input type="checkbox" id="checkFlachdach"> <span>Flachdach-Prüf.</span></label>
-                <label class="checkbox-item"><input type="checkbox"> <span>Pool LO</span></label>
+                <label class="checkbox-item"><input type="checkbox" id="checkPool"> <span>Pool LO</span></label>
             </div>
             <div id="zeitContainer" style="margin-top:8px; display:none;">
                 <div class="grid">
@@ -190,6 +200,33 @@
 
     <div class="section" id="reparaturSection">
         <h2>Reparatur &amp; Prüfdetails</h2>
+        
+        <div id="ueberpruefteBauteileContainer" style="display:none; margin-bottom: 10px; border: 1px solid var(--border); padding: 8px; border-radius: 4px; background: #fafafa;">
+            <span class="label" style="color:var(--accent); font-size:11px; margin-bottom:6px;">Überprüfte Bauteile</span>
+            <div class="checkbox-group" style="grid-template-columns: repeat(3, 1fr);">
+                <label class="checkbox-item"><input type="checkbox"> <span>Kaltwasser</span></label>
+                <label class="checkbox-item"><input type="checkbox"> <span>Warmwasser</span></label>
+                <label class="checkbox-item"><input type="checkbox"> <span>Zirkulation</span></label>
+                <label class="checkbox-item"><input type="checkbox"> <span>Heizungsleitungen</span></label>
+                <label class="checkbox-item"><input type="checkbox"> <span>Ablauf</span></label>
+                <label class="checkbox-item"><input type="checkbox"> <span>Regenablauf</span></label>
+                <label class="checkbox-item"><input type="checkbox" id="checkSonstigesBauteile" onclick="toggleSonstigesBauteile()"> <span>Sonstiges</span></label>
+            </div>
+            <input type="text" id="inputSonstigesBauteile" placeholder="..." style="display:none; margin-top:6px;">
+        </div>
+
+        <div id="poolBauteileContainer" style="display:none; margin-bottom: 10px; border: 1px solid var(--border); padding: 8px; border-radius: 4px; background: #eef5f9;">
+            <span class="label" style="color:#2b83b8; font-size:11px; margin-bottom:6px;">Pool Bauteile</span>
+            <div class="checkbox-group" style="grid-template-columns: repeat(3, 1fr);">
+                <label class="checkbox-item"><input type="checkbox"> <span>Skimmerleitung</span></label>
+                <label class="checkbox-item"><input type="checkbox"> <span>Düsenleitung</span></label>
+                <label class="checkbox-item"><input type="checkbox"> <span>Saugleitung</span></label>
+                <label class="checkbox-item"><input type="checkbox"> <span>Gegenstromanlage</span></label>
+                <label class="checkbox-item"><input type="checkbox" id="checkSonstigesPool" onclick="toggleSonstigesPool()"> <span>Sonstiges</span></label>
+            </div>
+            <input type="text" id="inputSonstigesPool" placeholder="..." style="display:none; margin-top:6px;">
+        </div>
+
         <div id="reparaturWorks" style="margin-bottom: 6px; display:none;">
             <span class="label">Erforderliche Reparaturarbeiten</span>
             <textarea id="reparatur" placeholder="..."></textarea>
@@ -373,6 +410,12 @@ function applyTemplateVisibility() {
     const flachdachOn = !!(cf && cf.checked);
     const leckOn = !!((cl && cl.checked) || (clo && clo.checked) || (co && co.checked));
 
+    // Box "Überprüfte Bauteile" anzeigen, wenn eine Leckortung ausgewählt ist
+    const bauteileContainer = document.getElementById('ueberpruefteBauteileContainer');
+    if (bauteileContainer) {
+        bauteileContainer.style.display = leckOn ? 'block' : 'none';
+    }
+
     if (flachdachOn) {
         flachdachTextOptions.style.display = 'block';
         setTemplateOptions('flachdach');
@@ -402,6 +445,16 @@ function applyFlachdachState() {
     renumberPhotoPages();
 }
 applyFlachdachState();
+
+/* Neue Box Logik: Pool LO */
+const checkPool = document.getElementById('checkPool');
+function applyPoolState() {
+    const poolContainer = document.getElementById('poolBauteileContainer');
+    if (!checkPool || !poolContainer) return;
+    poolContainer.style.display = checkPool.checked ? 'block' : 'none';
+}
+checkPool?.addEventListener('change', applyPoolState);
+applyPoolState();
 
 /* Vorlagentexte (werden in den Befund eingesetzt) */
 const FLACHDACH_TEXT_FUNKENSCHLAG =
@@ -869,6 +922,7 @@ function restoreFromData(data) {
     applyReparaturState();
     applyLeckortungState();
     applyTemplateVisibility();
+    applyPoolState(); // <--- Neu: Pool-Box Status nach dem Laden prüfen
 
     // 4) Skizzenseite sichtbar/nicht, je nach gespeicherten Toggle
     if (data.toggles && typeof data.toggles.sketchEnabled === 'boolean' && toggleSketch) {
@@ -926,6 +980,20 @@ function toggleSonstiges() {
 function toggleSonstigesReparatur() {
     const check = document.getElementById('checkSonstigesReparatur');
     document.getElementById('inputSonstigesReparatur').style.display = check.checked ? 'block' : 'none';
+}
+function toggleSonstigesBauteile() {
+    const check = document.getElementById('checkSonstigesBauteile');
+    const input = document.getElementById('inputSonstigesBauteile');
+    if (check && input) {
+        input.style.display = check.checked ? 'block' : 'none';
+    }
+}
+function toggleSonstigesPool() {
+    const check = document.getElementById('checkSonstigesPool');
+    const input = document.getElementById('inputSonstigesPool');
+    if (check && input) {
+        input.style.display = check.checked ? 'block' : 'none';
+    }
 }
 </script>
 </body>
