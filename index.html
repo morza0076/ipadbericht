@@ -41,15 +41,14 @@
         .checkbox-item { display:flex; align-items:center; gap:4px; cursor:pointer; }
         .checkbox-item input { width:auto; margin:0; }
 
-        /* HIER IST DIE ÄNDERUNG FÜR DEN KARIERTEN RASTER */
+        /* Karierter Raster */
         .drawing-area {
             border:1px solid var(--border);
             cursor:crosshair; touch-action:none; position:relative; width:100%; border-radius:4px;
-            /* Karierter Hintergrund mittels CSS-Verlauf */
             background-color: #ffffff;
             background-image: linear-gradient(#e0e0e0 1px, transparent 1px), linear-gradient(90deg, #e0e0e0 1px, transparent 1px);
-            background-size: 20px 20px; /* Größe der Kästchen */
-            background-position: -1px -1px; /* Leichter Versatz, damit es nicht direkt am Rand klebt */
+            background-size: 20px 20px;
+            background-position: -1px -1px;
         }
         .sketch-box { height:450px; margin-top:10px; }
 
@@ -619,15 +618,18 @@ function clearSketch() {
 /* =========================
    Fotos / Markierungen
    ========================= */
-function handlePhotos(input) {
-    const container = document.getElementById('photoPagesContainer');
-    container.innerHTML = "";
-    const files = Array.from(input.files);
 
-    for (let i = 0; i < files.length; i += 4) {
+// NEU: Hilfsfunktion, um das letzte Grid zu finden oder bei Bedarf ein neues zu erstellen
+function getOrCreateLastGrid() {
+    const container = document.getElementById('photoPagesContainer');
+    const grids = container.querySelectorAll('.photo-grid');
+    let lastGrid = grids.length > 0 ? grids[grids.length - 1] : null;
+
+    // Wenn kein Grid existiert oder das letzte Grid schon 4 Fotos hat -> neue Seite anlegen
+    if (!lastGrid || lastGrid.children.length >= 4) {
         const page = document.createElement('div');
         page.className = 'page';
-        const pageNum = calcPhotoPageNumber((i/4)|0);
+        const gridId = 'grid-' + Date.now() + '-' + Math.floor(Math.random()*1000);
         page.innerHTML = `
             <div class="header">
                 <div class="header-left">
@@ -635,20 +637,32 @@ function handlePhotos(input) {
                     <h1>Fotodokumentation</h1>
                 </div>
             </div>
-            <div class="photo-grid" id="grid-${i}"></div>
-            <div class="footer"><span>Brugger GmbH</span><span class="page-no">Seite ${pageNum}</span></div>
+            <div class="photo-grid" id="${gridId}"></div>
+            <div class="footer"><span>Brugger GmbH</span><span class="page-no"></span></div>
         `;
         container.appendChild(page);
-
-        files.slice(i, i + 4).forEach((file) => {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                // Aktiviert die Komprimierung vor dem Einfügen
-                scaleAndInsertPhoto(e.target.result, `grid-${i}`);
-            };
-            reader.readAsDataURL(file);
-        });
+        renumberPhotoPages();
+        return document.getElementById(gridId);
     }
+    return lastGrid;
+}
+
+function handlePhotos(input) {
+    const files = Array.from(input.files);
+    
+    // WICHTIG: Kein container.innerHTML = "" mehr! Altes wird nicht gelöscht.
+
+    files.forEach((file) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            // "null" signalisiert: Finde automatisch den richtigen Platz (anhängen)
+            scaleAndInsertPhoto(e.target.result, null); 
+        };
+        reader.readAsDataURL(file);
+    });
+
+    // Input zurücksetzen, damit auf dem iPad dieselbe Aktion sofort wieder möglich ist
+    input.value = ''; 
 }
 
 function calcPhotoPageNumber(photoPageIndex) {
@@ -682,7 +696,8 @@ function addArrow(e, container) {
     container.appendChild(arrow);
 }
 
-function insertPhotoBox(imgSrc, gridId, descText = '', arrowPos = null) {
+// Erlaubt null als gridId für automatisches Anhängen
+function insertPhotoBox(imgSrc, gridId = null, descText = '', arrowPos = null) {
     const box = document.createElement('div');
     box.className = 'photo-box';
     box.innerHTML = `
@@ -691,7 +706,16 @@ function insertPhotoBox(imgSrc, gridId, descText = '', arrowPos = null) {
         </div>
         <input type="text" class="photo-desc" placeholder="Beschreibung..." value="${descText ? (''+descText).replace(/"/g,'&quot;') : ''}">
     `;
-    const grid = document.getElementById(gridId);
+    
+    let grid;
+    if (gridId) {
+        grid = document.getElementById(gridId);
+    }
+    // Wenn keine ID übergeben wurde oder sie nicht existiert -> hänge es hinten an
+    if (!grid) {
+        grid = getOrCreateLastGrid();
+    }
+    
     grid.appendChild(box);
 
     if (arrowPos && typeof arrowPos.x === 'number' && typeof arrowPos.y === 'number') {
@@ -709,8 +733,8 @@ function insertPhotoBox(imgSrc, gridId, descText = '', arrowPos = null) {
     }
 }
 
-// Aktives Downsizing beim Import (komprimiert Bilder drastisch)
-function scaleAndInsertPhoto(dataUrl, gridId) {
+// Aktives Downsizing beim Import
+function scaleAndInsertPhoto(dataUrl, gridId = null) {
     const img = new Image();
     img.onload = () => {
         const maxSide = 1000;
@@ -730,7 +754,7 @@ function scaleAndInsertPhoto(dataUrl, gridId) {
         const cx = c.getContext('2d');
         cx.drawImage(img, 0, 0, width, height);
         
-        // Komprimiert als JPEG mit 70% Qualität (spart enorm viel Speicherplatz im PDF)
+        // Komprimiert als JPEG mit 70% Qualität
         const scaledDataUrl = cx.canvas.toDataURL('image/jpeg', 0.7);
         insertPhotoBox(scaledDataUrl, gridId);
     };
@@ -922,7 +946,7 @@ function restoreFromData(data) {
     applyReparaturState();
     applyLeckortungState();
     applyTemplateVisibility();
-    applyPoolState(); // <--- Neu: Pool-Box Status nach dem Laden prüfen
+    applyPoolState();
 
     // 4) Skizzenseite sichtbar/nicht, je nach gespeicherten Toggle
     if (data.toggles && typeof data.toggles.sketchEnabled === 'boolean' && toggleSketch) {
@@ -945,6 +969,10 @@ function restoreFromData(data) {
         data.photos.forEach((p, pageIdx) => {
             const page = document.createElement('div');
             page.className = 'page';
+            
+            // Verwende die Zeitstempel-Strategie, damit das Anhängen später richtig funktioniert
+            const gridId = `grid-restore-${pageIdx}-${Date.now()}`;
+            
             page.innerHTML = `
                 <div class="header">
                     <div class="header-left">
@@ -952,12 +980,11 @@ function restoreFromData(data) {
                         <h1>Fotodokumentation</h1>
                     </div>
                 </div>
-                <div class="photo-grid" id="grid-restore-${pageIdx}"></div>
+                <div class="photo-grid" id="${gridId}"></div>
                 <div class="footer"><span>Brugger GmbH</span><span class="page-no">Seite ${calcPhotoPageNumber(pageIdx)}</span></div>
             `;
             container.appendChild(page);
 
-            const gridId = `grid-restore-${pageIdx}`;
             if (Array.isArray(p.images)) {
                 p.images.forEach(imgObj => {
                     insertPhotoBox(imgObj.dataUrl, gridId, imgObj.description, imgObj.arrow);
