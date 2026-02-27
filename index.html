@@ -268,17 +268,36 @@ if (dateInput) {
 let currentStyle = '#000';
 let currentWidth = 2;
 
-function updateTitleWithAddress() {
-    const adr = document.getElementById('adresse');
-    const plz = document.getElementById('plz');
-    const ort = document.getElementById('ort');
+/* Zentrale Funktion für Dateinamen und Dokument-Titel */
+function buildReportBaseName() {
+    const adr = document.getElementById('adresse')?.value.trim() || '';
+    const plz = document.getElementById('plz')?.value.trim() || '';
+    const ort = document.getElementById('ort')?.value.trim() || '';
     const baseTitle = 'Leckortungsbericht';
-    if (!adr || !plz || !ort) { document.title = baseTitle; return; }
-    const parts = [plz.value.trim(), ort.value.trim(), adr.value.trim()].filter(Boolean);
-    document.title = parts.length ? `${baseTitle} - ${parts.join(' ')}` : baseTitle;
+
+    let locationPart = `${plz} ${ort}`.trim();
+    
+    let titleParts = [];
+    if (locationPart) titleParts.push(locationPart);
+    if (adr) titleParts.push(adr);
+
+    if (titleParts.length > 0) {
+        return `${baseTitle} - ${titleParts.join(', ')}`;
+    } else {
+        return baseTitle;
+    }
 }
+
+function updateTitleWithAddress() {
+    // Setzt den Titel im Browser (wird als Dateiname beim PDF-Druck verwendet)
+    document.title = buildReportBaseName();
+}
+
+// Live-Aktualisierung des Titels bei Texteingabe
 document.getElementById('adresse')?.addEventListener('input', updateTitleWithAddress);
-updateTitleWithAddress();
+document.getElementById('plz')?.addEventListener('input', updateTitleWithAddress);
+document.getElementById('ort')?.addEventListener('input', updateTitleWithAddress);
+updateTitleWithAddress(); // Initialer Aufruf
 
 function autoResize() { this.style.height = 'auto'; this.style.height = (this.scrollHeight + 2) + 'px'; }
 document.querySelectorAll('textarea').forEach(el => el.addEventListener('input', autoResize));
@@ -656,11 +675,10 @@ function scaleAndInsertPhoto(dataUrl, gridId) {
 }
 
 /* =========================
-   Mailto (ohne Anhang) – Betreff = automatischer Dateiname
+   Mailto (ohne Anhang)
    ========================= */
 function sendEmail() {
-    // Betreff: identisch zum automatischen Dateinamen
-    const subject = buildReportBaseName();
+    const subject = buildReportBaseName(); // Gleicher Name als E-Mail Betreff
 
     // Body aus aktuellen Feldern
     const nameEl = document.getElementById('name');
@@ -699,42 +717,6 @@ function sendEmail() {
 
     const mailto = `mailto:kanal@brugger-entfeuchtung.at?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     window.location.href = mailto;
-}
-
-/* =========================
-   Automatischer Dateiname für .lok + E‑Mail-Betreff
-   ========================= */
-function buildReportBaseName() {
-    const name   = document.getElementById('name')?.value?.trim() || '';
-    const adresse= document.getElementById('adresse')?.value?.trim() || '';
-    const plz    = document.getElementById('plz')?.value?.trim() || '';
-    const ort    = document.getElementById('ort')?.value?.trim() || '';
-    const datum  = document.getElementById('datum')?.value || '';
-
-    // Umlaute / Sonderzeichen sicher behandeln
-    const sanitize = (s) =>
-        (s || '')
-            .normalize('NFKD')                 // ä -> a + ¨
-            .replace(/[\u0300-\u036f]/g, '')   // kombinierende Zeichen entfernen
-            .replace(/[^\w\s.-]/g, '_')        // nicht erlaubte Zeichen -> _
-            .replace(/\s+/g, '_')              // Leerzeichen -> _
-            .replace(/_+/g, '_')               // doppelte _ reduzieren
-            .replace(/^_+|_+$/g, '');          // führende/abschließende _ weg
-
-    const datePart = datum ? datum.replace(/-/g, '_') : '';
-
-    const parts = [];
-    if (datePart) parts.push(datePart);        // 2026_02_26
-    if (plz)      parts.push(sanitize(plz));   // 8041
-    if (ort)      parts.push(sanitize(ort));   // Graz
-    if (adresse)  parts.push(sanitize(adresse)); // Liebenauer_Hauptstrasse_181
-    if (name)     parts.push(sanitize(name));  // Max_Mustermann
-
-    const base = parts.length
-        ? `Bericht_${parts.join('_')}`
-        : `Bericht_${new Date().toISOString().split('T')[0].replace(/-/g, '_')}`;
-
-    return base;
 }
 
 /* =========================
@@ -798,11 +780,14 @@ function exportFullReport() {
         data.photos.push({ index: pageIdx, images });
     });
 
-    // Datei speichern (.lok) – Name automatisch
+    // Gleicher Name, aber unzulässige Dateizeichen entfernen (falls man z.B. einen Schrägstrich in die Adresse tippt)
+    const safeFilename = buildReportBaseName().replace(/[<>:"/\\|?*]/g, '_');
+
+    // Datei speichern (.lok)
     const blob = new Blob([JSON.stringify(data)], { type:'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url; a.download = buildReportBaseName() + '.lok';
+    a.href = url; a.download = safeFilename + '.lok';
     a.click();
     URL.revokeObjectURL(url);
 }
@@ -916,6 +901,9 @@ function restoreFromData(data) {
             }
         });
     }
+    
+    // Titelleiste mit den geladenen Daten direkt aktualisieren
+    updateTitleWithAddress();
 }
 
 /* =========================
