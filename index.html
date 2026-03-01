@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Leckortungsbericht" />
@@ -12,11 +12,11 @@
         :root { --accent:#b89b1e; --text:#1f1f1f; --bg:#f4f1e8; --border:#ccc; }
         * { box-sizing:border-box; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
 
+        /* Druckränder 0 für saubere PDFs per Browser-Druck */
         @page { size:A4; margin:0 !important; }
 
         body { font-family:"Segoe UI", Roboto, Arial, sans-serif; background:var(--bg); margin:0; padding:10px; color:var(--text); }
 
-        /* --- KOMPAKTES ORIGINAL-LAYOUT --- */
         .page {
             width:210mm; min-height:297mm; background:#fff; padding:12mm;
             margin:0 auto 20px auto; position:relative; box-shadow:0 0 10px rgba(0,0,0,.1);
@@ -33,27 +33,22 @@
         .section h2 { font-size:13px; text-transform:uppercase; border-bottom:1px solid #eee; padding-bottom:3px; margin-bottom:6px; color:var(--accent); font-weight:700; }
 
         .grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-        .address-grid { display:grid; grid-template-columns: 80px 1fr 1.2fr; gap:8px; margin-top:6px; }
-        
         .label { font-size:10px; font-weight:700; margin-bottom:2px; display:block; color:#555; }
-        input, textarea, select { width:100%; border:1px solid var(--border); padding:6px; font-size:12px; border-radius:3px; background:#fff; outline:none; font-family:inherit; }
-        textarea { min-height:40px; resize:none; overflow:hidden; line-height:1.4; }
-        input:focus, textarea:focus, select:focus { border-color:var(--accent); }
+        input, textarea, select { width:100%; border:1px solid var(--border); padding:6px; font-size:12px; border-radius:3px; background:#fff; outline:none; }
+        textarea { min-height:40px; font-family:inherit; resize:none; overflow:hidden; line-height:1.4; }
 
         .checkbox-group { display:grid; grid-template-columns:1fr 1fr; gap:4px; font-size:11px; }
-        .checkbox-group-3 { display:grid; grid-template-columns:repeat(3, 1fr); gap:4px; font-size:11px; }
         .checkbox-item { display:flex; align-items:center; gap:4px; cursor:pointer; }
-        .checkbox-item input { width:14px; height:14px; margin:0; accent-color:var(--accent); }
+        .checkbox-item input { width:auto; margin:0; }
 
-        .bauteile-container { margin-bottom: 10px; border: 1px solid var(--border); padding: 8px; border-radius: 4px; background: #fafafa; }
-        .bauteile-container.pool { background: #eef5f9; }
-
+        /* Karierter Raster */
         .drawing-area {
             border:1px solid var(--border);
             cursor:crosshair; touch-action:none; position:relative; width:100%; border-radius:4px;
             background-color: #ffffff;
             background-image: linear-gradient(#e0e0e0 1px, transparent 1px), linear-gradient(90deg, #e0e0e0 1px, transparent 1px);
-            background-size: 20px 20px; background-position: -1px -1px;
+            background-size: 20px 20px;
+            background-position: -1px -1px;
         }
         .sketch-box { height:450px; margin-top:10px; }
 
@@ -71,92 +66,58 @@
 
         .footer { position:absolute; bottom:10mm; left:12mm; right:12mm; font-size:9px; display:flex; justify-content:space-between; color:#888; border-top:1px solid #eee; padding-top:5px; }
 
-        /* Controls Desktop */
-        #controls { position:fixed; top:10px; right:10px; z-index:100; display:flex; flex-direction:column; gap:6px; width:200px; }
-        button { padding:10px; background:var(--accent); color:#fff; border:none; border-radius:4px; cursor:pointer; font-weight:700; font-size:11px; text-transform:uppercase; }
+        #controls { position:fixed; top:10px; right:10px; z-index:100; display:flex; flex-direction:column; gap:8px; width:260px; }
+        button { padding:12px; background:var(--accent); color:#fff; border:none; border-radius:4px; cursor:pointer; font-weight:700; font-size:11px; }
         button.secondary { background:#444; }
 
-        /* =========================================
-           Mobile Optimierung (Samsung S23 & Co.)
-           ========================================= */
+        /* Mobile */
         @media screen and (max-width:768px) {
-            body { padding:0; background:#e5e2d8; }
-            
-            /* S23 App-Dock unten statt oben rechts */
-            #controls { 
-                position:fixed; top:auto; bottom:0; left:0; width:100%; 
-                flex-direction:row; flex-wrap:nowrap; overflow-x:auto; 
-                gap:8px; padding:10px 10px calc(10px + env(safe-area-inset-bottom)); 
-                background:#222; box-shadow:0 -2px 10px rgba(0,0,0,.3);
-                -webkit-overflow-scrolling: touch; scrollbar-width: none; border-radius: 12px 12px 0 0;
-            }
-            #controls::-webkit-scrollbar { display: none; }
-            #controls button { flex:0 0 auto; padding:12px 18px; font-size:12px; border-radius: 6px; }
-
-            .page { width:100%; min-height:auto; margin:0 0 70px 0; padding:15px; box-shadow:none; border-radius:0; border-bottom:1px solid #ccc; }
+            body { padding:4px; background:#e5e2d8; }
+            .page { width:100%; min-height:auto; margin:0 0 12px 0; padding:10px 8px 16px 8px; box-shadow:none; border-radius:0; }
             .header { flex-direction:column; align-items:flex-start; gap:6px; }
             .header-right { text-align:left; }
-            
-            /* Grids für schmale Displays */
-            .grid { grid-template-columns:1fr; gap: 10px; }
-            .address-grid { grid-template-columns:1fr; gap: 10px; } 
-            
-            /* Checkboxen daumenfreundlich, aber kompakt */
-            .checkbox-group-3 { grid-template-columns:1fr 1fr; }
-            .checkbox-item { padding: 6px 0; font-size: 13px; } 
-            .checkbox-item input { width: 18px; height: 18px; }
-            
-            /* Verhindert den Auto-Zoom beim S23 (16px Schriftgröße in Inputs ist Pflicht bei Mobile!) */
-            input, textarea, select { font-size: 16px; padding: 10px; }
-            
+            .grid { grid-template-columns:1fr; }
+            #controls { position:sticky; top:0; right:auto; left:0; width:100%; flex-direction:row; flex-wrap:wrap; gap:6px; padding:4px; background:rgba(244,241,232,.95); box-shadow:0 2px 4px rgba(0,0,0,.1); }
+            #controls button { flex:1 1 45%; min-width:120px; }
             .sketch-box { height:60vh; }
             .photo-grid { grid-template-columns:1fr; }
-            .img-container { height:260px; }
-            .footer { position: relative; bottom: auto; left: auto; right: auto; margin-top: 20px; }
+            .img-container { height:220px; }
         }
 
-        /* =========================================
-           Druckausgabe (Kompakt wie Original)
-           ========================================= */
         @media print {
-            body { background:#fff !important; padding:0 !important; margin:0 !important; }
+            body { background:#fff; padding:0; margin:0; }
             #controls, .toolbar, .no-print, #photoInput, #importFile { display:none !important; }
             body:not(.sketch-enabled) #sketchPage { display:none !important; }
-            
             .page {
                 margin:0 !important; box-shadow:none !important; border:none !important;
-                width:190mm; min-height:auto; height:auto; padding:8mm 10mm 14mm 10mm !important;
+                width:190mm; min-height:auto; height:auto; padding:8mm 10mm 14mm 10mm;
                 page-break-after:always; page-break-inside:avoid; break-after:page; break-inside:avoid;
             }
             .footer { position:static; margin-top:6mm; left:auto; right:auto; bottom:auto; }
             .page:last-of-type { page-break-after:auto; break-after:auto; }
-            
             input[type="text"], input[type="date"], input[type="number"], textarea, select, .photo-desc {
-                border:none !important; background:transparent !important; padding:0 !important; -webkit-appearance:none; appearance:none; font-size: 11px !important;
+                border:none !important; background:transparent !important; padding:0 !important; -webkit-appearance:none; appearance:none;
             }
-            .checkbox-item input { width: 12px !important; height: 12px !important; }
-            
-            /* Optionaler Fallback, damit lange Checkboxen sicher auf eine Seite passen */
-            #reparaturSection .checkbox-group-3 { grid-template-columns: repeat(4, 1fr) !important; }
-
             .drawing-area { border:1px solid #000 !important; background:transparent !important; }
             .sketch-box { height:180mm !important; }
             .img-container { height:55mm !important; }
             .photo-box { border-color:#000 !important; }
-            .bauteile-container { border-color:#000 !important; background:transparent !important; padding:4px !important; margin-bottom:8px !important; }
+            #ueberpruefteBauteileContainer, #poolBauteileContainer { border-color:#000 !important; background:transparent !important; padding:4px !important; margin-bottom:8px !important; }
         }
     </style>
 </head>
 <body>
 
 <div id="controls" class="no-print">
-    <button onclick="window.print()">Drucken</button>
-    <button onclick="sendEmail()">Email senden</button>
-    <button class="secondary" onclick="document.getElementById('photoInput').click()">Fotos hinzu</button>
+    <button class="secondary" onclick="window.print()">DRUCKEN</button>
+    <button class="secondary" onclick="sendEmail()">EMAIL SENDEN</button>
+    <button class="secondary" onclick="clearSketch()">SKIZZE LÖSCHEN</button>
+
     <input type="file" id="photoInput" multiple accept="image/*" style="display:none" onchange="handlePhotos(this)">
-    <button class="secondary" onclick="clearSketch()">Skizze löschen</button>
-    <button class="secondary" onclick="exportFullReport()">Speichern</button>
-    <button class="secondary" onclick="document.getElementById('importFile').click()">Laden</button>
+    <button class="secondary" onclick="document.getElementById('photoInput').click()">FOTOS HINZUFÜGEN</button>
+
+    <button class="secondary" onclick="exportFullReport()">BERICHT SPEICHERN</button>
+    <button class="secondary" onclick="document.getElementById('importFile').click()">BERICHT LADEN</button>
     <input type="file" id="importFile" accept=".lok,application/json" style="display:none" onchange="importFullReport(this)">
 </div>
 
@@ -179,10 +140,10 @@
             <div><span class="label">Kunde / Name</span><input type="text" id="name"></div>
             <div><span class="label">Datum</span><input type="date" id="datum"></div>
         </div>
-        <div>
-            <span class="label" style="margin-top:6px;">Einsatzadresse</span>
+        <div style="margin-top:6px">
+            <span class="label">Einsatzadresse</span>
             <input type="text" id="adresse" placeholder="Straße / Hausnummer">
-            <div class="address-grid">
+            <div class="grid" style="margin-top:6px; grid-template-columns: 80px 1fr 1.2fr;">
                 <input type="text" id="plz" placeholder="PLZ">
                 <input type="text" id="ort" placeholder="Ort">
                 <input type="text" id="telefon" placeholder="Telefonnummer">
@@ -239,9 +200,9 @@
     <div class="section" id="reparaturSection">
         <h2>Reparatur &amp; Prüfdetails</h2>
         
-        <div id="ueberpruefteBauteileContainer" class="bauteile-container" style="display:none;">
-            <span class="label" style="color:var(--accent); margin-bottom:6px;">Überprüfte Bauteile</span>
-            <div class="checkbox-group-3">
+        <div id="ueberpruefteBauteileContainer" style="display:none; margin-bottom: 10px; border: 1px solid var(--border); padding: 8px; border-radius: 4px; background: #fafafa;">
+            <span class="label" style="color:var(--accent); font-size:11px; margin-bottom:6px;">Überprüfte Bauteile</span>
+            <div class="checkbox-group" style="grid-template-columns: repeat(3, 1fr);">
                 <label class="checkbox-item"><input type="checkbox"> <span>Kaltwasser</span></label>
                 <label class="checkbox-item"><input type="checkbox"> <span>Warmwasser</span></label>
                 <label class="checkbox-item"><input type="checkbox"> <span>Zirkulation</span></label>
@@ -253,9 +214,9 @@
             <input type="text" id="inputSonstigesBauteile" placeholder="..." style="display:none; margin-top:6px;">
         </div>
 
-        <div id="poolBauteileContainer" class="bauteile-container pool" style="display:none;">
-            <span class="label" style="color:#2b83b8; margin-bottom:6px;">Pool Bauteile</span>
-            <div class="checkbox-group-3">
+        <div id="poolBauteileContainer" style="display:none; margin-bottom: 10px; border: 1px solid var(--border); padding: 8px; border-radius: 4px; background: #eef5f9;">
+            <span class="label" style="color:#2b83b8; font-size:11px; margin-bottom:6px;">Pool Bauteile</span>
+            <div class="checkbox-group" style="grid-template-columns: repeat(3, 1fr);">
                 <label class="checkbox-item"><input type="checkbox"> <span>Skimmerleitung</span></label>
                 <label class="checkbox-item"><input type="checkbox"> <span>Düsenleitung</span></label>
                 <label class="checkbox-item"><input type="checkbox"> <span>Saugleitung</span></label>
@@ -273,7 +234,7 @@
             <div><span class="label">Betroffene Räume</span><input type="text" placeholder="..."></div>
             <div><span class="label">Etage</span><input type="text" placeholder="..."></div>
         </div>
-        <div class="checkbox-group-3">
+        <div class="checkbox-group" style="grid-template-columns: repeat(3, 1fr);">
             <label class="checkbox-item"><input type="checkbox"> <span>Ursache bereits behoben</span></label>
             <label class="checkbox-item"><input type="checkbox"> <span>Druckabfall</span></label>
             <label class="checkbox-item"><input type="checkbox"> <span>Feuchtigkeit</span></label>
@@ -343,6 +304,7 @@ if (dateInput) {
 let currentStyle = '#000';
 let currentWidth = 2;
 
+/* Zentrale Funktion für Dateinamen und Dokument-Titel */
 function buildReportBaseName() {
     const adr = document.getElementById('adresse')?.value.trim() || '';
     const plz = document.getElementById('plz')?.value.trim() || '';
@@ -350,6 +312,7 @@ function buildReportBaseName() {
     const baseTitle = 'Leckortungsbericht';
 
     let locationPart = `${plz} ${ort}`.trim();
+    
     let titleParts = [];
     if (locationPart) titleParts.push(locationPart);
     if (adr) titleParts.push(adr);
@@ -362,13 +325,15 @@ function buildReportBaseName() {
 }
 
 function updateTitleWithAddress() {
+    // Setzt den Titel im Browser (wird als Dateiname beim PDF-Druck verwendet)
     document.title = buildReportBaseName();
 }
 
+// Live-Aktualisierung des Titels bei Texteingabe
 document.getElementById('adresse')?.addEventListener('input', updateTitleWithAddress);
 document.getElementById('plz')?.addEventListener('input', updateTitleWithAddress);
 document.getElementById('ort')?.addEventListener('input', updateTitleWithAddress);
-updateTitleWithAddress();
+updateTitleWithAddress(); // Initialer Aufruf
 
 function autoResize() { this.style.height = 'auto'; this.style.height = (this.scrollHeight + 2) + 'px'; }
 document.querySelectorAll('textarea').forEach(el => el.addEventListener('input', autoResize));
@@ -444,6 +409,7 @@ function applyTemplateVisibility() {
     const flachdachOn = !!(cf && cf.checked);
     const leckOn = !!((cl && cl.checked) || (clo && clo.checked) || (co && co.checked));
 
+    // Box "Überprüfte Bauteile" anzeigen, wenn eine Leckortung ausgewählt ist
     const bauteileContainer = document.getElementById('ueberpruefteBauteileContainer');
     if (bauteileContainer) {
         bauteileContainer.style.display = leckOn ? 'block' : 'none';
@@ -479,6 +445,7 @@ function applyFlachdachState() {
 }
 applyFlachdachState();
 
+/* Neue Box Logik: Pool LO */
 const checkPool = document.getElementById('checkPool');
 function applyPoolState() {
     const poolContainer = document.getElementById('poolBauteileContainer');
@@ -488,13 +455,79 @@ function applyPoolState() {
 checkPool?.addEventListener('change', applyPoolState);
 applyPoolState();
 
-/* Vorlagentexte */
-const FLACHDACH_TEXT_FUNKENSCHLAG = `1. Verfahrensoptik und Methodik\nDie Überprüfung der Kunststoff-Dachabdichtung auf dem Hauptdach wurde mittels des Hochspannungs-Impuls-Verfahrens (Trockenortungsverfahren) durchgeführt. Dieses Verfahren basiert auf der elektrischen Isolationsfähigkeit der Abdichtungslage.\n\nFunktionsweise: Eine kontrollierte Hochspannung wird über eine mobile Kupferbürste auf die Oberfläche der Dachbahn appliziert. Da die Kunststoffabdichtung als Nichtleiter fungiert, bleibt der Stromkreis unterbrochen, solange die Schicht intakt ist.\nDetektion: Bei Vorliegen einer Fehlstelle (Loch, Riss oder kapillare Undichtigkeit) kommt es zum Funkendurchschlag in Richtung des geerdeten Untergrunds. Dieser Durchschlag wird sowohl akustisch als auch optisch signalisiert und ermöglicht eine zentimetergenaue Lokalisierung.\nParameter: Die Prüfspannung wurde spezifisch auf die Materialstärke der vorliegenden Kunststoffbahn kalibriert, um eine zuverlässige Durchschlagskraft bei Defekten zu gewährleisten, ohne das intakte Material thermisch zu belasten.\n\n2. Untersuchungsumfang\nGegenstand der Prüfung war die freiliegende Flachdachfläche des Hauptdaches. Voraussetzung für die Durchführung war eine trockene und besenreine Oberfläche ohne Auflast (z. B. Kies oder Begrünung), um eine flächendeckende Kontaktierung durch die Prüfbürste sicherzustellen.\n\n3. Befund und Ergebnisse\nIm Rahmen der systematischen Abfahrung der Dachfläche sowie der detaillierten Überprüfung der Nahtfügebereiche und Anschlüsse wurden insgesamt 24 Verdachtsbereiche identifiziert.\n\nCharakteristik der Fehlstellen: Die Detektionen umfassen sowohl punktuelle Perforationen als auch potenzielle Schwachstellen im Bereich der Nahtüberlappungen.\nDokumentation: Alle 24 lokalisierten Stellen wurden unmittelbar auf der Dachhaut markiert, um eine direkte Zuordnung für die nachfolgenden Instandsetzungsmaßnahmen zu ermöglichen.`;
-const FLACHDACH_TEXT_ROOFSCAN = `1. Ausgangssituation:\nAn der Decke im 1. Untergeschoss wurde ein Wassereintritt im Bereich eines Gullys festgestellt.\nDarüber befindet sich die Flachdachabdichtung der Terrasse.\n\nDer Aufbau des Flachdaches stellt sich wie folgt dar:\n- Stahlbetondecke\n- Abdichtung\n- Isolierung\n- Kies\n- Betonplatten\n\nZur Lokalisierung der Wasserdurchtritte wurden Untersuchungen mittels einer Potential-Differenzmessung durchgeführt.\nEs wurde nur ein Teilbereich der Terrasse überprüft.\n\n2. Durchführung der Messung und vorbereitende Maßnahmen:\nZur Charakterisierung von möglichen Leckagen im Abdichtungssystem wurden gerichtete elektrische Felder zwischen der Einspeisung an der Schadstelle und einem mobilen Sensor im Messbereich erzeugt. Wegsamkeitsbereiche durch das Abdichtungssystem äußern sich durch erhöhte Energiedurchtritte des Tracersignals.\n\n3. Untersuchungsergebnisse:\nEs wurde zum Zeitpunkt der Überprüfung ein Verdachtsbereich V1 ermittelt.\nDer Verdachtsbereich befindet sich ca. 3 m neben dem betroffenen Gully.\nDa eine punktuelle Lokalisierung der Undichtheit aufgrund der Witterung nicht möglich ist, wird empfohlen, die gesamte Flachdachfläche nach einem Niederschlag nochmals zu prüfen.`;
-const TEXT_HEIZUNG = `Diagnose und Druckprüfung\nAufgrund eines systemseitigen Wasserverlustes an der Heizungsanlage wurden die einzelnen Heizkreise einer systemgetrennten Druckprobe unterzogen. Hierbei konnte ein signifikanter Druckabfall im Heizkreis des Gastraums lokalisiert werden.\n\nLeckortung mittels Spurengas\nZur exakten Lokalisierung der Schadstelle wurde der betroffene Heizkreis entleert und mit Ortungsgas (Formiergas) beaufschlagt. Die anschließende messtechnische Untersuchung ergab einen Gasaustritt an der Heizungsleitung innerhalb des Gastraums.`;
-const TEXT_BLEI_WOHNUNG = `An den Wänden zum Badezimmer wurden Vernässungen festgestellt.\nEs erfolgte die Überprüfung der Druck- und Ablaufleitungen im Schadensbereich.\n\nBei den Druckleitungen wurde zum Zeitpunkt der Überprüfung keine Undichtheit festgestellt.\nBei der Überprüfung der Ablaufleitungen wurden Undichtheiten in der Bleileitung des Waschtisches in der Wand und im Fußbodenaufbau sowie Undichtheiten in der Bleileitung zum Gully festgestellt.`;
-const TEXT_SILIKONFUGE = `An einer Wand zum Badezimmer wurden Vernässungen festgestellt.\nEs erfolgte die Überprüfung der Druck- und Ablaufleitungen in der gesamten Wohnung.\nZum Zeitpunkt der Überprüfung wurde keine Undichtheit an den Druck- und Ablaufleitungen festgestellt.\n\nEs wurden Undichtheiten in der Silikonabdichtung der Badewanne festgestellt.`;
-const TEXT_GASAUSTritt_WHG = `Objekt: Trennwand Kinderzimmer / Badezimmer\nSchadensbild: Akute Vernässung des Mauerwerks im bodennahen und mittleren Wandbereich.\n\nUntersuchungsschritte\nSystemprüfung: Funktionsprüfung der Abwasser- und Druckleitungen zur Differenzierung der Schadensquelle.\nVorbereitung: Absperrung der Wasserzufuhr sowie vollständige Entleerung des Leitungssystems.\nDetektionsverfahren: Beaufschlagung der Rohrleitungen mit Prüfgas (Tracergas). Die Ortung erfolgte mittels elektronischem Gasspürgerät durch Messung der Gasdiffusion an den Bauteiloberflächen.\n\nTechnischer Befund\nDie messtechnische Untersuchung lokalisierte eine Undichtigkeit an der Warmwasserleitung. Der Gasaustritt konzentriert sich innerhalb der Wandung im Bereich der Zuleitung zur Duscharmatur.`;
+/* Vorlagentexte (werden in den Befund eingesetzt) */
+const FLACHDACH_TEXT_FUNKENSCHLAG =
+`1. Verfahrensoptik und Methodik
+Die Überprüfung der Kunststoff-Dachabdichtung auf dem Hauptdach wurde mittels des Hochspannungs-Impuls-Verfahrens (Trockenortungsverfahren) durchgeführt. Dieses Verfahren basiert auf der elektrischen Isolationsfähigkeit der Abdichtungslage.
+
+Funktionsweise: Eine kontrollierte Hochspannung wird über eine mobile Kupferbürste auf die Oberfläche der Dachbahn appliziert. Da die Kunststoffabdichtung als Nichtleiter fungiert, bleibt der Stromkreis unterbrochen, solange die Schicht intakt ist.
+Detektion: Bei Vorliegen einer Fehlstelle (Loch, Riss oder kapillare Undichtigkeit) kommt es zum Funkendurchschlag in Richtung des geerdeten Untergrunds. Dieser Durchschlag wird sowohl akustisch als auch optisch signalisiert und ermöglicht eine zentimetergenaue Lokalisierung.
+Parameter: Die Prüfspannung wurde spezifisch auf die Materialstärke der vorliegenden Kunststoffbahn kalibriert, um eine zuverlässige Durchschlagskraft bei Defekten zu gewährleisten, ohne das intakte Material thermisch zu belasten.
+
+2. Untersuchungsumfang
+Gegenstand der Prüfung war die freiliegende Flachdachfläche des Hauptdaches. Voraussetzung für die Durchführung war eine trockene und besenreine Oberfläche ohne Auflast (z. B. Kies oder Begrünung), um eine flächendeckende Kontaktierung durch die Prüfbürste sicherzustellen.
+
+3. Befund und Ergebnisse
+Im Rahmen der systematischen Abfahrung der Dachfläche sowie der detaillierten Überprüfung der Nahtfügebereiche und Anschlüsse wurden insgesamt 24 Verdachtsbereiche identifiziert.
+
+Charakteristik der Fehlstellen: Die Detektionen umfassen sowohl punktuelle Perforationen als auch potenzielle Schwachstellen im Bereich der Nahtüberlappungen.
+Dokumentation: Alle 24 lokalisierten Stellen wurden unmittelbar auf der Dachhaut markiert, um eine direkte Zuordnung für die nachfolgenden Instandsetzungsmaßnahmen zu ermöglichen.`;
+
+const FLACHDACH_TEXT_ROOFSCAN =
+`1. Ausgangssituation:
+An der Decke im 1. Untergeschoss wurde ein Wassereintritt im Bereich eines Gullys festgestellt.
+Darüber befindet sich die Flachdachabdichtung der Terrasse.
+
+Der Aufbau des Flachdaches stellt sich wie folgt dar:
+- Stahlbetondecke
+- Abdichtung
+- Isolierung
+- Kies
+- Betonplatten
+
+Zur Lokalisierung der Wasserdurchtritte wurden Untersuchungen mittels einer Potential-Differenzmessung durchgeführt.
+Es wurde nur ein Teilbereich der Terrasse überprüft.
+
+2. Durchführung der Messung und vorbereitende Maßnahmen:
+Zur Charakterisierung von möglichen Leckagen im Abdichtungssystem wurden gerichtete elektrische Felder zwischen der Einspeisung an der Schadstelle und einem mobilen Sensor im Messbereich erzeugt. Wegsamkeitsbereiche durch das Abdichtungssystem äußern sich durch erhöhte Energiedurchtritte des Tracersignals.
+
+3. Untersuchungsergebnisse:
+Es wurde zum Zeitpunkt der Überprüfung ein Verdachtsbereich V1 ermittelt.
+Der Verdachtsbereich befindet sich ca. 3 m neben dem betroffenen Gully.
+Da eine punktuelle Lokalisierung der Undichtheit aufgrund der Witterung nicht möglich ist, wird empfohlen, die gesamte Flachdachfläche nach einem Niederschlag nochmals zu prüfen.`;
+
+const TEXT_HEIZUNG =
+`Diagnose und Druckprüfung
+Aufgrund eines systemseitigen Wasserverlustes an der Heizungsanlage wurden die einzelnen Heizkreise einer systemgetrennten Druckprobe unterzogen. Hierbei konnte ein signifikanter Druckabfall im Heizkreis des Gastraums lokalisiert werden.
+
+Leckortung mittels Spurengas
+Zur exakten Lokalisierung der Schadstelle wurde der betroffene Heizkreis entleert und mit Ortungsgas (Formiergas) beaufschlagt. Die anschließende messtechnische Untersuchung ergab einen Gasaustritt an der Heizungsleitung innerhalb des Gastraums.`;
+
+const TEXT_BLEI_WOHNUNG =
+`An den Wänden zum Badezimmer wurden Vernässungen festgestellt.
+Es erfolgte die Überprüfung der Druck- und Ablaufleitungen im Schadensbereich.
+
+Bei den Druckleitungen wurde zum Zeitpunkt der Überprüfung keine Undichtheit festgestellt.
+Bei der Überprüfung der Ablaufleitungen wurden Undichtheiten in der Bleileitung des Waschtisches in der Wand und im Fußbodenaufbau sowie Undichtheiten in der Bleileitung zum Gully festgestellt.`;
+
+const TEXT_SILIKONFUGE =
+`An einer Wand zum Badezimmer wurden Vernässungen festgestellt.
+Es erfolgte die Überprüfung der Druck- und Ablaufleitungen in der gesamten Wohnung.
+Zum Zeitpunkt der Überprüfung wurde keine Undichtheit an den Druck- und Ablaufleitungen festgestellt.
+
+Es wurden Undichtheiten in der Silikonabdichtung der Badewanne festgestellt.`;
+
+const TEXT_GASAUSTritt_WHG =
+`Objekt: Trennwand Kinderzimmer / Badezimmer
+Schadensbild: Akute Vernässung des Mauerwerks im bodennahen und mittleren Wandbereich.
+
+Untersuchungsschritte
+Systemprüfung: Funktionsprüfung der Abwasser- und Druckleitungen zur Differenzierung der Schadensquelle.
+Vorbereitung: Absperrung der Wasserzufuhr sowie vollständige Entleerung des Leitungssystems.
+Detektionsverfahren: Beaufschlagung der Rohrleitungen mit Prüfgas (Tracergas). Die Ortung erfolgte mittels elektronischem Gasspürgerät durch Messung der Gasdiffusion an den Bauteiloberflächen.
+
+Technischer Befund
+Die messtechnische Untersuchung lokalisierte eine Undichtigkeit an der Warmwasserleitung. Der Gasaustritt konzentriert sich innerhalb der Wandung im Bereich der Zuleitung zur Duscharmatur.`;
 
 if (flachdachTemplateSelect && befundTextarea) {
     flachdachTemplateSelect.addEventListener('change', () => {
@@ -585,11 +618,14 @@ function clearSketch() {
 /* =========================
    Fotos / Markierungen
    ========================= */
+
+// NEU: Hilfsfunktion, um das letzte Grid zu finden oder bei Bedarf ein neues zu erstellen
 function getOrCreateLastGrid() {
     const container = document.getElementById('photoPagesContainer');
     const grids = container.querySelectorAll('.photo-grid');
     let lastGrid = grids.length > 0 ? grids[grids.length - 1] : null;
 
+    // Wenn kein Grid existiert oder das letzte Grid schon 4 Fotos hat -> neue Seite anlegen
     if (!lastGrid || lastGrid.children.length >= 4) {
         const page = document.createElement('div');
         page.className = 'page';
@@ -613,17 +649,24 @@ function getOrCreateLastGrid() {
 
 function handlePhotos(input) {
     const files = Array.from(input.files);
+    
+    // WICHTIG: Kein container.innerHTML = "" mehr! Altes wird nicht gelöscht.
+
     files.forEach((file) => {
         const reader = new FileReader();
         reader.onload = (e) => {
+            // "null" signalisiert: Finde automatisch den richtigen Platz (anhängen)
             scaleAndInsertPhoto(e.target.result, null); 
         };
         reader.readAsDataURL(file);
     });
+
+    // Input zurücksetzen, damit auf dem iPad dieselbe Aktion sofort wieder möglich ist
     input.value = ''; 
 }
 
 function calcPhotoPageNumber(photoPageIndex) {
+    // Hauptseite = 1, Skizze (wenn aktiv) = 2, Fotoseiten ab 3 (oder 2, wenn Skizze aus)
     const hasSketch = !!(toggleSketch && toggleSketch.checked);
     return (hasSketch ? 3 : 2) + photoPageIndex;
 }
@@ -653,6 +696,7 @@ function addArrow(e, container) {
     container.appendChild(arrow);
 }
 
+// Erlaubt null als gridId für automatisches Anhängen
 function insertPhotoBox(imgSrc, gridId = null, descText = '', arrowPos = null) {
     const box = document.createElement('div');
     box.className = 'photo-box';
@@ -667,6 +711,7 @@ function insertPhotoBox(imgSrc, gridId = null, descText = '', arrowPos = null) {
     if (gridId) {
         grid = document.getElementById(gridId);
     }
+    // Wenn keine ID übergeben wurde oder sie nicht existiert -> hänge es hinten an
     if (!grid) {
         grid = getOrCreateLastGrid();
     }
@@ -688,6 +733,7 @@ function insertPhotoBox(imgSrc, gridId = null, descText = '', arrowPos = null) {
     }
 }
 
+// Aktives Downsizing beim Import
 function scaleAndInsertPhoto(dataUrl, gridId = null) {
     const img = new Image();
     img.onload = () => {
@@ -708,6 +754,7 @@ function scaleAndInsertPhoto(dataUrl, gridId = null) {
         const cx = c.getContext('2d');
         cx.drawImage(img, 0, 0, width, height);
         
+        // Komprimiert als JPEG mit 70% Qualität
         const scaledDataUrl = cx.canvas.toDataURL('image/jpeg', 0.7);
         insertPhotoBox(scaledDataUrl, gridId);
     };
@@ -715,11 +762,12 @@ function scaleAndInsertPhoto(dataUrl, gridId = null) {
 }
 
 /* =========================
-   Mailto 
+   Mailto (ohne Anhang)
    ========================= */
 function sendEmail() {
-    const subject = buildReportBaseName();
+    const subject = buildReportBaseName(); // Gleicher Name als E-Mail Betreff
 
+    // Body aus aktuellen Feldern
     const nameEl = document.getElementById('name');
     const datumEl = document.getElementById('datum');
     const adresseEl = document.getElementById('adresse');
@@ -752,7 +800,7 @@ function sendEmail() {
     body += '\n';
     if (befund) { body += 'Schadensanalyse & Befund:\n' + befund + '\n\n'; }
     if (reparatur) { body += 'Erforderliche Reparaturarbeiten:\n' + reparatur + '\n\n'; }
-    body += '\n---\nGesendet vom Leckortungsbericht-System.';
+    body += '\n---\nGesendet vom Leckortungsbericht-Formular.';
 
     const mailto = `mailto:kanal@brugger-entfeuchtung.at?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     window.location.href = mailto;
@@ -775,6 +823,7 @@ function exportFullReport() {
         photos: []
     };
 
+    // Inputs/Textareas/Selects mit/ohne ID
     document.querySelectorAll('input').forEach(inp => {
         if (inp.type === 'checkbox') return;
         if (inp.id) data.byId[inp.id] = inp.value;
@@ -789,12 +838,15 @@ function exportFullReport() {
         else data.selectsNoId.push(sel.value);
     });
 
+    // Checkboxen in Dokument-Reihenfolge
     const allChecks = Array.from(document.querySelectorAll('input[type="checkbox"]'));
     data.checkStatesOrdered = allChecks.map(c => !!c.checked);
 
+    // Skizze als PNG
     try { data.sketch.png = document.getElementById('sketch-canvas').toDataURL('image/png'); }
     catch (_) { data.sketch.png = null; }
 
+    // Fotoseiten erfassen
     const photoPages = Array.from(document.querySelectorAll('#photoPagesContainer .page'));
     photoPages.forEach((page, pageIdx) => {
         const grid = page.querySelector('.photo-grid');
@@ -815,7 +867,10 @@ function exportFullReport() {
         data.photos.push({ index: pageIdx, images });
     });
 
+    // Gleicher Name, aber unzulässige Dateizeichen entfernen (falls man z.B. einen Schrägstrich in die Adresse tippt)
     const safeFilename = buildReportBaseName().replace(/[<>:"/\\|?*]/g, '_');
+
+    // Datei speichern (.lok)
     const blob = new Blob([JSON.stringify(data)], { type:'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -844,6 +899,7 @@ function importFullReport(inputEl) {
 function restoreFromData(data) {
     if (!data || typeof data !== 'object') return;
 
+    // 1) ID-basierte Felder
     if (data.byId) {
         Object.keys(data.byId).forEach(id => {
             const el = document.getElementById(id);
@@ -855,6 +911,7 @@ function restoreFromData(data) {
         });
     }
 
+    // 2) Reihenfolge-Felder ohne ID
     if (Array.isArray(data.inputsNoId)) {
         let idx = 0;
         document.querySelectorAll('input').forEach(inp => {
@@ -879,21 +936,25 @@ function restoreFromData(data) {
         });
     }
 
+    // 3) Checkboxen (Dokument-Reihenfolge)
     if (Array.isArray(data.checkStatesOrdered)) {
         const allChecks = Array.from(document.querySelectorAll('input[type="checkbox"]'));
         allChecks.forEach((c, i) => { c.checked = !!data.checkStatesOrdered[i]; });
     }
 
+    // Abhängige Sichtbarkeiten
     applyReparaturState();
     applyLeckortungState();
     applyTemplateVisibility();
     applyPoolState();
 
+    // 4) Skizzenseite sichtbar/nicht, je nach gespeicherten Toggle
     if (data.toggles && typeof data.toggles.sketchEnabled === 'boolean' && toggleSketch) {
         toggleSketch.checked = data.toggles.sketchEnabled;
         toggleSketch.dispatchEvent(new Event('change'));
     }
 
+    // 5) Skizze PNG in Canvas zeichnen
     if (data.sketch && data.sketch.png) {
         const canvas = document.getElementById('sketch-canvas');
         const img = new Image();
@@ -901,6 +962,7 @@ function restoreFromData(data) {
         img.src = data.sketch.png;
     }
 
+    // 6) Fotoseiten rekonstruieren
     const container = document.getElementById('photoPagesContainer');
     container.innerHTML = '';
     if (Array.isArray(data.photos) && data.photos.length) {
@@ -908,6 +970,7 @@ function restoreFromData(data) {
             const page = document.createElement('div');
             page.className = 'page';
             
+            // Verwende die Zeitstempel-Strategie, damit das Anhängen später richtig funktioniert
             const gridId = `grid-restore-${pageIdx}-${Date.now()}`;
             
             page.innerHTML = `
@@ -930,6 +993,7 @@ function restoreFromData(data) {
         });
     }
     
+    // Titelleiste mit den geladenen Daten direkt aktualisieren
     updateTitleWithAddress();
 }
 
