@@ -1,102 +1,15 @@
 
 <!DOCTYPE html>
-<html lang="de">
+<html lang='de'>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="Brugger Berichte" />
-  <title>Brugger Formulare</title>
-  <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="stylesheet" href="./assets/css/app.css">
+<meta charset='utf-8'/>
+<meta name='viewport' content='width=device-width, initial-scale=1'/>
+<link rel='manifest' href='./manifest.webmanifest'>
+<link rel='stylesheet' href='./assets/css/app.css'>
+<title>Brugger GitHub Version</title>
 </head>
 <body>
-  <div id="loadingOverlay" class="overlay hidden" aria-hidden="true">
-    <div class="spinner" aria-label="Ladevorgang"></div>
-    <div class="overlay-text">Fotos werden verarbeitet…</div>
-  </div>
-
-  <main id="start" class="viewport">
-    <section class="card card--center" id="login-container">
-      <img src="Logo.PNG" alt="Brugger Logo" class="logo" onerror="this.style.display='none'" />
-      <h1>Geschützter Bereich</h1>
-      <label for="loginPassword" class="label">PIN eingeben</label>
-      <input type="password" inputmode="numeric" pattern="[0-9]*" id="loginPassword" class="input input--big" placeholder="••••" />
-      <button class="btn btn--primary btn--full" id="loginBtn">🔓 Entsperren</button>
-      <p id="loginError" class="error hidden" role="alert">PIN falsch!</p>
-      <button class="link" id="openSettings">⚙️ E‑Mail & App‑Einstellungen</button>
-    </section>
-
-    <section class="card card--center hidden" id="menu-container">
-      <img src="Logo.PNG" alt="Brugger Logo" class="logo" onerror="this.style.display='none'" />
-      <h1>Berichtstyp wählen</h1>
-      <div class="menu-grid">
-        <button class="btn btn--primary" data-app="LO">💧 Leckortungsbericht</button>
-        <button class="btn" data-app="KB">🕳️ Kanalreinigungs‑ & Inspektionsbericht</button>
-        <button class="btn" data-app="RB">📝 Regiebericht</button>
-        <button class="btn btn--accent" data-app="DL">📊 Datenlogger Auswertung</button>
-      </div>
-      <div class="divider"></div>
-      <div class="menu-actions">
-        <input type="file" id="startImportFile" accept=".lok,application/json" class="hidden" />
-        <button class="btn btn--ghost" id="restoreAutosave">🔄 Letzten Entwurf wiederherstellen</button>
-        <button class="btn btn--ghost" id="importSaved">💾 Gespeicherten Bericht laden</button>
-        <button class="btn btn--danger" id="hardReset">⚠️ App Reparatur / Reset</button>
-      </div>
-      <p class="muted">Version 4.0 (Refactor, modular)</p>
-    </section>
-  </main>
-
-  <div id="app-root"></div>
-
-  <dialog id="settingsModal" class="modal">
-    <form method="dialog" class="modal__body">
-      <h3>Einstellungen</h3>
-      <label class="label">Standard E‑Mail Empfänger</label>
-      <input type="email" id="settingsEmail" class="input" placeholder="kanal@brugger-entfeuchtung.at" />
-      <label class="label">Name des Technikers (für Berichte)</label>
-      <input type="text" id="settingsTechnician" class="input" placeholder="Max Mustermann" />
-      <label class="label">Admin‑E‑Mail (für Geocoding‑Kontakt, optional)</label>
-      <input type="email" id="settingsAdminEmail" class="input" placeholder="it@firma.at" />
-
-      <div class="grid-2">
-        <div>
-          <label class="label">Dark Mode</label>
-          <label class="switch">
-            <input type="checkbox" id="settingsDarkMode" />
-            <span class="slider"></span>
-          </label>
-        </div>
-        <div>
-          <label class="label">App‑PIN neu setzen</label>
-          <input type="password" id="settingsNewPin" class="input" placeholder="(4–10 Ziffern)" inputmode="numeric" pattern="[0-9]{4,10}" />
-        </div>
-      </div>
-
-      <details class="details">
-        <summary>📁 Kundendatenbank</summary>
-        <div class="row">
-          <button class="btn" id="exportCustomers">⬆️ Exportieren</button>
-          <input type="file" id="importCustomersInput" accept=".json" class="hidden" />
-          <button class="btn" id="importCustomers">⬇️ Importieren</button>
-        </div>
-      </details>
-
-      <details class="details">
-        <summary>✏️ Textvorlagen</summary>
-        <button class="btn" id="openTemplateManager">Vorlagen bearbeiten</button>
-      </details>
-
-      <div class="actions">
-        <button class="btn" value="cancel">Schließen</button>
-        <button class="btn btn--primary" id="saveSettings" value="default">Speichern</button>
-      </div>
-    </form>
-  </dialog>
-
-  <div id="toast-container" class="toasts" aria-live="polite" aria-atomic="true"></div>
-
-  <script type="module" src="./assets/js/app.js"></script>
+<h1>GitHub Version OK</h1>
+<script type='module' src='./assets/js/app.js'></script>
 </body>
 </html>
