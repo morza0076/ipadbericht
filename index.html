@@ -22,10 +22,10 @@
       <img src="Logo.PNG" alt="Brugger Logo" class="logo" onerror="this.style.display='none'" />
       <h1>Geschützter Bereich</h1>
       <label for="loginPassword" class="label">PIN eingeben</label>
-      <input type="password" inputmode="numeric" pattern="[0-9]*" id="loginPassword" class="input input--big" placeholder="••••" />
-      <button class="btn btn--primary btn--full" id="loginBtn">🔓 Entsperren</button>
+      <input type="password" inputmode="numeric" pattern="[0-9]{4,10}" id="loginPassword" class="input input--big" placeholder="••••" minlength="4" maxlength="10" autocomplete="current-password" />
+      <button type="button" class="btn btn--primary btn--full" id="loginBtn">🔓 Entsperren</button>
       <p id="loginError" class="error hidden" role="alert">PIN falsch!</p>
-      <button class="link" id="openSettings">⚙️ E‑Mail & App‑Einstellungen</button>
+      <button type="button" class="link" id="openSettings">⚙️ E‑Mail & App‑Einstellungen</button>
     </section>
 
     <section class="card card--center hidden" id="menu-container">
@@ -40,9 +40,9 @@
       <div class="divider"></div>
       <div class="menu-actions">
         <input type="file" id="startImportFile" accept=".lok,application/json" class="hidden" />
-        <button class="btn btn--ghost" id="restoreAutosave">🔄 Letzten Entwurf wiederherstellen</button>
-        <button class="btn btn--ghost" id="importSaved">💾 Gespeicherten Bericht laden</button>
-        <button class="btn btn--danger" id="hardReset">⚠️ App Reparatur / Reset</button>
+        <button type="button" class="btn btn--ghost" id="restoreAutosave">🔄 Letzten Entwurf wiederherstellen</button>
+        <button type="button" class="btn btn--ghost" id="importSaved">💾 Gespeicherten Bericht laden</button>
+        <button type="button" class="btn btn--danger" id="hardReset">⚠️ App Reparatur / Reset</button>
       </div>
       <p class="muted">Version 4.0 (Refactor, modular)</p>
     </section>
@@ -77,15 +77,15 @@
       <details class="details">
         <summary>📁 Kundendatenbank</summary>
         <div class="row">
-          <button class="btn" id="exportCustomers">⬆️ Exportieren</button>
+          <button type="button" class="btn" id="exportCustomers">⬆️ Exportieren</button>
           <input type="file" id="importCustomersInput" accept=".json" class="hidden" />
-          <button class="btn" id="importCustomers">⬇️ Importieren</button>
+          <button type="button" class="btn" id="importCustomers">⬇️ Importieren</button>
         </div>
       </details>
 
       <details class="details">
         <summary>✏️ Textvorlagen</summary>
-        <button class="btn" id="openTemplateManager">Vorlagen bearbeiten</button>
+        <button type="button" class="btn" id="openTemplateManager">Vorlagen bearbeiten</button>
       </details>
 
       <div class="actions">
