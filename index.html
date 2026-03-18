@@ -22,10 +22,10 @@
       <img src="Logo.PNG" alt="Brugger Logo" class="logo" onerror="this.style.display='none'" />
       <h1>Geschützter Bereich</h1>
       <label for="loginPassword" class="label">PIN eingeben</label>
-      <input type="password" inputmode="numeric" pattern="[0-9]*" id="loginPassword" class="input input--big" placeholder="••••" />
-      <button class="btn btn--primary btn--full" id="loginBtn">🔓 Entsperren</button>
+      <input type="password" inputmode="numeric" pattern="[0-9]{4,10}" id="loginPassword" class="input input--big" placeholder="••••" minlength="4" maxlength="10" autocomplete="current-password" />
+      <button type="button" class="btn btn--primary btn--full" id="loginBtn">🔓 Entsperren</button>
       <p id="loginError" class="error hidden" role="alert">PIN falsch!</p>
-      <button class="link" id="openSettings">⚙️ E‑Mail & App‑Einstellungen</button>
+      <button type="button" class="link" id="openSettings">⚙️ E‑Mail & App‑Einstellungen</button>
     </section>
 
     <section class="card card--center hidden" id="menu-container">
