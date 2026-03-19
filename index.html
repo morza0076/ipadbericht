@@ -78,7 +78,7 @@
         body.dark-mode .logo { background: rgba(255,255,255,0.9); padding: 2px 5px; border-radius: 4px; }
 
         * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-        @page { size: A4; margin: 3mm !important; }
+        @page { size: A4; margin: 0 !important; }
 
         body { 
             font-family: var(--font-main);
@@ -337,7 +337,8 @@
             #controls::-webkit-scrollbar { display: none; }
             #controls .save-status { flex: 0 0 auto; min-width: 220px; }
             #controls .control-btn { flex: 0 0 auto; padding: 12px 20px; font-size: 12px; box-shadow: none; margin-top:0; }
-            .page { margin: 15px auto; }
+            .page { margin: 15px auto; min-height: auto; padding-bottom: 16px; }
+            .footer { position: static; left: auto; right: auto; bottom: auto; margin-top: 14px; }
             input, textarea, select { font-size: 16px; padding: 10px; }
             .sketch-container { height: 65vh; }
         }
@@ -378,19 +379,22 @@
             #start-screen, #controls, .toolbar, .no-print, input[type="file"], #cropModal, #photoEditorModal, #settingsModal, #toast-container { display: none !important; }
             .logo { background: transparent !important; } /* Logo-Hintergrund im Druck entfernen */
             body:not(.sketch-enabled) #sketchPage { display: none !important; }
+            #app-root { margin: 0 !important; padding: 0 !important; }
             
             .page {
-                margin: 0 auto 1.5mm auto !important;
+                margin: 0 auto !important;
                 box-shadow: none !important;
                 border: none !important;
+                box-sizing: border-box !important;
                 width: 200mm !important;
                 max-width: 200mm !important;
-                height: 285mm !important;
-                min-height: 0 !important;
+                height: 265mm !important;
+                min-height: 265mm !important;
+                max-height: 265mm !important;
                 padding: 5mm 6mm 10mm 6mm !important;
-                page-break-after: always !important;
+                page-break-after: auto !important;
                 page-break-inside: avoid !important;
-                break-after: page !important;
+                break-after: auto !important;
                 break-inside: avoid !important;
                 border-radius: 0 !important;
                 overflow: hidden !important;
@@ -401,9 +405,9 @@
                 float: none !important;
                 background: #ffffff !important;
             }
-            .page:last-child {
-                page-break-after: auto !important;
-                break-after: auto !important;
+            .page.print-page-break {
+                page-break-after: always !important;
+                break-after: page !important;
             }
             .page::before {
                 content: none !important;
@@ -541,7 +545,7 @@
             
             .signature-box { border: 1px solid #e3e8ef !important; background: #ffffff !important; padding: 4px !important; margin-top: 4px; border-radius: 12px !important; }
             .signature-pad { border: 1px dashed #b6c1cf !important; background: #ffffff !important; height: 66px !important; border-radius: 10px !important; }
-            .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 3px; page-break-inside: auto; }
+            .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 3px; page-break-inside: avoid !important; }
             .photo-box { border: 1px solid #e3e8ef !important; box-shadow: none !important; padding: 5px !important; page-break-inside: avoid; border-radius: 12px !important; background: #ffffff !important; }
             .img-container { height: 70mm !important; border: 1px solid #eef2f6 !important; background: #ffffff !important; border-radius: 10px !important; }
             #ueberpruefteBauteileContainer, #poolBauteileContainer { border: 1px solid #e3e8ef !important; background: #ffffff !important; padding: 3px !important; margin-bottom: 3px !important; border-radius: 12px !important; }
@@ -569,13 +573,145 @@
             #poolBauteileContainer:not(:has(input:checked)) {
                 display: none !important;
             }
+
+            body.ios-print-mode #app-root #mainPage,
+            body.ios-print-mode #app-root #sketchPage,
+            body.ios-print-mode #app-root #photoPagesContainer .page {
+                box-sizing: border-box !important;
+                width: 198mm !important;
+                max-width: 198mm !important;
+                height: 265mm !important;
+                min-height: 265mm !important;
+                max-height: 265mm !important;
+                margin: 0 auto !important;
+                padding: 3mm 3.5mm 4mm 3.5mm !important;
+                overflow: hidden !important;
+            }
+
+            body.ios-print-mode #app-root #mainPage {
+                padding: 2.5mm 3mm 3mm 3mm !important;
+            }
+
+            body.ios-print-mode #app-root #mainPage .header,
+            body.ios-print-mode #app-root #sketchPage .header,
+            body.ios-print-mode #app-root #photoPagesContainer .page .header {
+                margin-bottom: 4px !important;
+                padding: 6px 8px 7px 8px !important;
+            }
+
+            body.ios-print-mode #app-root #mainPage .header-top,
+            body.ios-print-mode #app-root #sketchPage .header-top,
+            body.ios-print-mode #app-root #photoPagesContainer .page .header-top {
+                margin-bottom: 5px !important;
+            }
+
+            body.ios-print-mode #app-root #mainPage .header-title,
+            body.ios-print-mode #app-root #sketchPage .header-title,
+            body.ios-print-mode #app-root #photoPagesContainer .page .header-title {
+                font-size: 13.8px !important;
+                line-height: 1.02 !important;
+            }
+
+            body.ios-print-mode #app-root #mainPage .header-right,
+            body.ios-print-mode #app-root #sketchPage .header-right,
+            body.ios-print-mode #app-root #photoPagesContainer .page .header-right {
+                font-size: 8.2px !important;
+                line-height: 1.2 !important;
+                padding: 5px 7px !important;
+            }
+
+            body.ios-print-mode #app-root #mainPage .logo,
+            body.ios-print-mode #app-root #sketchPage .logo,
+            body.ios-print-mode #app-root #photoPagesContainer .page .logo {
+                max-height: 38px !important;
+            }
+
+            body.ios-print-mode #app-root #mainPage .section {
+                margin-bottom: 3px !important;
+                padding: 4px 6px 5px 6px !important;
+                border-radius: 10px !important;
+            }
+
+            body.ios-print-mode #app-root #mainPage .section h2 {
+                font-size: 8.2px !important;
+                margin-bottom: 3px !important;
+                padding-bottom: 3px !important;
+            }
+
+            body.ios-print-mode #app-root #mainPage .label {
+                font-size: 7.6px !important;
+                margin-bottom: 2px !important;
+                line-height: 1.05 !important;
+            }
+
+            body.ios-print-mode #app-root #mainPage .grid,
+            body.ios-print-mode #app-root #mainPage .address-grid,
+            body.ios-print-mode #app-root #mainPage .grid-3,
+            body.ios-print-mode #app-root #mainPage .grid-1-2 {
+                gap: 2px 5px !important;
+                margin-top: 0 !important;
+            }
+
+            body.ios-print-mode #app-root #mainPage input:not([type="checkbox"]),
+            body.ios-print-mode #app-root #mainPage select,
+            body.ios-print-mode #app-root #mainPage .print-textarea-clone {
+                font-size: 8.6px !important;
+                line-height: 1.05 !important;
+                padding-top: 0 !important;
+                padding-bottom: 0 !important;
+            }
+
+            body.ios-print-mode #app-root #mainPage .checkbox-item {
+                font-size: 8px !important;
+                gap: 1px !important;
+            }
+
+            body.ios-print-mode #app-root #mainPage .checkbox-group,
+            body.ios-print-mode #app-root #mainPage .checkbox-group-3 {
+                gap: 0 2px !important;
+                margin-bottom: 0 !important;
+            }
+
+            body.ios-print-mode #app-root #mainPage .section-header-flex {
+                margin-bottom: 2px !important;
+            }
+
+            body.ios-print-mode #app-root #sketchPage .sketch-container {
+                height: 132mm !important;
+            }
+
+            body.ios-print-mode #app-root #photoPagesContainer .photo-grid {
+                gap: 5px !important;
+                margin-top: 0 !important;
+            }
+
+            body.ios-print-mode #app-root #photoPagesContainer .photo-box {
+                padding: 3px !important;
+            }
+
+            body.ios-print-mode #app-root #photoPagesContainer .img-container {
+                height: 58mm !important;
+                margin-bottom: 5px !important;
+            }
+
+            body.ios-print-mode #app-root #photoPagesContainer .photo-desc {
+                font-size: 8.2px !important;
+                line-height: 1 !important;
+                padding: 0 !important;
+            }
+
+            body.ios-print-mode #app-root #mainPage .footer,
+            body.ios-print-mode #app-root #sketchPage .footer,
+            body.ios-print-mode #app-root #photoPagesContainer .page .footer {
+                display: none !important;
+            }
         }
 
         @supports (-webkit-touch-callout: none) {
             @media print {
                 @page {
                     size: A4;
-                    margin: 2mm !important;
+                    margin: 0 !important;
                 }
 
                 html, body {
@@ -587,12 +723,13 @@
 
                 #app-root .page {
                     box-sizing: border-box !important;
-                    width: 202mm !important;
-                    max-width: 202mm !important;
-                    height: auto !important;
-                    min-height: 286mm !important;
+                    width: 200mm !important;
+                    max-width: 200mm !important;
+                    height: 265mm !important;
+                    min-height: 265mm !important;
+                    max-height: 265mm !important;
                     margin: 0 auto !important;
-                    padding: 3.5mm 4.5mm 7mm 4.5mm !important;
+                    padding: 3mm 4mm 6mm 4mm !important;
                     page-break-after: auto !important;
                     page-break-inside: avoid !important;
                     break-after: auto !important;
@@ -602,121 +739,73 @@
                     overflow: hidden !important;
                 }
 
-                #app-root .page + .page {
-                    page-break-before: always !important;
-                    break-before: page !important;
+                #app-root #sketchPage {
+                    height: 265mm !important;
+                    min-height: 265mm !important;
+                    max-height: 265mm !important;
+                    padding-bottom: 5mm !important;
+                }
+
+                #app-root #photoPagesContainer .page {
+                    height: 265mm !important;
+                    min-height: 265mm !important;
+                    max-height: 265mm !important;
+                    padding-bottom: 5mm !important;
+                }
+
+                #app-root #sketchPage .header,
+                #app-root #photoPagesContainer .page .header {
+                    margin-bottom: 5px !important;
+                    padding: 7px 9px 8px 9px !important;
+                }
+
+                #app-root #sketchPage .header-top,
+                #app-root #photoPagesContainer .page .header-top {
+                    margin-bottom: 6px !important;
+                }
+
+                #app-root #sketchPage .header-title,
+                #app-root #photoPagesContainer .page .header-title {
+                    font-size: 14.5px !important;
+                    line-height: 1.05 !important;
+                }
+
+                #app-root #sketchPage .header-right,
+                #app-root #photoPagesContainer .page .header-right {
+                    font-size: 8.7px !important;
+                    padding: 6px 8px !important;
+                }
+
+                #app-root #sketchPage .logo,
+                #app-root #photoPagesContainer .page .logo {
+                    max-height: 42px !important;
+                }
+
+                #app-root #sketchPage .sketch-container {
+                    height: 138mm !important;
+                }
+
+                #app-root #photoPagesContainer .photo-grid {
+                    gap: 6px !important;
+                    margin-top: 1px !important;
+                }
+
+                #app-root #photoPagesContainer .photo-box {
+                    padding: 4px !important;
+                }
+
+                #app-root #photoPagesContainer .img-container {
+                    height: 62mm !important;
+                }
+
+                #app-root #photoPagesContainer .photo-desc {
+                    font-size: 8.7px !important;
+                    line-height: 1 !important;
                 }
 
                 .footer {
-                    bottom: 3mm !important;
-                }
-
-                body.print-ios-compact #app-root .page {
-                    width: 198mm !important;
-                    max-width: 198mm !important;
-                    height: 280mm !important;
-                    min-height: 280mm !important;
-                    padding: 2.5mm 3.5mm 4mm 3.5mm !important;
-                    font-size: 8.5px !important;
-                }
-
-                body.print-ios-compact .header {
-                    margin-bottom: 4px !important;
-                    padding: 6px 8px 7px 8px !important;
-                    border-radius: 10px !important;
-                }
-
-                body.print-ios-compact .header-top {
-                    margin-bottom: 5px !important;
-                }
-
-                body.print-ios-compact .logo {
-                    max-height: 34px !important;
-                }
-
-                body.print-ios-compact .header-title {
-                    font-size: 12.8px !important;
-                    line-height: 1.05 !important;
-                }
-
-                body.print-ios-compact .header-right {
-                    font-size: 7.8px !important;
-                    line-height: 1.2 !important;
-                    padding: 5px 7px !important;
-                }
-
-                body.print-ios-compact .header-right strong {
-                    font-size: 8.8px !important;
-                }
-
-                body.print-ios-compact .section {
-                    margin-bottom: 3px !important;
-                    padding: 4px 6px 5px 6px !important;
-                    border-radius: 10px !important;
-                }
-
-                body.print-ios-compact .section h2 {
-                    font-size: 8px !important;
-                    margin-bottom: 3px !important;
-                    padding-bottom: 3px !important;
-                }
-
-                body.print-ios-compact .grid,
-                body.print-ios-compact .address-grid,
-                body.print-ios-compact .grid-3,
-                body.print-ios-compact .grid-1-2 {
-                    gap: 2px 5px !important;
-                }
-
-                body.print-ios-compact .label {
+                    bottom: 2mm !important;
                     font-size: 7.4px !important;
-                    margin-bottom: 2px !important;
-                }
-
-                body.print-ios-compact .print-textarea-clone,
-                body.print-ios-compact input:not([type="checkbox"]),
-                body.print-ios-compact select,
-                body.print-ios-compact .photo-desc {
-                    font-size: 8.2px !important;
-                    line-height: 1.05 !important;
-                }
-
-                body.print-ios-compact .checkbox-item {
-                    font-size: 7.6px !important;
-                    gap: 1px !important;
-                }
-
-                body.print-ios-compact input[type="checkbox"] {
-                    width: 8px !important;
-                    height: 8px !important;
-                    margin-right: 2px !important;
-                }
-
-                body.print-ios-compact .sketch-container {
-                    height: 134mm !important;
-                    border-radius: 10px !important;
-                }
-
-                body.print-ios-compact .signature-pad {
-                    height: 54px !important;
-                }
-
-                body.print-ios-compact .photo-grid {
-                    gap: 5px !important;
-                    margin-top: 2px !important;
-                }
-
-                body.print-ios-compact .photo-box {
-                    padding: 4px !important;
-                    border-radius: 8px !important;
-                }
-
-                body.print-ios-compact .img-container {
-                    height: 58mm !important;
-                }
-
-                body.print-ios-compact .footer {
-                    display: none !important;
                 }
             }
         }
@@ -743,6 +832,7 @@
             padding: 0 !important;
         }
         body.pdf-export-mode .page {
+            box-sizing: border-box !important;
             width: 200mm !important;
             max-width: 200mm !important;
             min-height: 285mm !important;
@@ -1472,7 +1562,158 @@
                 }
 
                 .page {
-                    margin: 20px 10px;
+                    margin: 12px 8px;
+                    min-height: auto;
+                    padding: 8mm 7mm 12px;
+                    border-radius: 16px;
+                }
+
+                .page::before {
+                    height: 4px;
+                }
+
+                .header {
+                    padding: 10px 12px 12px;
+                    margin-bottom: 12px;
+                    border-radius: 14px;
+                }
+
+                .header-top {
+                    margin-bottom: 8px;
+                }
+
+                .header-title {
+                    font-size: 24px;
+                }
+
+                .logo {
+                    max-height: 58px;
+                }
+
+                .header-right {
+                    padding: 6px 10px;
+                    border-radius: 10px;
+                    font-size: 11px;
+                    line-height: 1.15;
+                }
+
+                .header-right strong {
+                    font-size: 13px;
+                }
+
+                .section {
+                    margin-bottom: 8px;
+                    padding: 8px 10px 10px;
+                    border-radius: 14px;
+                }
+
+                .section h2 {
+                    margin-bottom: 7px;
+                    padding-bottom: 5px;
+                    font-size: 10px;
+                }
+
+                .section-header-flex {
+                    margin-bottom: 6px;
+                }
+
+                .grid,
+                .grid-3,
+                .grid-1-2,
+                .address-grid {
+                    gap: 8px;
+                }
+
+                .address-grid {
+                    grid-template-columns: 72px 1fr 1.1fr;
+                }
+
+                .address-grid.address-grid-compact {
+                    grid-template-columns: 72px 1fr;
+                }
+
+                .form-divider {
+                    margin-top: 8px;
+                    padding-top: 8px;
+                }
+
+                .label {
+                    font-size: 9px;
+                    margin-bottom: 3px;
+                    line-height: 1.15;
+                }
+
+                input,
+                textarea,
+                select {
+                    padding: 7px 9px;
+                    font-size: 14px;
+                    border-radius: 10px;
+                }
+
+                textarea {
+                    min-height: 30px;
+                    line-height: 1.25;
+                }
+
+                #befund,
+                #reparatur,
+                #interne_notizen,
+                #reparatur_notizen,
+                #bauteile_notizen,
+                #pool_notizen {
+                    min-height: 54px;
+                }
+
+                .checkbox-group,
+                .checkbox-group-3 {
+                    gap: 2px 6px;
+                }
+
+                .checkbox-item {
+                    gap: 4px;
+                    padding: 1px 0;
+                    font-size: 11px;
+                    line-height: 1.15;
+                }
+
+                .checkbox-item input {
+                    width: 12px;
+                    height: 12px;
+                }
+
+                .gps-btn,
+                .mic-btn {
+                    padding: 3px 6px;
+                    font-size: 9px;
+                    gap: 4px;
+                }
+
+                #mainPage .section.no-print {
+                    margin-top: 8px !important;
+                    padding: 8px 10px !important;
+                }
+
+                #mainPage .section.no-print h2 {
+                    margin-bottom: 4px;
+                }
+
+                #mainPage .section.no-print textarea {
+                    min-height: 44px;
+                }
+
+                #boxArbeitszeitOrtungsgas {
+                    gap: 4px !important;
+                }
+
+                .footer {
+                    position: static;
+                    left: auto;
+                    right: auto;
+                    bottom: auto;
+                    margin-top: 6px;
+                    padding-top: 6px;
+                    font-size: 8px;
                 }
             }
 
@@ -1991,6 +2232,7 @@
             <div class="toolbar-divider"></div>
             <div class="tool mode-tool active" id="snapToggleBtn" onclick="toggleGridSnap(this)" title="Rasterfang an/aus">🧲</div>
             <div class="tool mode-tool" onclick="document.getElementById('sketchPhotoInput').click()" title="Bild in Skizze einfügen">🖼️</div>
+            <button type="button" class="tool mode-tool" id="sketchBgFitToggleBtn" onclick="toggleSketchBackgroundFitMode()" title="Bildmodus: Einpassen" style="width:auto; min-width:54px; padding:0 10px; border-radius:18px; font-size:11px; font-weight:700;">FIT</button>
             <div class="toolbar-divider"></div>
             <div class="tool mode-tool active" onclick="setMode('freehand', this)" title="Freihand">✏️</div>
             <div class="tool mode-tool" onclick="setMode('highlight', this)" title="Leuchtstift">🖍️</div>
@@ -2190,6 +2432,7 @@
             <div class="toolbar-divider"></div>
             <div class="tool mode-tool active" id="snapToggleBtn" onclick="toggleGridSnap(this)" title="Rasterfang an/aus">🧲</div>
             <div class="tool mode-tool" onclick="document.getElementById('sketchPhotoInput').click()" title="Bild in Skizze einfügen">🖼️</div>
+            <button type="button" class="tool mode-tool" id="sketchBgFitToggleBtn" onclick="toggleSketchBackgroundFitMode()" title="Bildmodus: Einpassen" style="width:auto; min-width:54px; padding:0 10px; border-radius:18px; font-size:11px; font-weight:700;">FIT</button>
             <div class="toolbar-divider"></div>
             <div class="tool mode-tool active" onclick="setMode('freehand', this)" title="Freihand">✏️</div>
             <div class="tool mode-tool" onclick="setMode('highlight', this)" title="Leuchtstift">🖍️</div>
@@ -2604,6 +2847,7 @@
             <div class="toolbar-divider"></div>
             <div class="tool mode-tool active" id="snapToggleBtn" onclick="toggleGridSnap(this)" title="Rasterfang an/aus">🧲</div>
             <div class="tool mode-tool" onclick="document.getElementById('sketchPhotoInput').click()" title="Bild in Skizze einfügen">🖼️</div>
+            <button type="button" class="tool mode-tool" id="sketchBgFitToggleBtn" onclick="toggleSketchBackgroundFitMode()" title="Bildmodus: Einpassen" style="width:auto; min-width:54px; padding:0 10px; border-radius:18px; font-size:11px; font-weight:700;">FIT</button>
             <div class="toolbar-divider"></div>
             <div class="tool mode-tool active" onclick="setMode('freehand', this)" title="Freihand">✏️</div>
             <div class="tool mode-tool" onclick="setMode('highlight', this)" title="Leuchtstift">🖍️</div>
@@ -2962,7 +3206,7 @@ function startApp(type) {
         currentApp = type;
         currentDraftId = null;
         document.getElementById('start-screen').style.display = 'none';
-        const tpl = document.getElementById(type === 'LO' ? 'tpl-lo' : (type === 'KB' ? 'tpl-kb' : (type === 'RB' ? 'tpl-rb' : 'tpl-dl')));
+        const tpl = document.getElementById(`tpl-${type.toLowerCase()}`);
         if (!tpl) throw new Error("Vorlage nicht gefunden: " + type);
         
         const appRoot = document.getElementById('app-root');
@@ -2992,9 +3236,20 @@ function startApp(type) {
    ========================================================= */
 function preparePrintView() {
     enablePrintLightMode();
+    document.body.classList.toggle('ios-print-mode', getPrintSupportContext().isIOS);
+    document.querySelectorAll('.print-page-break').forEach(el => el.classList.remove('print-page-break'));
 
-    const printSupport = getPrintSupportContext();
-    document.body.classList.toggle('print-ios-compact', printSupport.isIOS);
+    const togglePrintVisibility = (element, visible) => {
+        if (!element) return;
+        element.classList.toggle('no-print', !visible);
+        element.classList.toggle('temp-hide', !visible);
+    };
+
+    const hasPrintableValue = (field) => {
+        if (!field) return false;
+        const value = String(field.value || '').trim();
+        return value !== '' && value !== '- wählen -' && value !== '0';
+    };
 
     document.querySelectorAll('textarea').forEach(el => {
         let clone = el.nextElementSibling;
@@ -3005,6 +3260,8 @@ function preparePrintView() {
         }
         clone.textContent = el.value;
     });
+
+    const printSupport = getPrintSupportContext();
     
     document.querySelectorAll('.checkbox-group, .checkbox-group-3').forEach(group => {
         const inputs = Array.from(group.querySelectorAll('input[type="checkbox"]'));
@@ -3058,6 +3315,38 @@ function preparePrintView() {
         if (el.value.trim() === '') el.parentElement.classList.add('no-print', 'temp-hide');
     });
 
+    [
+        'name',
+        'datum',
+        'auftraggeber_name',
+        'auftraggeber_tel'
+    ].forEach(id => {
+        const field = document.getElementById(id);
+        if (!field) return;
+        togglePrintVisibility(field.parentElement, hasPrintableValue(field));
+    });
+
+    [
+        { ids: ['adresse', 'plz', 'ort', 'telefon'] },
+        { ids: ['auftraggeber_adresse', 'auftraggeber_plz', 'auftraggeber_ort'], containerId: 'auftraggeberContainer' }
+    ].forEach(group => {
+        const fields = group.ids.map(id => document.getElementById(id)).filter(Boolean);
+        if (!fields.length) return;
+
+        const hasAnyValue = fields.some(hasPrintableValue);
+        const container = group.containerId
+            ? document.getElementById(group.containerId)
+            : fields[0].parentElement;
+
+        if (!hasAnyValue) {
+            togglePrintVisibility(container, false);
+            return;
+        }
+
+        togglePrintVisibility(container, true);
+        fields.forEach(field => togglePrintVisibility(field, hasPrintableValue(field)));
+    });
+
     document.querySelectorAll('.photo-desc').forEach(desc => {
         if (desc.value.trim() === '') desc.classList.add('no-print', 'temp-hide');
         else desc.classList.remove('no-print');
@@ -3067,6 +3356,9 @@ function preparePrintView() {
     if (reparaturSection && !sectionHasPrintableContent(reparaturSection)) {
         reparaturSection.classList.add('no-print', 'temp-hide');
     }
+
+    const printablePages = Array.from(document.querySelectorAll('#app-root .page')).filter(page => page.offsetParent !== null);
+    printablePages.forEach((page, index) => page.classList.toggle('print-page-break', index < printablePages.length - 1));
 }
 
 function sectionHasPrintableContent(section) {
@@ -3086,7 +3378,8 @@ function sectionHasPrintableContent(section) {
 function cleanupAfterPrint() {
     document.querySelectorAll('.print-textarea-clone').forEach(el => el.remove());
     document.querySelectorAll('.no-print.temp-hide').forEach(el => el.classList.remove('no-print', 'temp-hide'));
-    document.body.classList.remove('print-ios-compact');
+    document.querySelectorAll('.print-page-break').forEach(el => el.classList.remove('print-page-break'));
+    document.body.classList.remove('ios-print-mode');
     disablePrintLightMode();
 }
 
@@ -3644,6 +3937,93 @@ function resetMicBtn() {
    ========================================================= */
 let cropImg = new Image(), cropCvs = null, cropCtx = null, isCrop = false, cx1=0, cy1=0, cx2=0, cy2=0, cScale=1;
 
+let sketchBackgroundSourceData = null;
+let sketchBackgroundFitMode = 'contain';
+
+function drawImageFittedOnCanvas(canvas, source, fitMode = 'contain') {
+    if (!canvas || !source) return;
+    const ctx = canvas.getContext('2d');
+    const sourceWidth = source.naturalWidth || source.videoWidth || source.width;
+    const sourceHeight = source.naturalHeight || source.videoHeight || source.height;
+    if (!ctx || !sourceWidth || !sourceHeight || !canvas.width || !canvas.height) return;
+
+    const scale = fitMode === 'cover'
+        ? Math.max(canvas.width / sourceWidth, canvas.height / sourceHeight)
+        : Math.min(canvas.width / sourceWidth, canvas.height / sourceHeight);
+    const renderWidth = sourceWidth * scale;
+    const renderHeight = sourceHeight * scale;
+    const offsetX = (canvas.width - renderWidth) / 2;
+    const offsetY = (canvas.height - renderHeight) / 2;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(source, offsetX, offsetY, renderWidth, renderHeight);
+}
+
+function restoreCanvasSnapshot(canvas, dataUrl, fitMode = 'stretch') {
+    if (!canvas || !dataUrl) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const image = new Image();
+    image.onload = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (fitMode === 'contain' || fitMode === 'cover') {
+            drawImageFittedOnCanvas(canvas, image, fitMode);
+            return;
+        }
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+    };
+    image.src = dataUrl;
+}
+
+function updateSketchBackgroundModeButton() {
+    const isFillMode = sketchBackgroundFitMode === 'cover';
+    const label = isFillMode ? 'FILL' : 'FIT';
+    const title = isFillMode ? 'Bildmodus: Füllen' : 'Bildmodus: Einpassen';
+    document.querySelectorAll('#sketchBgFitToggleBtn').forEach(button => {
+        button.textContent = label;
+        button.title = title;
+        button.setAttribute('aria-label', title);
+        button.classList.toggle('active', isFillMode);
+    });
+}
+
+function renderSketchBackground() {
+    const canvas = document.getElementById('sketch-bg-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (sketchBackgroundSourceData) {
+        restoreCanvasSnapshot(canvas, sketchBackgroundSourceData, sketchBackgroundFitMode);
+    }
+}
+
+function setSketchBackgroundSource(dataUrl, { markDirty = true } = {}) {
+    sketchBackgroundSourceData = dataUrl || null;
+    renderSketchBackground();
+    updateSketchBackgroundModeButton();
+    if (markDirty) {
+        hasUnsavedChanges = true;
+        saveToLocal();
+    }
+}
+
+function setSketchBackgroundFitMode(mode, { markDirty = true } = {}) {
+    sketchBackgroundFitMode = mode === 'cover' ? 'cover' : 'contain';
+    renderSketchBackground();
+    updateSketchBackgroundModeButton();
+    if (markDirty) {
+        hasUnsavedChanges = true;
+        saveToLocal();
+    }
+}
+
+function toggleSketchBackgroundFitMode() {
+    setSketchBackgroundFitMode(sketchBackgroundFitMode === 'contain' ? 'cover' : 'contain');
+}
+
 function _refreshCropCanvas() {
     document.getElementById('cropModal').style.display = 'flex';
     const mw = window.innerWidth*0.95, mh = window.innerHeight*0.65;
@@ -3685,12 +4065,7 @@ function confirmCrop() {
     let x=Math.min(cx1,cx2)*cScale, y=Math.min(cy1,cy2)*cScale, w=Math.abs(cx2-cx1)*cScale, h=Math.abs(cy2-cy1)*cScale;
     if(w<10||h<10) { x=0; y=0; w=cropImg.width; h=cropImg.height; }
     const tc = document.createElement('canvas'); tc.width=w; tc.height=h; tc.getContext('2d').drawImage(cropImg,x,y,w,h,0,0,w,h);
-    const bgc = document.getElementById('sketch-bg-canvas');
-    if (bgc) {
-        const cw=bgc.width, ch=bgc.height; let scale, off;
-        if(w/h > cw/ch) { scale = ch/h; off=(w*scale-cw)/2; bgc.getContext('2d').drawImage(tc,0,0,w,h,-off,0,w*scale,ch); } 
-        else { scale = cw/w; off=(h*scale-ch)/2; bgc.getContext('2d').drawImage(tc,0,0,w,h,0,-off,cw,h*scale); }
-    }
+    setSketchBackgroundSource(tc.toDataURL('image/png'));
     closeCropModal();
 }
 
@@ -3725,6 +4100,7 @@ function setupSketchListeners() {
     if(tb && touchOn) { tb.classList.add('active'); tb.style.background="#d0e4f5"; tb.style.borderColor="#2b83b8"; }
     const sb = document.getElementById('snapToggleBtn');
     if(sb && useGridSnap) { sb.classList.add('active'); sb.style.background="#d0e4f5"; sb.style.borderColor="#2b83b8"; }
+    updateSketchBackgroundModeButton();
     const cvs = document.getElementById('sketch-canvas');
     if(cvs) sketchCtx = initDrawing(cvs);
 }
@@ -3750,10 +4126,10 @@ function saveSketchState() {
 }
 
 function toggleGridSnap(el) { useGridSnap = !useGridSnap; el.classList.toggle('active', useGridSnap); el.style.background=useGridSnap?"#d0e4f5":"#fff"; el.style.borderColor=useGridSnap?"#2b83b8":"#ccc"; }
-function setMode(m, el) { cMode = m; isErase = false; document.querySelectorAll('.mode-tool:not(#touchToggleBtn)').forEach(t=>t.classList.remove('active')); el.classList.add('active'); }
+function setMode(m, el) { cMode = m; isErase = false; document.querySelectorAll('.mode-tool:not(#touchToggleBtn):not(#sketchBgFitToggleBtn)').forEach(t=>t.classList.remove('active')); el.classList.add('active'); }
 function setWidth(w, el) { cWidth = w; if(isErase) setMode('freehand', document.querySelector('.mode-tool[title="Freihand"]')); document.querySelectorAll('.width-tool').forEach(t => t.classList.remove('active')); el.classList.add('active'); }
 function setColor(c, el) { cColor = c; if(isErase) setMode('freehand', document.querySelector('.mode-tool[title="Freihand"]')); document.querySelectorAll('.color-tool').forEach(t=>t.classList.remove('active')); el.classList.add('active'); }
-function setEraser(el) { isErase = true; document.querySelectorAll('.mode-tool:not(#touchToggleBtn)').forEach(t=>t.classList.remove('active')); el.classList.add('active'); }
+function setEraser(el) { isErase = true; document.querySelectorAll('.mode-tool:not(#touchToggleBtn):not(#sketchBgFitToggleBtn)').forEach(t=>t.classList.remove('active')); el.classList.add('active'); }
 
 let cStampType = '';
 let cStampRotation = 0;
@@ -3924,10 +4300,17 @@ function initDrawing(cvs) {
         const r = cvs.getBoundingClientRect(); 
         if(r.width === 0 || r.height === 0) return;
         const dpr = window.devicePixelRatio || 1;
-        [cvs, bgCvs].forEach(c => { 
-            if(!c) return; const t = c.toDataURL(); c.width=r.width * dpr; c.height=r.height * dpr; 
-            const i=new Image(); i.onload=()=>c.getContext('2d').drawImage(i,0,0,c.width,c.height); i.src=t; 
-        }); 
+        [cvs, bgCvs].forEach(c => {
+            if(!c) return;
+            const snapshot = c.id === 'sketch-bg-canvas' && sketchBackgroundSourceData ? null : c.toDataURL();
+            c.width = r.width * dpr;
+            c.height = r.height * dpr;
+            if (c.id === 'sketch-bg-canvas' && sketchBackgroundSourceData) {
+                renderSketchBackground();
+            } else {
+                restoreCanvasSnapshot(c, snapshot, 'stretch');
+            }
+        });
     }
     setTimeout(rs, 100); 
     const resizeHandler = debounce(rs, 200);
@@ -4159,6 +4542,7 @@ function clearSketch() {
             if (c.id === 'sketch-canvas') setTimeout(() => { sketchHistory = [c.toDataURL()]; hasUnsavedChanges = true; saveToLocal(); }, 50);
         }
     });
+    sketchBackgroundSourceData = null;
 }
 
 /* =========================================================
@@ -4778,7 +5162,14 @@ function getReportData() {
         updatedAt: new Date().toISOString()
     };
 
-    if(currentApp==='LO' || currentApp==='KB' || currentApp==='DL') { try{ d.sketch.bg=document.getElementById('sketch-bg-canvas').toDataURL('image/png'); d.sketch.lines=document.getElementById('sketch-canvas').toDataURL('image/png'); }catch(e){} }
+    if(currentApp==='LO' || currentApp==='KB' || currentApp==='DL') {
+        try {
+            d.sketch.bg = document.getElementById('sketch-bg-canvas').toDataURL('image/png');
+            d.sketch.bgSource = sketchBackgroundSourceData;
+            d.sketch.bgMode = sketchBackgroundFitMode;
+            d.sketch.lines = document.getElementById('sketch-canvas').toDataURL('image/png');
+        } catch(e) {}
+    }
     else { try{ if(sigCanvas) d.signature.png=sigCanvas.toDataURL('image/png'); }catch(e){} }
     document.querySelectorAll('#photoPagesContainer .page').forEach((p, idx) => {
         const imgs = Array.from(p.querySelectorAll('.photo-box')).map(b => {
@@ -4859,8 +5250,10 @@ function restoreFromData(d) {
     if(currentApp==='LO' || currentApp==='KB' || currentApp==='DL') {
         if (currentApp==='LO') { applyReparaturState(); applyFlachdachState(); applyPoolState(); }
         if(d.toggles && typeof d.toggles.sketchEnabled==='boolean' && document.getElementById('toggleSketch')) { document.getElementById('toggleSketch').checked=d.toggles.sketchEnabled; document.getElementById('toggleSketch').dispatchEvent(new Event('change')); }
-        if(d.sketch?.bg) { const i=new Image(); i.onload=()=>document.getElementById('sketch-bg-canvas').getContext('2d').drawImage(i,0,0); i.src=d.sketch.bg; }
-        if(d.sketch?.lines||d.sketch?.png) { const i=new Image(); i.onload=()=>document.getElementById('sketch-canvas').getContext('2d').drawImage(i,0,0); i.src=d.sketch.lines||d.sketch.png; }
+        sketchBackgroundFitMode = d.sketch?.bgMode === 'cover' ? 'cover' : 'contain';
+        updateSketchBackgroundModeButton();
+        if(d.sketch?.bgSource || d.sketch?.bg) setSketchBackgroundSource(d.sketch.bgSource || d.sketch.bg, { markDirty: false });
+        if(d.sketch?.lines||d.sketch?.png) restoreCanvasSnapshot(document.getElementById('sketch-canvas'), d.sketch.lines||d.sketch.png, 'stretch');
     } else {
         updateDynamicRows();
         if(d.signature?.png && sigCtx) { const i=new Image(); i.onload=()=>sigCtx.drawImage(i,0,0); i.src=d.signature.png; }
@@ -5407,6 +5800,7 @@ function openPhotoEditor(container) {
             if(text) {
                 peCtx.fillStyle = peColor; peCtx.font = "bold 40px Arial"; peCtx.fillText(text, sx, sy);
                 peHist.push(peCvs.toDataURL());
+                savePEState();
             }
             drawing=false;
         }
@@ -5435,6 +5829,12 @@ function openPhotoEditor(container) {
         }; img.src = peHist[peHist.length-1];
     };
     peCvs.onpointerup = () => { if(drawing && peMode!=='text') peHist.push(peCvs.toDataURL()); drawing=false; };
+    peCvs.onpointerup = () => { if(drawing && peMode!=='text') savePEState(); drawing=false; };
+}
+
+function savePEState() {
+    if (peHist.length > 10) peHist.shift(); // Limitiert den RAM-Verbrauch auf dem iPad
+    peHist.push(peCvs.toDataURL('image/jpeg', 0.8)); // JPEG ist viel kleiner als PNG
 }
 
 function setPE_Mode(m, el) { peMode=m; document.querySelectorAll('#photoEditorModal .mode-tool').forEach(t=>t.classList.remove('active')); el.classList.add('active'); }
@@ -5456,6 +5856,7 @@ function rotatePE(degrees) {
     peCvs.width = h; peCvs.height = w;
     peCtx.save(); peCtx.translate(h / 2, w / 2); peCtx.rotate(rad); peCtx.drawImage(tempCanvas, -w / 2, -h / 2); peCtx.restore();
     peHist.push(peCvs.toDataURL());
+    savePEState();
 }
 
 function setupPWA() {
