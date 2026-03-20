@@ -40,6 +40,7 @@
             --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.05);
             
             --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --lo-print-unified-font: 600 14px/1.25 var(--font-main);
             
             /* Theme Variablen Defaults (Light) */
             --page-bg: #ffffff;
@@ -526,8 +527,41 @@
             #mainPage .section:first-of-type input#telefon {
                 font-size: 10px !important;
                 line-height: 1.1 !important;
-                padding: 1px 0 !important;
             }
+            #mainPage .section:first-of-type input#telefon,
+            #mainPage .section:first-of-type input#auftraggeber_name,
+            #mainPage .section:first-of-type input#auftraggeber_tel,
+            #mainPage .section:first-of-type input#auftraggeber_adresse,
+            #mainPage .section:first-of-type input#auftraggeber_plz,
+            #mainPage .section:first-of-type input#auftraggeber_ort {
+                font-size: 12px !important;
+                line-height: 1.15 !important;
+                padding: 1px 0 !important;
+                font-weight: 600 !important;
+            }
+            #befund + .print-textarea-clone {
+                font-size: 11.5px !important;
+                line-height: 1.3 !important;
+            }
+        #mainPage .section:first-of-type input:not([type="checkbox"]),
+        #mainPage .section:first-of-type select {
+            font-size: 10px !important;
+            line-height: 1.1 !important;
+            padding: 1px 0 !important;
+        }
+        body[data-app-type="LO"].is-lo-ortung:not(.is-flachdach) #mainPage .section:first-of-type input:not([type="checkbox"]),
+        body[data-app-type="LO"].is-lo-ortung:not(.is-flachdach) #mainPage .section:first-of-type select {
+            font: var(--lo-print-unified-font) !important;
+            letter-spacing: normal !important;
+        }
+        #befund + .print-textarea-clone {
+            font-size: 10px !important;
+            line-height: 1.2 !important;
+        }
+        body[data-app-type="LO"].is-lo-ortung:not(.is-flachdach) #befund + .print-textarea-clone {
+            font: var(--lo-print-unified-font) !important;
+            letter-spacing: normal !important;
+        }
             input[type="checkbox"] { -webkit-appearance: auto !important; appearance: auto !important; border: 1px solid #000 !important; width: 9px !important; height: 9px !important; margin-right: 3px !important; margin-top: 0 !important; margin-bottom: 0 !important; accent-color: var(--primary) !important; }
             .checkbox-item { font-size: 8.7px !important; padding: 0 !important; margin: 0 !important; gap: 2px !important; line-height: 1 !important; }
             .checkbox-group, .checkbox-group-3 { gap: 1px 2px !important; margin-bottom: 1px !important; }
@@ -660,6 +694,32 @@
                 line-height: 1.05 !important;
                 padding-top: 0 !important;
                 padding-bottom: 0 !important;
+            }
+
+            body.ios-print-mode #mainPage .section:first-of-type input#name,
+            body.ios-print-mode #mainPage .section:first-of-type input#datum,
+            body.ios-print-mode #mainPage .section:first-of-type input#adresse,
+            body.ios-print-mode #mainPage .section:first-of-type input#plz,
+            body.ios-print-mode #mainPage .section:first-of-type input#ort,
+            body.ios-print-mode #mainPage .section:first-of-type input#telefon,
+            body.ios-print-mode #mainPage .section:first-of-type input#auftraggeber_name,
+            body.ios-print-mode #mainPage .section:first-of-type input#auftraggeber_tel,
+            body.ios-print-mode #mainPage .section:first-of-type input#auftraggeber_adresse,
+            body.ios-print-mode #mainPage .section:first-of-type input#auftraggeber_plz,
+            body.ios-print-mode #mainPage .section:first-of-type input#auftraggeber_ort {
+                font-size: 11px !important;
+            }
+            body.ios-print-mode #befund + .print-textarea-clone {
+                font-size: 10.5px !important;
+            }
+            body.ios-print-mode[data-app-type="LO"].is-lo-ortung:not(.is-flachdach) #mainPage .section:first-of-type input:not([type="checkbox"]),
+            body.ios-print-mode[data-app-type="LO"].is-lo-ortung:not(.is-flachdach) #mainPage .section:first-of-type select {
+                font: var(--lo-print-unified-font) !important;
+                letter-spacing: normal !important;
+            }
+            body.ios-print-mode[data-app-type="LO"].is-lo-ortung:not(.is-flachdach) #befund + .print-textarea-clone {
+                font: var(--lo-print-unified-font) !important;
+                letter-spacing: normal !important;
             }
 
             body.ios-print-mode #app-root #mainPage .checkbox-item {
@@ -852,6 +912,42 @@
         }
         body.pdf-export-mode .pdf-export-hidden-image {
             visibility: hidden !important;
+        }
+        body.pdf-export-mode textarea {
+            display: none !important;
+        }
+        body.pdf-export-mode .print-textarea-clone {
+            display: block !important;
+            width: 100% !important;
+            font-size: 10px !important;
+            line-height: 1.2 !important;
+            white-space: pre-wrap !important;
+            word-wrap: break-word !important;
+            margin: 0 !important;
+            padding: 2px 0 !important;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            color: inherit !important;
+        }
+        body.pdf-export-mode #mainPage .section:first-of-type input#adresse,
+        body.pdf-export-mode #mainPage .section:first-of-type input#plz,
+        body.pdf-export-mode #mainPage .section:first-of-type input#ort,
+        body.pdf-export-mode #mainPage .section:first-of-type input#auftraggeber_adresse,
+        body.pdf-export-mode #mainPage .section:first-of-type input#auftraggeber_plz,
+        body.pdf-export-mode #mainPage .section:first-of-type input#auftraggeber_ort {
+            font-size: 12px !important;
+            line-height: 1.15 !important;
+            font-weight: 600 !important;
+        }
+        body.pdf-export-mode[data-app-type="LO"].is-lo-ortung:not(.is-flachdach) #mainPage .section:first-of-type input:not([type="checkbox"]),
+        body.pdf-export-mode[data-app-type="LO"].is-lo-ortung:not(.is-flachdach) #mainPage .section:first-of-type select {
+            font: var(--lo-print-unified-font) !important;
+            letter-spacing: normal !important;
+        }
+        body.pdf-export-mode[data-app-type="LO"].is-lo-ortung:not(.is-flachdach) #befund + .print-textarea-clone {
+            font: var(--lo-print-unified-font) !important;
+            letter-spacing: normal !important;
         }
 
         /* TOAST NOTIFICATIONS */
@@ -1800,12 +1896,12 @@
             <p>Offene Baustellen bitte immer im gemeinsamen OneDrive-Ordner unter Offene Baustellen als .json speichern, damit sie auf allen Geräten sichtbar und wieder ladbar sind.</p>
         </div>
         <button class="menu-btn secondary" style="font-size: 13px; padding: 12px; margin-top: 20px; background: #ef4444; border: 1px solid #dc2626;" onclick="hardResetApp()">⚠️ App Reparatur / Reset</button>
-        <button type="button" class="text-link-btn" onclick="openSettings()">⚙️ E-Mail Einstellungen</button>
+        <button type="button" class="text-link-btn" style="margin-top: 15px;" onclick="openSettings()">⚙️ Einstellungen</button>
         <div style="margin-top: 15px; color: #9ca3af; font-size: 11px;">Version 4.1</div>
     </div>
 </div>
 
-<div id="cropModal" class="no-print">
+<div id="cropModal" class="no-print" style="display:none;">
     <h3 style="color:#fff; margin-bottom:5px;">Ausschnitt markieren</h3>
     <p style="color:#ccc; font-size:12px; margin-top:0; margin-bottom:15px;">Mit dem Finger/Maus den Bereich aufziehen</p>
     <canvas id="cropCanvas"></canvas>
@@ -1818,7 +1914,7 @@
 </div>
 <input type="file" id="sketchPhotoInput" accept="image/*" style="display:none" onchange="openCropModal(this)">
 
-<div id="photoEditorModal" class="no-print">
+<div id="photoEditorModal" class="no-print" style="display:none;">
     <div style="color:white; margin-bottom:10px; font-weight:bold;">Foto bearbeiten</div>
     <canvas id="photoEditorCanvas"></canvas>
     <div class="toolbar" style="margin-top:15px; background: #333; border:none;">
@@ -1842,7 +1938,7 @@
     </div>
 </div>
 
-<div id="settingsModal" class="no-print">
+<div id="settingsModal" class="no-print" style="display:none;">
     <div class="settings-panel">
         <h3 style="margin-top:0; margin-bottom:15px; color:var(--gray-900);">Einstellungen</h3>
         <label class="settings-label">Standard E-Mail Empfänger:</label>
@@ -3208,6 +3304,7 @@ function startApp(type) {
 
         currentApp = type;
         currentDraftId = null;
+        document.body.classList.remove('is-flachdach', 'is-lo-ortung');
         document.getElementById('start-screen').style.display = 'none';
         const tpl = document.getElementById(`tpl-${type.toLowerCase()}`);
         if (!tpl) throw new Error("Vorlage nicht gefunden: " + type);
@@ -3215,6 +3312,7 @@ function startApp(type) {
         const appRoot = document.getElementById('app-root');
         clearElement(appRoot); // WICHTIG: Vorherigen Inhalt löschen, um doppelte IDs zu vermeiden
         if(type === 'DL') appRoot.classList.add('dl-app'); else appRoot.classList.remove('dl-app');
+        document.body.dataset.appType = type;
         appRoot.appendChild(tpl.content.cloneNode(true));
         hydrateSharedFragments(appRoot);
         upgradeInteractiveAccessibility(appRoot);
@@ -3311,6 +3409,21 @@ function preparePrintView() {
             });
             if(!hasValue) firstEl.parentElement.classList.add('no-print', 'temp-hide');
             else firstEl.parentElement.classList.remove('no-print');
+        }
+    });
+
+    ['fahrzone_qty', 'ortungsgas_qty', 'faerbemittel_qty'].forEach(id => {
+        const qtyEl = document.getElementById(id);
+        if (qtyEl) {
+            const val = qtyEl.value.trim();
+            const shouldHide = !val || val === '0';
+            if (shouldHide) {
+                togglePrintVisibility(qtyEl, false);
+                const prev = qtyEl.previousElementSibling;
+                if (prev && prev.tagName === 'SPAN' && prev.textContent.trim() === 'Anz.') {
+                    togglePrintVisibility(prev, false);
+                }
+            }
         }
     });
 
@@ -4594,6 +4707,7 @@ function applyTemplateVisibility() {
     const opts = document.getElementById('flachdachTextOptions'); if(!opts) return;
     const cf = document.getElementById('checkFlachdach')?.checked;
     const leck = ['checkLeckortung','checkLOPauschale','checkOptLeckortung'].some(id=>document.getElementById(id)?.checked);
+    document.body.classList.toggle('is-lo-ortung', leck && !cf);
     const bt = document.getElementById('ueberpruefteBauteileContainer'); if(bt) bt.style.display = leck ? 'block' : 'none';
     opts.style.display = (cf || leck) ? 'block' : 'none';
     const sel = document.getElementById('flachdachTemplate');
