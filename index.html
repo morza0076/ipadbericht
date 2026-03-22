@@ -40,7 +40,7 @@
             --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.05);
             
             --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            --lo-print-unified-font: 600 14px/1.25 var(--font-main);
+            --lo-print-unified-font: 600 11px/1.25 var(--font-main);
             
             /* Theme Variablen Defaults (Light) */
             --page-bg: #ffffff;
@@ -562,6 +562,19 @@
             font: var(--lo-print-unified-font) !important;
             letter-spacing: normal !important;
         }
+            .page .label,
+            .page .grid-header,
+            .page .header-right,
+            .page .header-right strong,
+            .page .section h2,
+            .page .footer,
+            .page .checkbox-item,
+            .page input:not([type="checkbox"]),
+            .page select,
+            .page .photo-desc,
+            .page .print-textarea-clone {
+                font-size: 11px !important;
+            }
             input[type="checkbox"] { -webkit-appearance: auto !important; appearance: auto !important; border: 1px solid #000 !important; width: 9px !important; height: 9px !important; margin-right: 3px !important; margin-top: 0 !important; margin-bottom: 0 !important; accent-color: var(--primary) !important; }
             .checkbox-item { font-size: 8.7px !important; padding: 0 !important; margin: 0 !important; gap: 2px !important; line-height: 1 !important; }
             .checkbox-group, .checkbox-group-3 { gap: 1px 2px !important; margin-bottom: 1px !important; }
@@ -948,6 +961,19 @@
         body.pdf-export-mode[data-app-type="LO"].is-lo-ortung:not(.is-flachdach) #befund + .print-textarea-clone {
             font: var(--lo-print-unified-font) !important;
             letter-spacing: normal !important;
+        }
+        body.pdf-export-mode .page .label,
+        body.pdf-export-mode .page .grid-header,
+        body.pdf-export-mode .page .header-right,
+        body.pdf-export-mode .page .header-right strong,
+        body.pdf-export-mode .page .section h2,
+        body.pdf-export-mode .page .footer,
+        body.pdf-export-mode .page .checkbox-item,
+        body.pdf-export-mode .page input:not([type="checkbox"]),
+        body.pdf-export-mode .page select,
+        body.pdf-export-mode .page .photo-desc,
+        body.pdf-export-mode .page .print-textarea-clone {
+            font-size: 11px !important;
         }
 
         /* TOAST NOTIFICATIONS */
