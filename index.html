@@ -5286,43 +5286,39 @@ async function sendEmail() {
     maybeShowIOSExportHint('email');
     await exportFullReport();
 
-    setTimeout(() => {
-        window.print();
+        const onAfterPrintForEmail = () => {
+            window.removeEventListener('afterprint', onAfterPrintForEmail);
+            setTimeout(() => {
+                let sbj = buildReportBaseName();
+                const folgeterminChecked = document.getElementById('check_folgetermin')?.checked;
+                const folgeterminText = document.getElementById('folgetermin_text')?.value.trim();
 
-    const onAfterPrint = () => {
-        window.removeEventListener('afterprint', onAfterPrint);
+                if (folgeterminChecked) {
+                    sbj = 'WICHTIG (Folgetermin) - ' + sbj;
+                }
+
+                let body = '';
+                if (folgeterminChecked) {
+                    body += `🚨 ACHTUNG: BAUSTELLE NICHT ABGESCHLOSSEN 🚨\n`;
+                    body += `Folgetermin / Info: ${folgeterminText || 'Bitte vereinbaren'}\n\n`;
+                }
+
+                const notizenId = (currentApp === 'LO' || currentApp === 'KB' || currentApp === 'DL') ? 'interne_notizen' : 'interne_notizen_rb';
+                const notizen = document.getElementById(notizenId)?.value.trim();
+                if (notizen) body += notizen + '\n\n';
+
+                body += 'BITTE DAS SOEBEN ERSTELLTE PDF HIER ANHÄNGEN.\n\n';
+                body += 'Gesendet vom Brugger-Formular.';
+                const emailTarget = localStorage.getItem('brugger_email') || 'kanal@brugger-entfeuchtung.at';
+                window.location.href = `mailto:${emailTarget}?subject=${encodeURIComponent(sbj)}&body=${encodeURIComponent(body)}`;
+            }, 500);
+        };
+
+        window.addEventListener('afterprint', onAfterPrintForEmail);
+
         setTimeout(() => {
-            let sbj = buildReportBaseName();
-            const folgeterminChecked = document.getElementById('check_folgetermin')?.checked;
-            const folgeterminText = document.getElementById('folgetermin_text')?.value.trim();
-
-            if (folgeterminChecked) {
-                sbj = 'WICHTIG (Folgetermin) - ' + sbj;
-            }
-
-            let body = '';
-            if (folgeterminChecked) {
-                body += `🚨 ACHTUNG: BAUSTELLE NICHT ABGESCHLOSSEN 🚨\n`;
-                body += `Folgetermin / Info: ${folgeterminText || 'Bitte vereinbaren'}\n\n`;
-            }
-
-            const notizenId = (currentApp === 'LO' || currentApp === 'KB' || currentApp === 'DL') ? 'interne_notizen' : 'interne_notizen_rb';
-            const notizen = document.getElementById(notizenId)?.value.trim();
-            if (notizen) body += notizen + '\n\n';
-
-            body += 'BITTE DAS SOEBEN ERSTELLTE PDF HIER ANHÄNGEN.\n\n';
-            body += 'Gesendet vom Brugger-Formular.';
-            const emailTarget = localStorage.getItem('brugger_email') || 'kanal@brugger-entfeuchtung.at';
-            window.location.href = `mailto:${emailTarget}?subject=${encodeURIComponent(sbj)}&body=${encodeURIComponent(body)}`;
-        }, 900);
+            window.print();
         }, 500);
-    };
-
-    window.addEventListener('afterprint', onAfterPrint);
-
-    setTimeout(() => {
-        window.print();
-    }, 900);
 }
 
 function getReportData() {
