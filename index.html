@@ -365,8 +365,11 @@
            PRINT STYLES (PDF OPTIMIERUNG)
            ========================================= */
         @media print {
+            :root { color-scheme: light !important; }
             html, body {
                 background: #fff;
+                color: #000 !important;
+                color-scheme: light !important;
                 padding: 0;
                 margin: 0;
                 width: auto !important;
@@ -888,6 +891,8 @@
 
         body.pdf-export-mode {
             background: #ffffff !important;
+            color: #000000 !important;
+            color-scheme: light !important;
             padding: 0 !important;
         }
         body.pdf-export-mode::before,
@@ -918,6 +923,7 @@
             border: none !important;
             border-radius: 0 !important;
             background: #ffffff !important;
+            color: #111827 !important;
             overflow: hidden !important;
         }
         body.pdf-export-mode .page:last-child {
@@ -1321,6 +1327,7 @@
             --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.05);
             background: #f3f4f6;
             color: #111827;
+            color-scheme: light !important;
         }
         body.print-light-mode::before,
         body.print-light-mode::after {
@@ -3666,6 +3673,15 @@ function stripProblematicPdfCharacters(text) {
 }
 
 function sanitizePdfCloneDocument(clonedDocument) {
+    clonedDocument.documentElement.style.setProperty('color-scheme', 'light', 'important');
+    clonedDocument.body.style.setProperty('color-scheme', 'light', 'important');
+    clonedDocument.documentElement.style.setProperty('background-color', '#ffffff', 'important');
+    clonedDocument.body.style.setProperty('background-color', '#ffffff', 'important');
+    clonedDocument.documentElement.style.setProperty('color', '#000000', 'important');
+    clonedDocument.body.style.setProperty('color', '#000000', 'important');
+    clonedDocument.documentElement.classList.remove('dark-mode');
+    clonedDocument.body.classList.remove('dark-mode');
+
     const root = clonedDocument.getElementById('app-root');
     if (!root) return;
 
@@ -3732,6 +3748,7 @@ async function saveBlobToDevice(blob, fileName, description = 'Datei') {
         if (window.showSaveFilePicker) {
             const handle = await window.showSaveFilePicker({
                 suggestedName: fileName,
+                startIn: 'documents',
                 types: [{ description, accept: { [blob.type || 'application/octet-stream']: [`.${fileName.split('.').pop()}`] } }]
             });
             const writable = await handle.createWritable();
