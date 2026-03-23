@@ -1580,6 +1580,7 @@
                 background: linear-gradient(135deg, #d74747 0%, #b91c1c 100%);
             }
 
+
             .toolbar {
                 padding: 10px 18px;
                 border-radius: 22px;
@@ -1843,6 +1844,23 @@
             }
 
             @media screen and (max-width: 768px) {
+                .toolbar {
+                    padding: 8px 4px;
+                    border-radius: 16px;
+                    gap: 8px;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                }
+                .tool {
+                    width: 54px;
+                    height: 54px;
+                    font-size: 32px;
+                    margin: 2px 0;
+                }
+                .toolbar-divider {
+                    height: 38px;
+                }
+            }
                 #start-screen {
                     padding: 18px 14px;
                 }
@@ -4230,6 +4248,10 @@ function setupSketchListeners() {
     const ts = document.getElementById('toggleSketch');
     if (ts) {
         document.body.classList.remove('sketch-enabled');
+        // Hide sketchPage initially if not checked
+        if (document.getElementById('sketchPage')) {
+            document.getElementById('sketchPage').style.display = ts.checked ? '' : 'none';
+        }
         ts.addEventListener('change', () => {
             document.body.classList.toggle('sketch-enabled', ts.checked);
             if (document.getElementById('sketchPage')) {
