@@ -5289,6 +5289,8 @@ async function sendEmail() {
     setTimeout(() => {
         window.print();
 
+    const onAfterPrint = () => {
+        window.removeEventListener('afterprint', onAfterPrint);
         setTimeout(() => {
             let sbj = buildReportBaseName();
             const folgeterminChecked = document.getElementById('check_folgetermin')?.checked;
@@ -5313,6 +5315,13 @@ async function sendEmail() {
             const emailTarget = localStorage.getItem('brugger_email') || 'kanal@brugger-entfeuchtung.at';
             window.location.href = `mailto:${emailTarget}?subject=${encodeURIComponent(sbj)}&body=${encodeURIComponent(body)}`;
         }, 900);
+        }, 500);
+    };
+
+    window.addEventListener('afterprint', onAfterPrint);
+
+    setTimeout(() => {
+        window.print();
     }, 900);
 }
 
