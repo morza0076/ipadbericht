@@ -395,7 +395,7 @@
                 height: 265mm !important;
                 min-height: 265mm !important;
                 max-height: 265mm !important;
-                padding: 5mm 6mm 10mm 6mm !important;
+                padding: 6mm 8mm 11mm 8mm !important;
                 page-break-after: auto !important;
                 page-break-inside: avoid !important;
                 break-after: auto !important;
@@ -405,9 +405,12 @@
                 position: relative;
                 left: auto !important;
                 right: auto !important;
-                font-size: 9.7px !important;
+                font-family: 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+                font-size: 10px !important;
+                line-height: 1.35 !important;
                 float: none !important;
                 background: #ffffff !important;
+                color: #111827 !important;
             }
             .page.print-page-break {
                 page-break-after: always !important;
@@ -424,48 +427,52 @@
             }
             
             .header {
-                border: 1px solid #d9e1ea !important;
-                border-radius: 14px !important;
-                background: #ffffff !important;
-                margin-bottom: 7px !important;
-                padding: 9px 11px 10px 11px !important;
+                border: 1px solid #c8d2e0 !important;
+                border-top: 3px solid #9a8218 !important;
+                border-radius: 8px !important;
+                background: #fafbfc !important;
+                margin-bottom: 8px !important;
+                padding: 10px 12px 11px 12px !important;
             }
             .header-top { margin-bottom: 8px !important; align-items: flex-start !important; }
             .header-title {
                 background: transparent !important;
                 padding: 0 !important;
-                font-size: 15.5px !important;
+                font-size: 15px !important;
+                font-weight: 800 !important;
                 text-align: left !important;
                 border: none !important;
-                letter-spacing: 0.04em !important;
-                line-height: 1.1 !important;
+                letter-spacing: 0.06em !important;
+                line-height: 1.15 !important;
+                color: #0f172a !important;
             }
             .header-right {
-                font-size: 9.2px !important;
-                line-height: 1.35 !important;
-                color: #4b5563 !important;
-                border: 1px solid #e4e9f0 !important;
-                border-radius: 10px !important;
+                font-size: 8.8px !important;
+                line-height: 1.4 !important;
+                color: #334155 !important;
+                border: 1px solid #d8e0ea !important;
+                border-radius: 6px !important;
                 background: #ffffff !important;
-                padding: 7px 9px !important;
+                padding: 8px 10px !important;
             }
-            .header-right strong { font-size: 10.6px !important; margin-bottom: 1px !important; color: var(--primary) !important; letter-spacing: 0.05em !important; text-transform: uppercase !important; }
-            .logo { max-height: 46px !important; }
+            .header-right strong { font-size: 9.8px !important; margin-bottom: 2px !important; color: #7c6a12 !important; letter-spacing: 0.08em !important; text-transform: uppercase !important; }
+            .logo { max-height: 44px !important; }
             .section {
-                margin-bottom: 4px !important;
-                padding: 6px 8px 7px 8px !important;
-                border: 1px solid #e3e8ef !important;
-                border-radius: 14px !important;
+                margin-bottom: 5px !important;
+                padding: 7px 9px 8px 9px !important;
+                border: 1px solid #d8e2ec !important;
+                border-radius: 8px !important;
                 background: #ffffff !important;
             }
             .section h2 {
                 background: transparent !important;
-                color: var(--primary) !important;
-                border-bottom: 1px solid #e0e6ed !important;
-                padding: 0 0 5px 0 !important;
-                margin-bottom: 5px !important;
-                font-size: 9px !important;
-                letter-spacing: 0.08em !important;
+                color: #1e293b !important;
+                border-bottom: 1px solid #cbd5e1 !important;
+                padding: 0 0 6px 0 !important;
+                margin-bottom: 6px !important;
+                font-size: 8.5px !important;
+                font-weight: 800 !important;
+                letter-spacing: 0.12em !important;
             }
             #mainPage .section:first-of-type > h2 {
                 background: #fff !important;
@@ -489,38 +496,39 @@
                 margin-bottom: 3px !important;
                 line-height: 1.2 !important;
             }
-            .label { font-size: 8.3px !important; font-weight: 700 !important; letter-spacing: 0.04em !important; color: #6b7280 !important; }
-            .footer { position: absolute !important; left: 6mm !important; right: 6mm !important; bottom: 4mm !important; margin-top: 0 !important; color: #6b7280; border-top: 1px solid #d1d5db !important; padding-top: 2px !important; font-size: 7.9px !important; }
+            .label { font-size: 8px !important; font-weight: 700 !important; letter-spacing: 0.06em !important; color: #475569 !important; text-transform: uppercase !important; }
+            .footer { display: flex !important; align-items: center !important; position: absolute !important; left: 8mm !important; right: 8mm !important; bottom: 4mm !important; margin-top: 0 !important; color: #64748b !important; border-top: 1px solid #cbd5e1 !important; padding-top: 4px !important; font-size: 7.5px !important; letter-spacing: 0.06em !important; text-transform: uppercase !important; justify-content: space-between !important; }
             textarea { display: none !important; }
             .print-textarea-clone {
                 display: block !important;
                 width: 100% !important;
                 font-size: 9.5px !important;
-                line-height: 1.2 !important;
+                line-height: 1.38 !important;
                 white-space: pre-wrap !important;
                 word-wrap: break-word !important;
                 margin: 0 !important;
-                padding: 2px 0 !important;
+                padding: 3px 0 !important;
                 background: transparent !important;
                 border: none !important;
                 border-radius: 0 !important;
                 box-shadow: none !important;
-                color: inherit !important;
+                color: #111827 !important;
                 min-height: 0 !important;
             }
             input:not([type="checkbox"]), select, .photo-desc {
                 border: none !important;
+                border-bottom: 0.35pt solid #e2e8f0 !important;
                 background: transparent !important;
-                padding: 1px 0 !important;
+                padding: 2px 0 3px 0 !important;
                 -webkit-appearance: none;
                 appearance: none;
-                font-size: 9.4px !important;
+                font-size: 9.5px !important;
                 margin: 0 !important;
                 border-radius: 0 !important;
                 height: auto !important;
                 min-height: 0 !important;
-                line-height: 1.1 !important;
-                color: inherit !important;
+                line-height: 1.32 !important;
+                color: #0f172a !important;
             }
             #mainPage .section:first-of-type input#name,
             #mainPage .section:first-of-type input#datum,
@@ -543,40 +551,23 @@
                 font-weight: 600 !important;
             }
             #befund + .print-textarea-clone {
-                font-size: 11.5px !important;
-                line-height: 1.3 !important;
+                font-size: 10.5px !important;
+                line-height: 1.4 !important;
             }
-        #mainPage .section:first-of-type input:not([type="checkbox"]),
-        #mainPage .section:first-of-type select {
-            font-size: 10px !important;
-            line-height: 1.1 !important;
-            padding: 1px 0 !important;
-        }
-        body[data-app-type="LO"].is-lo-ortung:not(.is-flachdach) #mainPage .section:first-of-type input:not([type="checkbox"]),
-        body[data-app-type="LO"].is-lo-ortung:not(.is-flachdach) #mainPage .section:first-of-type select {
-            font: var(--lo-print-unified-font) !important;
-            letter-spacing: normal !important;
-        }
-        #befund + .print-textarea-clone {
-            font-size: 10px !important;
-            line-height: 1.2 !important;
-        }
-        body[data-app-type="LO"].is-lo-ortung:not(.is-flachdach) #befund + .print-textarea-clone {
-            font: var(--lo-print-unified-font) !important;
-            letter-spacing: normal !important;
-        }
-            .page .label,
-            .page .grid-header,
-            .page .header-right,
-            .page .header-right strong,
-            .page .section h2,
-            .page .footer,
-            .page .checkbox-item,
-            .page input:not([type="checkbox"]),
-            .page select,
-            .page .photo-desc,
-            .page .print-textarea-clone {
-                font-size: 11px !important;
+            #mainPage .section:first-of-type input:not([type="checkbox"]),
+            #mainPage .section:first-of-type select {
+                font-size: 10px !important;
+                line-height: 1.25 !important;
+                padding: 2px 0 4px 0 !important;
+            }
+            body[data-app-type="LO"].is-lo-ortung:not(.is-flachdach) #mainPage .section:first-of-type input:not([type="checkbox"]),
+            body[data-app-type="LO"].is-lo-ortung:not(.is-flachdach) #mainPage .section:first-of-type select {
+                font: var(--lo-print-unified-font) !important;
+                letter-spacing: normal !important;
+            }
+            body[data-app-type="LO"].is-lo-ortung:not(.is-flachdach) #befund + .print-textarea-clone {
+                font: var(--lo-print-unified-font) !important;
+                letter-spacing: normal !important;
             }
             input[type="checkbox"] { -webkit-appearance: auto !important; appearance: auto !important; border: 1px solid #000 !important; width: 9px !important; height: 9px !important; margin-right: 3px !important; margin-top: 0 !important; margin-bottom: 0 !important; accent-color: var(--primary) !important; }
             .checkbox-item { font-size: 8.7px !important; padding: 0 !important; margin: 0 !important; gap: 2px !important; line-height: 1 !important; }
@@ -590,15 +581,14 @@
             .grid-header { border-bottom: 1px solid #d1d5db; padding-bottom: 3px; margin-bottom: 5px; color: #6b7280 !important; }
             .is-empty-row { display: none !important; }
             
-            .sketch-container { border: 1px solid #d6deeb !important; background: #ffffff !important; box-shadow: none !important; height: 148mm !important; background-image: none !important; margin-top: 0 !important; border-radius: 14px !important; }
+            .sketch-container { border: 1px solid #c8d2e0 !important; background: #fafbfc !important; box-shadow: none !important; height: 148mm !important; background-image: none !important; margin-top: 0 !important; border-radius: 8px !important; }
             #sketch-canvas { position: static !important; width: 100% !important; height: 100% !important; }
             
-            .signature-box { border: 1px solid #e3e8ef !important; background: #ffffff !important; padding: 4px !important; margin-top: 4px; border-radius: 12px !important; }
-            .signature-pad { border: 1px dashed #b6c1cf !important; background: #ffffff !important; height: 66px !important; border-radius: 10px !important; }
-            .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 3px; page-break-inside: avoid !important; }
-            .photo-box { border: 1px solid #e3e8ef !important; box-shadow: none !important; padding: 5px !important; page-break-inside: avoid; border-radius: 12px !important; background: #ffffff !important; }
-            .img-container { height: 70mm !important; border: 1px solid #eef2f6 !important; background: #ffffff !important; border-radius: 10px !important; }
-            .img-container { height: 92mm !important; border: 1px solid #eef2f6 !important; background: #ffffff !important; border-radius: 10px !important; }
+            .signature-box { border: 1px solid #d8e2ec !important; background: #fafbfc !important; padding: 6px !important; margin-top: 5px; border-radius: 8px !important; }
+            .signature-pad { border: 1px dashed #94a3b8 !important; background: #ffffff !important; height: 66px !important; border-radius: 6px !important; }
+            .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px; page-break-inside: avoid !important; }
+            .photo-box { border: 1px solid #d8e2ec !important; box-shadow: none !important; padding: 6px !important; page-break-inside: avoid; border-radius: 8px !important; background: #ffffff !important; }
+            .img-container { height: 84mm !important; border: 1px solid #dbe4ee !important; background: #fafbfc !important; border-radius: 6px !important; }
             #ueberpruefteBauteileContainer, #poolBauteileContainer { border: 1px solid #e3e8ef !important; background: #ffffff !important; padding: 3px !important; margin-bottom: 3px !important; border-radius: 12px !important; }
             #auftraggeberContainer { border-top: none !important; }
             
@@ -887,99 +877,6 @@
                     font-size: 7.4px !important;
                 }
             }
-        }
-
-        body.pdf-export-mode {
-            background: #ffffff !important;
-            color: #000000 !important;
-            color-scheme: light !important;
-            padding: 0 !important;
-        }
-        body.pdf-export-mode::before,
-        body.pdf-export-mode::after {
-            display: none !important;
-        }
-        body.pdf-export-mode #controls,
-        body.pdf-export-mode .toolbar,
-        body.pdf-export-mode .no-print,
-        body.pdf-export-mode input[type="file"],
-        body.pdf-export-mode #cropModal,
-        body.pdf-export-mode #photoEditorModal,
-        body.pdf-export-mode #settingsModal,
-        body.pdf-export-mode #toast-container {
-            display: none !important;
-        }
-        body.pdf-export-mode #app-root {
-            padding: 0 !important;
-        }
-        body.pdf-export-mode .page {
-            box-sizing: border-box !important;
-            width: 200mm !important;
-            max-width: 200mm !important;
-            min-height: 285mm !important;
-            margin: 0 auto 4mm auto !important;
-            padding: 5mm 6mm 10mm 6mm !important;
-            box-shadow: none !important;
-            border: none !important;
-            border-radius: 0 !important;
-            background: #ffffff !important;
-            color: #111827 !important;
-            overflow: hidden !important;
-        }
-        body.pdf-export-mode .page:last-child {
-            margin-bottom: 0 !important;
-        }
-        body.pdf-export-mode .pdf-export-hidden-image {
-            visibility: hidden !important;
-        }
-        body.pdf-export-mode textarea {
-            display: none !important;
-        }
-        body.pdf-export-mode .print-textarea-clone {
-            display: block !important;
-            width: 100% !important;
-            font-size: 10px !important;
-            line-height: 1.2 !important;
-            white-space: pre-wrap !important;
-            word-wrap: break-word !important;
-            margin: 0 !important;
-            padding: 2px 0 !important;
-            background: transparent !important;
-            border: none !important;
-            box-shadow: none !important;
-            color: inherit !important;
-        }
-        body.pdf-export-mode #mainPage .section:first-of-type input#adresse,
-        body.pdf-export-mode #mainPage .section:first-of-type input#plz,
-        body.pdf-export-mode #mainPage .section:first-of-type input#ort,
-        body.pdf-export-mode #mainPage .section:first-of-type input#auftraggeber_adresse,
-        body.pdf-export-mode #mainPage .section:first-of-type input#auftraggeber_plz,
-        body.pdf-export-mode #mainPage .section:first-of-type input#auftraggeber_ort {
-            font-size: 12px !important;
-            line-height: 1.15 !important;
-            font-weight: 600 !important;
-        }
-        body.pdf-export-mode[data-app-type="LO"].is-lo-ortung:not(.is-flachdach) #mainPage .section:first-of-type input:not([type="checkbox"]),
-        body.pdf-export-mode[data-app-type="LO"].is-lo-ortung:not(.is-flachdach) #mainPage .section:first-of-type select {
-            font: var(--lo-print-unified-font) !important;
-            letter-spacing: normal !important;
-        }
-        body.pdf-export-mode[data-app-type="LO"].is-lo-ortung:not(.is-flachdach) #befund + .print-textarea-clone {
-            font: var(--lo-print-unified-font) !important;
-            letter-spacing: normal !important;
-        }
-        body.pdf-export-mode .page .label,
-        body.pdf-export-mode .page .grid-header,
-        body.pdf-export-mode .page .header-right,
-        body.pdf-export-mode .page .header-right strong,
-        body.pdf-export-mode .page .section h2,
-        body.pdf-export-mode .page .footer,
-        body.pdf-export-mode .page .checkbox-item,
-        body.pdf-export-mode .page input:not([type="checkbox"]),
-        body.pdf-export-mode .page select,
-        body.pdf-export-mode .page .photo-desc,
-        body.pdf-export-mode .page .print-textarea-clone {
-            font-size: 11px !important;
         }
 
         /* TOAST NOTIFICATIONS */
@@ -1897,7 +1794,6 @@
                     font-size: 22px;
                 }
             }
-        }
     </style>
 </head>
 <body>
@@ -2103,6 +1999,9 @@
         <button class="control-btn secondary" onclick="document.getElementById('photoInput').click()">FOTOS HINZUFÜGEN</button>
         <button class="control-btn secondary" onclick="clearSketch()">SKIZZE LÖSCHEN</button>
         <button class="control-btn secondary" onclick="sendEmail()">EMAIL SENDEN</button>
+        <button type="button" class="no-print control-btn secondary" style="margin-bottom: 10px; width: 100%; font-size: 11px; padding: 8px;" onclick="pasteFromCalendar()">
+            📅 Daten aus Kalender-Termin einfügen
+        </button>
         <button class="control-btn secondary" onclick="saveOpenConstructionNow()">OFFENE BAUSTELLE SICHERN</button>
         <label id="btnPhotoNumbering" class="control-btn secondary" style="display:none; gap:8px;">
             <input type="checkbox" id="checkPhotoNumbering" onchange="togglePhotoNumbering()" style="width:14px !important; height:14px; accent-color:#fff; margin:0;">
@@ -2118,6 +2017,9 @@
         <input type="file" id="photoInput" multiple accept="image/*" style="display:none" onchange="handlePhotos(this)">
         <button class="control-btn secondary" onclick="document.getElementById('photoInput').click()">FOTOS HINZUFÜGEN</button>
         <button class="control-btn secondary" onclick="sendEmail()">EMAIL SENDEN</button>
+        <button type="button" class="no-print control-btn secondary" style="margin-bottom: 10px; width: 100%; font-size: 11px; padding: 8px;" onclick="pasteFromCalendar()">
+            📅 Daten aus Kalender-Termin einfügen
+        </button>
         <button class="control-btn secondary" onclick="saveOpenConstructionNow()">OFFENE BAUSTELLE SICHERN</button>
         <label id="btnPhotoNumbering" class="control-btn secondary" style="display:none; gap:8px;">
             <input type="checkbox" id="checkPhotoNumbering" onchange="togglePhotoNumbering()" style="width:14px !important; height:14px; accent-color:#fff; margin:0;">
@@ -3033,12 +2935,79 @@
     <div id="photoPagesContainer"></div>
 </template>
 
-<script src="vendor/html2canvas.min.js" data-pdf-lib="html2canvas"></script>
-<script src="vendor/jspdf.umd.min.js" data-pdf-lib="jspdf"></script>
+<!-- Alle Skripte werden jetzt am Ende geladen -->
 <script>
 /* =========================================================
-   TEXT-VORLAGEN (Leckortung)
+   KALENDER / OUTLOOK PARSER (Auto-Fill)
    ========================================================= */
+async function pasteFromCalendar() {
+    const parseCalendarText = (text) => {
+        const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+        let plz = '', ort = '', street = '', name = '', tel = '';
+
+        const telMatch = text.match(/(\+43|0043|0)[0-9\s\-\/]{6,}/);
+        if (telMatch) tel = telMatch[0].trim();
+
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            const lowerLine = line.toLowerCase();
+
+            if (lowerLine.startsWith('ort:') || lowerLine.startsWith('adresse:') || lowerLine.startsWith('location:')) {
+                const locationText = line.substring(line.indexOf(':') + 1).trim();
+                const plzMatch = locationText.match(/(?:A-|D-|AT-)?\b(\d{4,5})\s+([a-zA-ZäöüÄÖÜß\-\s]+)/);
+                if (plzMatch) {
+                    plz = plzMatch[1];
+                    ort = plzMatch[2].trim();
+                    street = locationText.replace(plzMatch[0], '').replace(',', '').trim();
+                } else {
+                    street = locationText;
+                }
+            }
+
+            if (lowerLine.startsWith('betreff:') || lowerLine.startsWith('titel:') || lowerLine.startsWith('thema:')) {
+                name = line.substring(line.indexOf(':') + 1).trim();
+            }
+        }
+
+        if (!plz) {
+            for (let i = 0; i < lines.length; i++) {
+                const match = lines[i].match(/(?:A-|D-|AT-)?\b(\d{4,5})\s+([a-zA-ZäöüÄÖÜß\-\s]+)/);
+                if (match) {
+                    plz = match[1];
+                    ort = match[2].trim();
+                    if (i > 0) street = lines[i - 1];
+                    if (i > 1 && !name) name = lines[0];
+                    break;
+                }
+            }
+        }
+
+        if (document.getElementById('name') && name) document.getElementById('name').value = name;
+        if (document.getElementById('adresse') && street) document.getElementById('adresse').value = street;
+        if (document.getElementById('plz') && plz) document.getElementById('plz').value = plz;
+        if (document.getElementById('ort') && ort) document.getElementById('ort').value = ort;
+        if (document.getElementById('telefon') && tel) document.getElementById('telefon').value = tel;
+        if (typeof updateTitleWithAddress === 'function') updateTitleWithAddress();
+        showToast("Kalenderdaten erfolgreich übernommen!", "success");
+    };
+
+    try {
+        const text = await navigator.clipboard.readText();
+        if (!text || text.trim() === '') {
+            alert("Zwischenablage ist leer. Bitte kopiere zuerst den Kalender-Termin!");
+            return;
+        }
+        parseCalendarText(text);
+    } catch (err) {
+        const manualText = prompt("Bitte füge den kopierten Kalender-Termin hier ein (Strg+V oder lange tippen -> Einsetzen):");
+        if (manualText && manualText.trim()) parseCalendarText(manualText);
+    }
+}
+
+function showToast(msg, type="info") {
+    alert(msg);
+}
+
 let textTemplates = [];
 const DEFAULT_TEMPLATES = [
     { id: 'funkenschlag', category: 'flachdach', title: 'Funkenschlag', text: "1. Verfahrensoptik und Methodik\nDie Überprüfung der Kunststoff-Dachabdichtung auf dem Hauptdach wurde mittels des Hochspannungs-Impuls-Verfahrens (Trockenortungsverfahren) durchgeführt. Dieses Verfahren basiert auf der elektrischen Isolationsfähigkeit der Abdichtungslage.\n\nFunktionsweise: Eine kontrollierte Hochspannung wird über eine mobile Kupferbürste auf die Oberfläche der Dachbahn appliziert. Da die Kunststoffabdichtung als Nichtleiter fungiert, bleibt der Stromkreis unterbrochen, solange die Schicht intakt ist.\nDetektion: Bei Vorliegen einer Fehlstelle (Loch, Riss oder kapillare Undichtigkeit) kommt es zum Funkendurchschlag in Richtung des geerdeten Untergrunds. Dieser Durchschlag wird sowohl akustisch als auch optisch signalisiert und ermöglicht eine zentimetergenaue Lokalisierung.\nParameter: Die Prüfspannung wurde spezifisch auf die Materialstärke der vorliegenden Kunststoffbahn kalibriert, um eine zuverlässige Durchschlagskraft bei Defekten zu gewährleisten, ohne das intakte Material thermisch zu belasten.\n\n2. Untersuchungsumfang\nGegenstand der Prüfung war die freiliegende Flachdachfläche des Hauptdaches. Voraussetzung für die Durchführung war eine trockene und besenreine Oberfläche ohne Auflast (z. B. Kies oder Begrünung), um eine flächendeckende Kontaktierung durch die Prüfbürste sicherzustellen.\n\n3. Befund und Ergebnisse\nIm Rahmen der systematischen Abfahrung der Dachfläche sowie der detaillierten Überprüfung der Nahtfügebereiche und Anschlüsse wurden insgesamt 24 Verdachtsbereiche identifiziert.\n\nCharakteristik der Fehlstellen: Die Detektionen umfassen sowohl punktuelle Perforationen als auch potenzielle Schwachstellen im Bereich der Nahtüberlappungen.\nDokumentation: Alle 24 lokalisierten Stellen wurden unmittelbar auf der Dachhaut markiert, um eine direkte Zuordnung für die nachfolgenden Instandsetzungsmaßnahmen zu ermöglichen." },
@@ -3049,11 +3018,8 @@ const DEFAULT_TEMPLATES = [
     { id: 'gasaustritt', category: 'leckortung', title: 'Gasaustritt Whg', text: "Objekt: Trennwand Kinderzimmer / Badezimmer\nSchadensbild: Akute Vernässung des Mauerwerks im bodennahen und mittleren Wandbereich.\n\nUntersuchungsschritte\nSystemprüfung: Funktionsprüfung der Abwasser- und Druckleitungen zur Differenzierung der Schadensquelle.\nVorbereitung: Absperrung der Wasserzufuhr sowie vollständige Entleerung des Leitungssystems.\nDetektionsverfahren: Beaufschlagung der Rohrleitungen mit Prüfgas (Tracergas). Die Ortung erfolgte mittels elektronischem Gasspürgerät durch Messung der Gasdiffusion an den Bauteiloberflächen.\n\nTechnischer Befund\nDie messtechnische Untersuchung lokalisierte eine Undichtigkeit an der Warmwasserleitung. Der Gasaustritt konzentriert sich innerhalb der Wandung im Bereich der Zuleitung zur Duscharmatur." }
 ];
 
-/* =========================================================
-   APP STEUERUNG
-   ========================================================= */
 let currentApp = null;
-let appCleanupFuncs = []; // Liste für Cleanup-Funktionen (Event Listeners)
+let appCleanupFuncs = [];
 let hasUnsavedChanges = false;
 let currentDraftId = null;
 const DB_NAME = 'BruggerAppDB';
@@ -3153,6 +3119,62 @@ function updateSaveStatus(message = 'Bereit', state = 'saved') {
 
 function formatStatusTime(date = new Date()) {
     return date.toLocaleTimeString('de-AT', { hour: '2-digit', minute: '2-digit' });
+}
+
+// AUTO-FILL: PLZ <-> ORT
+function setupPlzOrtAutoFill() {
+    // Diese Pärchen (Kunde & Auftraggeber) werden überwacht
+    const fields = [
+        { plz: 'plz', ort: 'ort' },
+        { plz: 'auftraggeber_plz', ort: 'auftraggeber_ort' }
+    ];
+
+    fields.forEach(pair => {
+        const plzInput = document.getElementById(pair.plz);
+        const ortInput = document.getElementById(pair.ort);
+
+        if (plzInput && ortInput) {
+            // 1. Wenn PLZ eingegeben wird -> Ort suchen
+            plzInput.addEventListener('change', async () => {
+                const plz = plzInput.value.trim();
+                // Nur suchen, wenn eine PLZ eingetippt wurde und der Ort noch leer ist
+                if (plz.length >= 4 && !ortInput.value.trim()) {
+                    ortInput.value = "⏳...";
+                    try {
+                        // Suche auf Österreich (at) und Deutschland (de)
+                        const res = await fetch(`https://nominatim.openstreetmap.org/search?postalcode=${plz}&countrycodes=at,de&format=json&addressdetails=1`);
+                        const data = await res.json();
+                        if (data && data.length > 0) {
+                            const addr = data[0].address;
+                            ortInput.value = addr.city || addr.town || addr.village || addr.municipality || data[0].name || "";
+                            updateTitleWithAddress(); // Formulartitel (PDF-Name) updaten
+                        } else {
+                            ortInput.value = "";
+                        }
+                    } catch (e) { ortInput.value = ""; }
+                }
+            });
+
+            // 2. Wenn Ort eingegeben wird -> PLZ suchen
+            ortInput.addEventListener('change', async () => {
+                const ort = ortInput.value.trim();
+                // Nur suchen, wenn Ort eingetippt wurde und die PLZ noch leer ist
+                if (ort.length >= 3 && !plzInput.value.trim()) {
+                    plzInput.value = "⏳...";
+                    try {
+                        const res = await fetch(`https://nominatim.openstreetmap.org/search?city=${ort}&countrycodes=at,de&format=json&addressdetails=1`);
+                        const data = await res.json();
+                        if (data && data.length > 0 && data[0].address && data[0].address.postcode) {
+                            plzInput.value = data[0].address.postcode;
+                            updateTitleWithAddress();
+                        } else {
+                            plzInput.value = "";
+                        }
+                    } catch (e) { plzInput.value = ""; }
+                }
+            });
+        }
+    });
 }
 
 function isIOSLikeDevice() {
@@ -3587,273 +3609,6 @@ async function shareFileOnIOS(blob, fileName) {
     }
 }
 
-const externalScriptPromises = new Map();
-const HTML2CANVAS_SRC = 'vendor/html2canvas.min.js';
-const JSPDF_SRC = 'vendor/jspdf.umd.min.js';
-
-function arePdfLibrariesReady() {
-    return !!(window.html2canvas && window.jspdf && window.jspdf.jsPDF);
-}
-
-function loadExternalScript(src) {
-    if (externalScriptPromises.has(src)) return externalScriptPromises.get(src);
-    const promise = new Promise((resolve, reject) => {
-        if (arePdfLibrariesReady()) return resolve(true);
-
-        const existing = document.querySelector(`script[src="${src}"]`);
-        if (existing && existing.dataset.loaded === 'true') {
-            return resolve(true);
-        }
-
-        let script = existing;
-        if (script) {
-            script.remove();
-        }
-
-        script = document.createElement('script');
-        script.src = src;
-        script.async = true;
-        script.crossOrigin = 'anonymous';
-        script.addEventListener('load', () => {
-            script.dataset.loaded = 'true';
-            resolve(true);
-        }, { once: true });
-        script.addEventListener('error', () => reject(new Error(`Script konnte nicht geladen werden: ${src}`)), { once: true });
-        document.head.appendChild(script);
-    });
-    externalScriptPromises.set(src, promise);
-    return promise;
-}
-
-async function ensurePdfLibraries() {
-    if (arePdfLibrariesReady()) return true;
-    await Promise.all([
-        loadExternalScript(HTML2CANVAS_SRC),
-        loadExternalScript(JSPDF_SRC)
-    ]);
-    return arePdfLibrariesReady();
-}
-
-function waitForNextPaint() {
-    return new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-}
-
-function markProblematicImagesForPdf() {
-    const marked = [];
-    document.querySelectorAll('#app-root img').forEach(img => {
-        const src = img.getAttribute('src') || '';
-        const isEmbedded = src.startsWith('data:') || src.startsWith('blob:');
-        if (isEmbedded) return;
-        img.classList.add('pdf-export-hidden-image');
-        marked.push(img);
-    });
-    return marked;
-}
-
-function restoreProblematicImagesAfterPdf(images) {
-    images.forEach(img => img.classList.remove('pdf-export-hidden-image'));
-}
-
-function showPdfDebugError(error) {
-    const rawMessage = String(error?.message || error || 'Unbekannter PDF Fehler');
-    const rawStack = String(error?.stack || '').split('\n').slice(0, 6).join('\n');
-    const debugText = rawStack ? `${rawMessage}\n\n${rawStack}` : rawMessage;
-    console.error('PDF debug details:', debugText);
-    setTimeout(() => {
-        alert(`PDF DEBUG FEHLER\n\n${debugText}`);
-    }, 50);
-}
-
-function stripProblematicPdfCharacters(text) {
-    return String(text || '')
-        .replace(/[\u{1F000}-\u{1FAFF}]/gu, '')
-        .replace(/[\u2600-\u27BF]/g, '')
-        .replace(/[\u200D\uFE0E\uFE0F]/g, '')
-        .replace(/\s{2,}/g, ' ');
-}
-
-function sanitizePdfCloneDocument(clonedDocument) {
-    clonedDocument.documentElement.style.setProperty('color-scheme', 'light', 'important');
-    clonedDocument.body.style.setProperty('color-scheme', 'light', 'important');
-    clonedDocument.documentElement.style.setProperty('background-color', '#ffffff', 'important');
-    clonedDocument.body.style.setProperty('background-color', '#ffffff', 'important');
-    clonedDocument.documentElement.style.setProperty('color', '#000000', 'important');
-    clonedDocument.body.style.setProperty('color', '#000000', 'important');
-    clonedDocument.documentElement.classList.remove('dark-mode');
-    clonedDocument.body.classList.remove('dark-mode');
-
-    const root = clonedDocument.getElementById('app-root');
-    if (!root) return;
-
-    const walker = clonedDocument.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-    const textNodes = [];
-    let currentNode = walker.nextNode();
-    while (currentNode) {
-        textNodes.push(currentNode);
-        currentNode = walker.nextNode();
-    }
-
-    textNodes.forEach(node => {
-        const original = node.nodeValue || '';
-        const sanitized = stripProblematicPdfCharacters(original);
-        if (sanitized !== original) node.nodeValue = sanitized;
-    });
-}
-
-function fitCanvasIntoPdfPage(canvas, pdfWidth, pdfHeight) {
-    const imgWidth = pdfWidth;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-    const renderHeight = Math.min(imgHeight, pdfHeight);
-    const renderWidth = imgHeight > pdfHeight ? (canvas.width * pdfHeight) / canvas.height : imgWidth;
-    return {
-        x: (pdfWidth - renderWidth) / 2,
-        y: 0,
-        width: renderWidth,
-        height: renderHeight
-    };
-}
-
-function createPdfFallbackCanvas(sourceCanvas) {
-    const fallbackCanvas = document.createElement('canvas');
-    fallbackCanvas.width = Math.max(1, Math.floor(sourceCanvas.width * 0.75));
-    fallbackCanvas.height = Math.max(1, Math.floor(sourceCanvas.height * 0.75));
-    const context = fallbackCanvas.getContext('2d', { alpha: false });
-    context.fillStyle = '#ffffff';
-    context.fillRect(0, 0, fallbackCanvas.width, fallbackCanvas.height);
-    context.drawImage(sourceCanvas, 0, 0, fallbackCanvas.width, fallbackCanvas.height);
-    return fallbackCanvas;
-}
-
-function addCanvasToPdf(pdf, canvas, pageIndex, pdfWidth, pdfHeight) {
-    const placement = fitCanvasIntoPdfPage(canvas, pdfWidth, pdfHeight);
-    if (pageIndex > 0) pdf.addPage();
-
-    try {
-        // Nur JPEG verwenden für drastisch kleinere PDF-Dateien
-        const jpegData = canvas.toDataURL('image/jpeg', 0.65);
-        pdf.addImage(jpegData, 'JPEG', placement.x, placement.y, placement.width, placement.height, undefined, 'FAST');
-        return;
-    } catch (error) {
-        console.warn('JPEG export failed, trying fallback canvas', error);
-    }
-
-    const fallbackCanvas = createPdfFallbackCanvas(canvas);
-    const fallbackPlacement = fitCanvasIntoPdfPage(fallbackCanvas, pdfWidth, pdfHeight);
-    const jpegData = fallbackCanvas.toDataURL('image/jpeg', 0.60);
-    pdf.addImage(jpegData, 'JPEG', fallbackPlacement.x, fallbackPlacement.y, fallbackPlacement.width, fallbackPlacement.height, undefined, 'FAST');
-}
-
-async function saveBlobToDevice(blob, fileName, description = 'Datei') {
-    try {
-        if (window.showSaveFilePicker) {
-            const handle = await window.showSaveFilePicker({
-                suggestedName: fileName,
-                startIn: 'documents',
-                types: [{ description, accept: { [blob.type || 'application/octet-stream']: [`.${fileName.split('.').pop()}`] } }]
-            });
-            const writable = await handle.createWritable();
-            await writable.write(blob);
-            await writable.close();
-            return true;
-        }
-    } catch (e) {
-        if (e?.name === 'AbortError') return 'aborted';
-    }
-
-    const iosShareResult = await shareFileOnIOS(blob, fileName);
-    if (iosShareResult === true || iosShareResult === 'aborted') return iosShareResult;
-
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement('a');
-    anchor.href = url;
-    anchor.download = fileName;
-    anchor.click();
-    setTimeout(() => URL.revokeObjectURL(url), 2000);
-    return true;
-}
-
-async function exportReportPdf({ skipReportSave = false } = {}) {
-    if (currentApp === 'DL') {
-        const raw = document.getElementById('dl_pasted_data');
-        if (raw) raw.value = '';
-    }
-
-    if (!skipReportSave) {
-        maybeShowIOSExportHint('save');
-        await exportFullReport();
-    }
-
-    updateSaveStatus('PDF wird erstellt...', 'saving');
-
-    let hiddenImages = [];
-
-    try {
-        const libsReady = await ensurePdfLibraries();
-        if (!libsReady) throw new Error('PDF-Bibliotheken sind nicht verfügbar.');
-
-        preparePrintView();
-        document.body.classList.add('pdf-export-mode');
-        hiddenImages = markProblematicImagesForPdf();
-        await waitForNextPaint();
-
-        const pages = Array.from(document.querySelectorAll('#app-root .page')).filter(page => page.offsetParent !== null);
-        if (!pages.length) throw new Error('Keine Seiten für den PDF-Export gefunden.');
-
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4', compress: true });
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = pdf.internal.pageSize.getHeight();
-        const captureScale = isIOSLikeDevice() ? 1.0 : 1.2; // Reduzierte Skalierung für kleinere Dateigröße
-
-        for (let index = 0; index < pages.length; index++) {
-            const page = pages[index];
-            await waitForNextPaint();
-            const canvas = await window.html2canvas(page, {
-                scale: captureScale,
-                useCORS: true,
-                backgroundColor: '#ffffff',
-                logging: false,
-                onclone: sanitizePdfCloneDocument,
-                scrollX: 0,
-                scrollY: 0,
-                windowWidth: document.documentElement.scrollWidth,
-                windowHeight: document.documentElement.scrollHeight
-            });
-            addCanvasToPdf(pdf, canvas, index, pdfWidth, pdfHeight);
-        }
-
-        const fileName = buildReportBaseName().replace(/[/\\?%*:|"<>]/g, '-') + '.pdf';
-        const pdfBlob = pdf.output('blob');
-        const saveResult = await saveBlobToDevice(pdfBlob, fileName, 'PDF Dokument');
-        if (saveResult === 'aborted') {
-            updateSaveStatus('PDF Export abgebrochen', 'dirty');
-            return false;
-        }
-
-        updateSaveStatus(`PDF gespeichert ${formatStatusTime()}`, 'saved');
-        showToast('PDF exportiert', 'success');
-        return { fileName, blob: pdfBlob };
-    } catch (e) {
-        console.error('PDF export failed', e);
-        updateSaveStatus('PDF Export fehlgeschlagen', 'dirty');
-        const rawMessage = String(e?.message || '');
-        showPdfDebugError(e);
-        const message = /Script konnte nicht geladen werden|PDF-Bibliotheken/.test(rawMessage)
-            ? 'PDF Export nicht verfügbar. Bitte Seite neu laden und sicherstellen, dass der Ordner vendor neben der HTML-Datei vorhanden ist.'
-            : /tainted|insecure|canvas|cross-origin/i.test(rawMessage)
-                ? 'PDF Export fehlgeschlagen. Wahrscheinlich blockiert ein Bild oder Logo den Export. Das wurde jetzt abgesichert. Bitte erneut versuchen.'
-                : /offset .* larger|DataView|addImage/i.test(rawMessage)
-                    ? 'PDF Export fehlgeschlagen. Der iPad-Bildparser hat die Seite abgelehnt. Der Export wurde jetzt vereinfacht. Bitte erneut versuchen.'
-                : `PDF Export fehlgeschlagen: ${e.message}`;
-        showToast(message, 'error');
-        return false;
-    } finally {
-        restoreProblematicImagesAfterPdf(hiddenImages);
-        document.body.classList.remove('pdf-export-mode');
-        cleanupAfterPrint();
-    }
-}
-
 function initCommon() {
     document.querySelectorAll('input[type="date"]').forEach(input => {
         try { input.valueAsDate = new Date(); } catch (e) { input.value = new Date().toISOString().split('T')[0]; }
@@ -3887,6 +3642,7 @@ function initCommon() {
     configureSpeechUI();
     
     setupPWA();
+    setupPlzOrtAutoFill(); // <- DIESE ZEILE HINZUGEFÜGT
 }
 
 function autoResize() { 
@@ -6016,7 +5772,6 @@ function openPhotoEditor(container) {
             }
         }; img.src = peHist[peHist.length-1];
     };
-    peCvs.onpointerup = () => { if(drawing && peMode!=='text') peHist.push(peCvs.toDataURL()); drawing=false; };
     peCvs.onpointerup = () => { if(drawing && peMode!=='text') savePEState(); drawing=false; };
 }
 
