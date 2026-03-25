@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Brugger Berichte" />
-    <title>Brugger Formulare 4.1</title>
+    <title>Brugger Formulare 4.2</title>
     <link rel="manifest" id="manifest-placeholder">
 
     <style>
@@ -191,6 +191,7 @@
         .material-grid { display: grid; grid-template-columns: 80px 80px 1fr; gap: 10px; margin-bottom: 10px; }
         .grid-header { font-size: 10px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; padding-left: 4px; letter-spacing: 0.5px; }
         .label { font-size: 11px; font-weight: 700; margin-bottom: 5px; display: block; color: var(--gray-600); text-transform: uppercase; letter-spacing: 0.03em; }
+        .hint-internal-notes { font-size: 10px; color: var(--gray-600); margin: 0 0 8px 0; line-height: 1.35; }
         
         .gps-btn, .mic-btn {
             background: var(--gray-600); color: #fff; border: none; padding: 4px 8px; border-radius: var(--radius-sm); 
@@ -334,10 +335,30 @@
            ========================================= */
         @media screen and (max-width: 1180px) {
             body { padding: 0; background: var(--bg-app); overflow-x: hidden; -webkit-text-size-adjust: 100%; }
-            #controls { position: sticky; top: 0; left: 0; width: 100%; flex-direction: row; flex-wrap: nowrap; overflow-x: auto; gap: 8px; padding: 12px; background: #2c3e50; border-radius: 0; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-            #controls::-webkit-scrollbar { display: none; }
-            #controls .save-status { flex: 0 0 auto; min-width: 220px; }
-            #controls .control-btn { flex: 0 0 auto; padding: 12px 20px; font-size: 12px; box-shadow: none; margin-top:0; }
+            #controls {
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                left: auto;
+                bottom: auto;
+                z-index: 1000;
+                width: min(268px, calc(100vw - 20px));
+                max-height: calc(100dvh - 20px);
+                overflow-x: hidden;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                display: flex;
+                flex-direction: column;
+                flex-wrap: nowrap;
+                gap: 8px;
+                padding: 12px;
+                background: rgba(44, 62, 80, 0.94);
+                border-radius: 16px;
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                box-shadow: 0 18px 40px -12px rgba(0, 0, 0, 0.35);
+            }
+            #controls .save-status { flex: 0 0 auto; min-width: 0; width: 100%; }
+            #controls .control-btn { flex: 0 0 auto; width: 100%; padding: 12px 16px; font-size: 12px; box-shadow: none; margin-top: 0; }
             .page { margin: 15px auto; min-height: auto; padding-bottom: 16px; }
             .footer { position: static; left: auto; right: auto; bottom: auto; margin-top: 14px; }
             input, textarea, select { font-size: 16px; padding: 10px; }
@@ -880,8 +901,9 @@
         }
 
         /* TOAST NOTIFICATIONS */
-        #toast-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 10000; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+        #toast-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 10000; display: flex; flex-direction: column; gap: 10px; pointer-events: none; max-width: min(420px, calc(100vw - 24px)); }
         .toast { background: #333; color: #fff; padding: 12px 24px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-size: 14px; opacity: 0; transform: translateY(20px); transition: all 0.3s ease; pointer-events: auto; display: flex; align-items: center; gap: 10px; }
+        .toast[role="status"] { outline: none; }
         .toast.show { opacity: 1; transform: translateY(0); }
         .toast.success { background: #10b981; }
         .toast.error { background: #ef4444; }
@@ -1584,11 +1606,19 @@
 
             @media screen and (max-width: 1180px) {
                 #controls {
-                    width: 100%;
-                    border-radius: 0 0 22px 22px;
+                    width: min(268px, calc(100vw - 20px));
+                    max-height: calc(100dvh - 20px);
+                    overflow-y: auto;
+                    border-radius: 22px;
                     padding: 12px;
-                    background: rgba(26, 36, 51, 0.9);
-                    border: none;
+                    background: rgba(255, 255, 255, 0.52);
+                    border: 1px solid rgba(255, 255, 255, 0.7);
+                    box-shadow: 0 30px 70px -42px rgba(26, 36, 51, 0.55);
+                }
+
+                body.dark-mode #controls {
+                    background: rgba(15, 23, 42, 0.92);
+                    border-color: rgba(71, 85, 105, 0.9);
                 }
 
                 .page {
@@ -1807,7 +1837,7 @@
     <div class="menu-box" id="login-container">
         <img src="Logo.PNG" alt="Brugger Logo" onerror="this.style.display='none'">
         <h1>PIN-Abfrage</h1>
-        <input type="password" inputmode="numeric" pattern="[0-9]*" id="loginPassword" placeholder="PIN eingeben" style="width:100%; padding:15px; font-size:24px; text-align:center; border:1px solid #ccc; border-radius:8px; margin-bottom:20px;" onkeyup="if(event.key==='Enter') attemptLogin()">
+        <input type="password" inputmode="numeric" pattern="[0-9]*" id="loginPassword" placeholder="PIN eingeben" autocomplete="current-password" aria-label="PIN eingeben" aria-invalid="false" style="width:100%; padding:15px; font-size:24px; text-align:center; border:1px solid #ccc; border-radius:8px; margin-bottom:20px;" onkeyup="if(event.key==='Enter') attemptLogin()">
         <button class="menu-btn" onclick="attemptLogin()">🔓 Entsperren</button>
         <p id="loginError" style="color:#ef4444; display:none; margin-top:10px; font-weight:bold;">PIN falsch!</p>
     </div>
@@ -1844,7 +1874,7 @@
         </div>
         <button class="menu-btn secondary" style="font-size: 13px; padding: 12px; margin-top: 20px; background: #ef4444; border: 1px solid #dc2626;" onclick="hardResetApp()">⚠️ App Reparatur / Reset</button>
         <button type="button" class="text-link-btn" style="margin-top: 15px;" onclick="openSettings()">⚙️ Einstellungen</button>
-        <div style="margin-top: 15px; color: #9ca3af; font-size: 11px;">Version 4.1</div>
+        <div style="margin-top: 15px; color: #9ca3af; font-size: 11px;">Version 4.2</div>
     </div>
 </div>
 
@@ -1993,39 +2023,39 @@
 <div id="app-root"></div>
 
 <template id="tpl-controls-sketch">
-    <div id="controls" class="no-print">
-        <button class="control-btn" onclick="printAndSave()">DRUCKEN & SPEICHERN</button>
-        <input type="file" id="photoInput" multiple accept="image/*" style="display:none" onchange="handlePhotos(this)">
-        <button class="control-btn secondary" onclick="document.getElementById('photoInput').click()">FOTOS HINZUFÜGEN</button>
-        <button class="control-btn secondary" onclick="clearSketch()">SKIZZE LÖSCHEN</button>
-        <button class="control-btn secondary" onclick="sendEmail()">EMAIL SENDEN</button>
-        <button type="button" class="no-print control-btn secondary" style="margin-bottom: 10px; width: 100%; font-size: 11px; padding: 8px;" onclick="pasteFromCalendar()">
+    <div id="controls" class="no-print" role="toolbar" aria-label="Bericht-Aktionen">
+        <button type="button" class="control-btn" onclick="printAndSave()" aria-label="Drucken und als JSON speichern">DRUCKEN & SPEICHERN</button>
+        <input type="file" id="photoInput" multiple accept="image/*" style="display:none" onchange="handlePhotos(this)" aria-label="Fotos auswählen">
+        <button type="button" class="control-btn secondary" onclick="document.getElementById('photoInput').click()" aria-label="Fotos zum Bericht hinzufügen">FOTOS HINZUFÜGEN</button>
+        <button type="button" class="control-btn secondary" onclick="clearSketch()" aria-label="Skizze löschen">SKIZZE LÖSCHEN</button>
+        <button type="button" class="control-btn secondary" onclick="sendEmail()" aria-label="E-Mail mit Bericht senden">EMAIL SENDEN</button>
+        <button type="button" class="no-print control-btn secondary" style="margin-bottom: 10px; width: 100%; font-size: 11px; padding: 8px;" onclick="pasteFromCalendar()" aria-label="Daten aus Kalender-Termin einfügen">
             📅 Daten aus Kalender-Termin einfügen
         </button>
-        <button class="control-btn secondary" onclick="saveOpenConstructionNow()">OFFENE BAUSTELLE SICHERN</button>
+        <button type="button" class="control-btn secondary" onclick="saveOpenConstructionNow()" aria-label="Offene Baustelle sichern">OFFENE BAUSTELLE SICHERN</button>
         <label id="btnPhotoNumbering" class="control-btn secondary" style="display:none; gap:8px;">
             <input type="checkbox" id="checkPhotoNumbering" onchange="togglePhotoNumbering()" style="width:14px !important; height:14px; accent-color:#fff; margin:0;">
             <span>FOTOS NUMMERIEREN</span>
         </label>
-        <button class="control-btn home" onclick="goHome()">🏠 ZUM HAUPTMENÜ</button>
+        <button type="button" class="control-btn home" onclick="goHome()" aria-label="Zum Hauptmenü">🏠 ZUM HAUPTMENÜ</button>
     </div>
 </template>
 
 <template id="tpl-controls-basic">
-    <div id="controls" class="no-print">
-        <button class="control-btn" onclick="printAndSave()">DRUCKEN & SPEICHERN</button>
-        <input type="file" id="photoInput" multiple accept="image/*" style="display:none" onchange="handlePhotos(this)">
-        <button class="control-btn secondary" onclick="document.getElementById('photoInput').click()">FOTOS HINZUFÜGEN</button>
-        <button class="control-btn secondary" onclick="sendEmail()">EMAIL SENDEN</button>
-        <button type="button" class="no-print control-btn secondary" style="margin-bottom: 10px; width: 100%; font-size: 11px; padding: 8px;" onclick="pasteFromCalendar()">
+    <div id="controls" class="no-print" role="toolbar" aria-label="Bericht-Aktionen">
+        <button type="button" class="control-btn" onclick="printAndSave()" aria-label="Drucken und als JSON speichern">DRUCKEN & SPEICHERN</button>
+        <input type="file" id="photoInput" multiple accept="image/*" style="display:none" onchange="handlePhotos(this)" aria-label="Fotos auswählen">
+        <button type="button" class="control-btn secondary" onclick="document.getElementById('photoInput').click()" aria-label="Fotos zum Bericht hinzufügen">FOTOS HINZUFÜGEN</button>
+        <button type="button" class="control-btn secondary" onclick="sendEmail()" aria-label="E-Mail mit Bericht senden">EMAIL SENDEN</button>
+        <button type="button" class="no-print control-btn secondary" style="margin-bottom: 10px; width: 100%; font-size: 11px; padding: 8px;" onclick="pasteFromCalendar()" aria-label="Daten aus Kalender-Termin einfügen">
             📅 Daten aus Kalender-Termin einfügen
         </button>
-        <button class="control-btn secondary" onclick="saveOpenConstructionNow()">OFFENE BAUSTELLE SICHERN</button>
+        <button type="button" class="control-btn secondary" onclick="saveOpenConstructionNow()" aria-label="Offene Baustelle sichern">OFFENE BAUSTELLE SICHERN</button>
         <label id="btnPhotoNumbering" class="control-btn secondary" style="display:none; gap:8px;">
             <input type="checkbox" id="checkPhotoNumbering" onchange="togglePhotoNumbering()" style="width:14px !important; height:14px; accent-color:#fff; margin:0;">
             <span>FOTOS NUMMERIEREN</span>
         </label>
-        <button class="control-btn home" onclick="goHome()">🏠 ZUM HAUPTMENÜ</button>
+        <button type="button" class="control-btn home" onclick="goHome()" aria-label="Zum Hauptmenü">🏠 ZUM HAUPTMENÜ</button>
     </div>
 </template>
 
@@ -2235,17 +2265,19 @@
             </div>
         </div>
 
-        <div class="section no-print" style="margin-top: 15px; border: 1px dashed #2b83b8; padding: 10px; border-radius: var(--radius); background: #f0f7fb;">
-            <div class="section-header-flex">
-                <h2 style="background: none; color: #2b83b8; padding: 0; margin: 0;">Interne Notizen (Nur für E-Mail)</h2>
-                <div style="display: flex; gap: 6px;">
-                    <button type="button" class="no-print mic-btn" onclick="toggleDictation(this, 'interne_notizen')">🎤 Dikt.</button>
-                    <button type="button" class="no-print gps-btn" style="background: #2b83b8; font-size: 10px; padding: 4px 8px;" onclick="insertGPSLink(this, 'interne_notizen')">📍 GPS</button>
+        <div class="section" style="margin-top: 15px; border: 1px dashed #2b83b8; padding: 10px; border-radius: var(--radius); background: #f0f7fb;">
+            <div class="no-print">
+                <div class="section-header-flex">
+                    <h2 style="background: none; color: #2b83b8; padding: 0; margin: 0;">Interne Notizen (nur Büro / E-Mail)</h2>
+                    <div style="display: flex; gap: 6px;">
+                        <button type="button" class="no-print mic-btn" onclick="toggleDictation(this, 'interne_notizen')">🎤 Dikt.</button>
+                        <button type="button" class="no-print gps-btn" style="background: #2b83b8; font-size: 10px; padding: 4px 8px;" onclick="insertGPSLink(this, 'interne_notizen')">📍 GPS</button>
+                    </div>
                 </div>
+                <p class="hint-internal-notes">Erscheint nicht im PDF-Druck.</p>
+                <textarea id="interne_notizen" placeholder="Notizen für das Büro / die E-Mail..." aria-label="Interne Notizen für Büro und E-Mail"></textarea>
             </div>
-            <textarea id="interne_notizen" placeholder="Notizen für das Büro / die E-Mail..."></textarea>
-            
-            <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #bae6fd;">
+            <div class="no-print" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #bae6fd;">
                 <label class="checkbox-item" style="font-weight: bold; color: #dc2626;">
                     <input type="checkbox" id="check_folgetermin" onchange="document.getElementById('folgetermin_container').style.display = this.checked ? 'block' : 'none'">
                     <span>⚠️ Baustelle nicht abgeschlossen - Folgetermin erforderlich</span>
@@ -2435,17 +2467,19 @@
             <textarea id="kanal_befund" placeholder="Beschreibung des Zustands, Verlaufs, festgestellte Schäden..."></textarea>
         </div>
 
-        <div class="section no-print" style="margin-top: 15px; border: 1px dashed #2b83b8; padding: 10px; border-radius: var(--radius); background: #f0f7fb;">
-            <div class="section-header-flex">
-                <h2 style="background: none; color: #2b83b8; padding: 0; margin: 0;">Interne Notizen (Nur für E-Mail)</h2>
-                <div style="display: flex; gap: 6px;">
-                    <button type="button" class="no-print mic-btn" onclick="toggleDictation(this, 'interne_notizen')">🎤 Dikt.</button>
-                    <button type="button" class="no-print gps-btn" style="background: #2b83b8; font-size: 10px; padding: 4px 8px;" onclick="insertGPSLink(this, 'interne_notizen')">📍 GPS</button>
+        <div class="section" style="margin-top: 15px; border: 1px dashed #2b83b8; padding: 10px; border-radius: var(--radius); background: #f0f7fb;">
+            <div class="no-print">
+                <div class="section-header-flex">
+                    <h2 style="background: none; color: #2b83b8; padding: 0; margin: 0;">Interne Notizen (nur Büro / E-Mail)</h2>
+                    <div style="display: flex; gap: 6px;">
+                        <button type="button" class="no-print mic-btn" onclick="toggleDictation(this, 'interne_notizen')">🎤 Dikt.</button>
+                        <button type="button" class="no-print gps-btn" style="background: #2b83b8; font-size: 10px; padding: 4px 8px;" onclick="insertGPSLink(this, 'interne_notizen')">📍 GPS</button>
+                    </div>
                 </div>
+                <p class="hint-internal-notes">Erscheint nicht im PDF-Druck.</p>
+                <textarea id="interne_notizen" placeholder="Notizen für das Büro / die E-Mail..." aria-label="Interne Notizen für Büro und E-Mail"></textarea>
             </div>
-            <textarea id="interne_notizen" placeholder="Notizen für das Büro / die E-Mail..."></textarea>
-            
-            <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #bae6fd;">
+            <div class="no-print" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #bae6fd;">
                 <label class="checkbox-item" style="font-weight: bold; color: #dc2626;">
                     <input type="checkbox" id="check_folgetermin" onchange="document.getElementById('folgetermin_container').style.display = this.checked ? 'block' : 'none'">
                     <span>⚠️ Baustelle nicht abgeschlossen - Folgetermin erforderlich</span>
@@ -2646,17 +2680,19 @@
             </div>
         </div>
 
-        <div class="section no-print" style="margin-top: 15px; border: 1px dashed #2b83b8; padding: 10px; border-radius: var(--radius); background: #f0f7fb;">
-            <div class="section-header-flex">
-                <h2 style="background: none; color: #2b83b8; padding: 0; margin: 0;">Interne Notizen (Nur für E-Mail)</h2>
-                <div style="display: flex; gap: 6px;">
-                    <button type="button" class="no-print mic-btn" onclick="toggleDictation(this, 'interne_notizen_rb')">🎤 Dikt.</button>
-                    <button type="button" class="no-print gps-btn" style="background: #2b83b8; font-size: 10px; padding: 4px 8px;" onclick="insertGPSLink(this, 'interne_notizen_rb')">📍 GPS</button>
+        <div class="section" style="margin-top: 15px; border: 1px dashed #2b83b8; padding: 10px; border-radius: var(--radius); background: #f0f7fb;">
+            <div class="no-print">
+                <div class="section-header-flex">
+                    <h2 style="background: none; color: #2b83b8; padding: 0; margin: 0;">Interne Notizen (nur Büro / E-Mail)</h2>
+                    <div style="display: flex; gap: 6px;">
+                        <button type="button" class="no-print mic-btn" onclick="toggleDictation(this, 'interne_notizen_rb')">🎤 Dikt.</button>
+                        <button type="button" class="no-print gps-btn" style="background: #2b83b8; font-size: 10px; padding: 4px 8px;" onclick="insertGPSLink(this, 'interne_notizen_rb')">📍 GPS</button>
+                    </div>
                 </div>
+                <p class="hint-internal-notes">Erscheint nicht im PDF-Druck.</p>
+                <textarea id="interne_notizen_rb" placeholder="Notizen für das Büro / die E-Mail..." aria-label="Interne Notizen für Büro und E-Mail"></textarea>
             </div>
-            <textarea id="interne_notizen_rb" placeholder="Notizen für das Büro / die E-Mail..."></textarea>
-            
-            <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #bae6fd;">
+            <div class="no-print" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #bae6fd;">
                 <label class="checkbox-item" style="font-weight: bold; color: #dc2626;">
                     <input type="checkbox" id="check_folgetermin" onchange="document.getElementById('folgetermin_container').style.display = this.checked ? 'block' : 'none'">
                     <span>⚠️ Baustelle nicht abgeschlossen - Folgetermin erforderlich</span>
@@ -2850,16 +2886,18 @@
             <textarea id="dl_massnahmen_text" placeholder="Weitere Erläuterungen..."></textarea>
         </div>
 
-        <div class="section no-print" style="margin-top: 15px; border: 1px dashed #2b83b8; padding: 10px; border-radius: var(--radius); background: #f0f7fb;">
-            <div class="section-header-flex">
-                <h2 style="background: none; color: #2b83b8; padding: 0; margin: 0;">Interne Notizen (Nur für E-Mail)</h2>
-                <div style="display: flex; gap: 6px;">
-                    <button type="button" class="no-print mic-btn" onclick="toggleDictation(this, 'interne_notizen')">🎤 Dikt.</button>
+        <div class="section" style="margin-top: 15px; border: 1px dashed #2b83b8; padding: 10px; border-radius: var(--radius); background: #f0f7fb;">
+            <div class="no-print">
+                <div class="section-header-flex">
+                    <h2 style="background: none; color: #2b83b8; padding: 0; margin: 0;">Interne Notizen (nur Büro / E-Mail)</h2>
+                    <div style="display: flex; gap: 6px;">
+                        <button type="button" class="no-print mic-btn" onclick="toggleDictation(this, 'interne_notizen')">🎤 Dikt.</button>
+                    </div>
                 </div>
+                <p class="hint-internal-notes">Erscheint nicht im PDF-Druck.</p>
+                <textarea id="interne_notizen" placeholder="Notizen für das Büro / die E-Mail..." aria-label="Interne Notizen für Büro und E-Mail"></textarea>
             </div>
-            <textarea id="interne_notizen" placeholder="Notizen für das Büro / die E-Mail..."></textarea>
-            
-            <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #bae6fd;">
+            <div class="no-print" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #bae6fd;">
                 <label class="checkbox-item" style="font-weight: bold; color: #dc2626;">
                     <input type="checkbox" id="check_folgetermin" onchange="document.getElementById('folgetermin_container').style.display = this.checked ? 'block' : 'none'">
                     <span>⚠️ Baustelle nicht abgeschlossen - Folgetermin erforderlich</span>
@@ -2940,72 +2978,82 @@
 /* =========================================================
    KALENDER / OUTLOOK PARSER (Auto-Fill)
    ========================================================= */
-async function pasteFromCalendar() {
-    const parseCalendarText = (text) => {
-        const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-        let plz = '', ort = '', street = '', name = '', tel = '';
-
-        const telMatch = text.match(/(\+43|0043|0)[0-9\s\-\/]{6,}/);
-        if (telMatch) tel = telMatch[0].trim();
-
-        for (let i = 0; i < lines.length; i++) {
-            const line = lines[i];
-            const lowerLine = line.toLowerCase();
-
-            if (lowerLine.startsWith('ort:') || lowerLine.startsWith('adresse:') || lowerLine.startsWith('location:')) {
-                const locationText = line.substring(line.indexOf(':') + 1).trim();
-                const plzMatch = locationText.match(/(?:A-|D-|AT-)?\b(\d{4,5})\s+([a-zA-ZäöüÄÖÜß\-\s]+)/);
-                if (plzMatch) {
-                    plz = plzMatch[1];
-                    ort = plzMatch[2].trim();
-                    street = locationText.replace(plzMatch[0], '').replace(',', '').trim();
-                } else {
-                    street = locationText;
-                }
-            }
-
-            if (lowerLine.startsWith('betreff:') || lowerLine.startsWith('titel:') || lowerLine.startsWith('thema:')) {
-                name = line.substring(line.indexOf(':') + 1).trim();
+function extractCalendarFields(text) {
+    const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+    let plz = '', ort = '', street = '', name = '', tel = '';
+    const telMatch = text.match(/(\+43|0043|0)[0-9\s\-\/]{6,}/);
+    if (telMatch) tel = telMatch[0].trim();
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const lowerLine = line.toLowerCase();
+        if (lowerLine.startsWith('ort:') || lowerLine.startsWith('adresse:') || lowerLine.startsWith('location:')) {
+            const locationText = line.substring(line.indexOf(':') + 1).trim();
+            const plzMatch = locationText.match(/(?:A-|D-|AT-)?\b(\d{4,5})\s+([a-zA-ZäöüÄÖÜß\-\s]+)/);
+            if (plzMatch) {
+                plz = plzMatch[1];
+                ort = plzMatch[2].trim();
+                street = locationText.replace(plzMatch[0], '').replace(',', '').trim();
+            } else {
+                street = locationText;
             }
         }
-
-        if (!plz) {
-            for (let i = 0; i < lines.length; i++) {
-                const match = lines[i].match(/(?:A-|D-|AT-)?\b(\d{4,5})\s+([a-zA-ZäöüÄÖÜß\-\s]+)/);
-                if (match) {
-                    plz = match[1];
-                    ort = match[2].trim();
-                    if (i > 0) street = lines[i - 1];
-                    if (i > 1 && !name) name = lines[0];
-                    break;
-                }
-            }
+        if (lowerLine.startsWith('betreff:') || lowerLine.startsWith('titel:') || lowerLine.startsWith('thema:')) {
+            name = line.substring(line.indexOf(':') + 1).trim();
         }
-
-        if (document.getElementById('name') && name) document.getElementById('name').value = name;
-        if (document.getElementById('adresse') && street) document.getElementById('adresse').value = street;
-        if (document.getElementById('plz') && plz) document.getElementById('plz').value = plz;
-        if (document.getElementById('ort') && ort) document.getElementById('ort').value = ort;
-        if (document.getElementById('telefon') && tel) document.getElementById('telefon').value = tel;
-        if (typeof updateTitleWithAddress === 'function') updateTitleWithAddress();
-        showToast("Kalenderdaten erfolgreich übernommen!", "success");
-    };
-
-    try {
-        const text = await navigator.clipboard.readText();
-        if (!text || text.trim() === '') {
-            alert("Zwischenablage ist leer. Bitte kopiere zuerst den Kalender-Termin!");
-            return;
-        }
-        parseCalendarText(text);
-    } catch (err) {
-        const manualText = prompt("Bitte füge den kopierten Kalender-Termin hier ein (Strg+V oder lange tippen -> Einsetzen):");
-        if (manualText && manualText.trim()) parseCalendarText(manualText);
     }
+    if (!plz) {
+        for (let i = 0; i < lines.length; i++) {
+            const match = lines[i].match(/(?:A-|D-|AT-)?\b(\d{4,5})\s+([a-zA-ZäöüÄÖÜß\-\s]+)/);
+            if (match) {
+                plz = match[1];
+                ort = match[2].trim();
+                if (i > 0) street = lines[i - 1];
+                if (i > 1 && !name) name = lines[0];
+                break;
+            }
+        }
+    }
+    return { name, street, plz, ort, tel };
 }
 
-function showToast(msg, type="info") {
-    alert(msg);
+function applyCalendarFields(parsed) {
+    if (document.getElementById('name') && parsed.name) document.getElementById('name').value = parsed.name;
+    if (document.getElementById('adresse') && parsed.street) document.getElementById('adresse').value = parsed.street;
+    if (document.getElementById('plz') && parsed.plz) document.getElementById('plz').value = parsed.plz;
+    if (document.getElementById('ort') && parsed.ort) document.getElementById('ort').value = parsed.ort;
+    if (document.getElementById('telefon') && parsed.tel) document.getElementById('telefon').value = parsed.tel;
+    if (typeof updateTitleWithAddress === 'function') updateTitleWithAddress();
+}
+
+function formatCalendarPreview(p) {
+    const rows = [];
+    if (p.name) rows.push('Name / Betreff: ' + p.name);
+    if (p.street) rows.push('Straße: ' + p.street);
+    if (p.plz || p.ort) rows.push('PLZ / Ort: ' + [p.plz, p.ort].filter(Boolean).join(' '));
+    if (p.tel) rows.push('Telefon: ' + p.tel);
+    return rows.join('\n');
+}
+
+async function pasteFromCalendar() {
+    let text = '';
+    try {
+        text = await navigator.clipboard.readText();
+    } catch (err) {
+        text = prompt('Bitte füge den kopierten Kalender-Termin hier ein (Strg+V oder lange tippen → Einsetzen):') || '';
+    }
+    if (!text || !text.trim()) {
+        showToast('Zwischenablage ist leer. Bitte zuerst den Kalender-Termin kopieren.', 'error');
+        return;
+    }
+    const parsed = extractCalendarFields(text);
+    const preview = formatCalendarPreview(parsed);
+    if (!preview.trim()) {
+        showToast('Keine Adressdaten erkannt. Textformat prüfen.', 'info');
+        return;
+    }
+    if (!confirm('Folgende Daten übernehmen?\n\n' + preview)) return;
+    applyCalendarFields(parsed);
+    showToast('Kalenderdaten übernommen.', 'success');
 }
 
 let textTemplates = [];
@@ -3071,14 +3119,37 @@ async function idbDelete(key) {
     } catch(e) { console.error("IDB Delete Error", e); return false; }
 }
 
-function attemptLogin() {
+const APP_PIN_SHA256_HEX = '486ea85278bd246cca4a4de0dd8e08ed0802eed350c73eebd662a4578c281496';
+
+async function attemptLogin() {
     const pw = document.getElementById('loginPassword');
-    if (pw && pw.value && pw.value.trim() === '4582') {
+    const err = document.getElementById('loginError');
+    if (!pw) return;
+    const raw = pw.value.trim();
+    if (!raw) {
+        if (err) err.style.display = 'block';
+        pw.setAttribute('aria-invalid', 'true');
+        return;
+    }
+    let hex;
+    try {
+        const enc = new TextEncoder().encode(raw);
+        const buf = await crypto.subtle.digest('SHA-256', enc);
+        hex = Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, '0')).join('');
+    } catch (e) {
+        showToast('PIN-Anmeldung benötigt eine sichere Verbindung (HTTPS oder localhost), nicht file://.', 'error');
+        return;
+    }
+    if (hex === APP_PIN_SHA256_HEX) {
+        if (err) err.style.display = 'none';
+        pw.removeAttribute('aria-invalid');
         document.getElementById('login-container').style.display = 'none';
         document.getElementById('menu-container').style.display = 'block';
     } else {
-        document.getElementById('loginError').style.display = 'block';
-        if(pw) { pw.value = ''; pw.focus(); }
+        if (err) err.style.display = 'block';
+        pw.setAttribute('aria-invalid', 'true');
+        pw.value = '';
+        pw.focus();
     }
 }
 
@@ -3121,9 +3192,17 @@ function formatStatusTime(date = new Date()) {
     return date.toLocaleTimeString('de-AT', { hour: '2-digit', minute: '2-digit' });
 }
 
+// AUTO-FILL: PLZ <-> ORT (Nominatim – Nutzungsbedingungen: E-Mail als Parameter)
+const NOMINATIM_EMAIL_PARAM = 'email=kanal%40brugger-entfeuchtung.at';
+
+async function nominatimGetJson(url) {
+    const res = await fetch(url, { headers: { Accept: 'application/json', 'Accept-Language': 'de' } });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return res.json();
+}
+
 // AUTO-FILL: PLZ <-> ORT
 function setupPlzOrtAutoFill() {
-    // Diese Pärchen (Kunde & Auftraggeber) werden überwacht
     const fields = [
         { plz: 'plz', ort: 'ort' },
         { plz: 'auftraggeber_plz', ort: 'auftraggeber_ort' }
@@ -3134,43 +3213,46 @@ function setupPlzOrtAutoFill() {
         const ortInput = document.getElementById(pair.ort);
 
         if (plzInput && ortInput) {
-            // 1. Wenn PLZ eingegeben wird -> Ort suchen
             plzInput.addEventListener('change', async () => {
                 const plz = plzInput.value.trim();
-                // Nur suchen, wenn eine PLZ eingetippt wurde und der Ort noch leer ist
                 if (plz.length >= 4 && !ortInput.value.trim()) {
-                    ortInput.value = "⏳...";
+                    ortInput.value = '⏳...';
                     try {
-                        // Suche auf Österreich (at) und Deutschland (de)
-                        const res = await fetch(`https://nominatim.openstreetmap.org/search?postalcode=${plz}&countrycodes=at,de&format=json&addressdetails=1`);
-                        const data = await res.json();
+                        const q = encodeURIComponent(plz);
+                        const data = await nominatimGetJson(`https://nominatim.openstreetmap.org/search?postalcode=${q}&countrycodes=at,de&format=json&addressdetails=1&${NOMINATIM_EMAIL_PARAM}`);
                         if (data && data.length > 0) {
                             const addr = data[0].address;
-                            ortInput.value = addr.city || addr.town || addr.village || addr.municipality || data[0].name || "";
-                            updateTitleWithAddress(); // Formulartitel (PDF-Name) updaten
+                            ortInput.value = addr.city || addr.town || addr.village || addr.municipality || data[0].name || '';
+                            updateTitleWithAddress();
                         } else {
-                            ortInput.value = "";
+                            ortInput.value = '';
+                            showToast('Kein Ort zur PLZ gefunden (Netz/Format prüfen).', 'info');
                         }
-                    } catch (e) { ortInput.value = ""; }
+                    } catch (e) {
+                        ortInput.value = '';
+                        showToast('Ortssuche nicht möglich (Offline oder Server).', 'error');
+                    }
                 }
             });
 
-            // 2. Wenn Ort eingegeben wird -> PLZ suchen
             ortInput.addEventListener('change', async () => {
                 const ort = ortInput.value.trim();
-                // Nur suchen, wenn Ort eingetippt wurde und die PLZ noch leer ist
                 if (ort.length >= 3 && !plzInput.value.trim()) {
-                    plzInput.value = "⏳...";
+                    plzInput.value = '⏳...';
                     try {
-                        const res = await fetch(`https://nominatim.openstreetmap.org/search?city=${ort}&countrycodes=at,de&format=json&addressdetails=1`);
-                        const data = await res.json();
+                        const q = encodeURIComponent(ort);
+                        const data = await nominatimGetJson(`https://nominatim.openstreetmap.org/search?city=${q}&countrycodes=at,de&format=json&addressdetails=1&${NOMINATIM_EMAIL_PARAM}`);
                         if (data && data.length > 0 && data[0].address && data[0].address.postcode) {
                             plzInput.value = data[0].address.postcode;
                             updateTitleWithAddress();
                         } else {
-                            plzInput.value = "";
+                            plzInput.value = '';
+                            showToast('Keine PLZ zum Ort gefunden.', 'info');
                         }
-                    } catch (e) { plzInput.value = ""; }
+                    } catch (e) {
+                        plzInput.value = '';
+                        showToast('PLZ-Suche nicht möglich (Offline oder Server).', 'error');
+                    }
                 }
             });
         }
@@ -3586,12 +3668,17 @@ function configureSpeechUI() {
 
 function maybeShowIOSExportHint(context) {
     if (!isIOSLikeDevice()) return;
+    try {
+        const key = 'brugger_ios_hint_' + context;
+        if (sessionStorage.getItem(key)) return;
+        sessionStorage.setItem(key, '1');
+    } catch (e) { /* SessionStorage blockiert */ }
     if (context === 'save') {
-        showToast('iPad: Im Teilen-Fenster "In Dateien sichern" fuer die .json-Datei waehlen.', 'info');
+        showToast('iPad/iPhone: Im Teilen-Dialog „In Dateien sichern“ für die JSON-Datei wählen.', 'info');
     } else if (context === 'print') {
-        showToast('iPad: PDF im Druckdialog sichern oder teilen.', 'info');
+        showToast('iPad/iPhone: PDF im Druckdialog mit „PDF sichern“ oder „Teilen“ speichern.', 'info');
     } else if (context === 'email') {
-        showToast('iPad: PDF nach dem Drucken manuell an die Mail anhängen.', 'info');
+        showToast('iPad/iPhone: PDF nach dem Druck der E-Mail manuell anhängen.', 'info');
     }
 }
 
@@ -3769,8 +3856,9 @@ function autoLocate(btn, target) {
     navigator.geolocation.getCurrentPosition(
         async (pos) => {
             try {
-                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&addressdetails=1`);
-                const data = await res.json();
+                const lat = pos.coords.latitude;
+                const lon = pos.coords.longitude;
+                const data = await nominatimGetJson(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&addressdetails=1&${NOMINATIM_EMAIL_PARAM}`);
                 if (data && data.address) {
                     const addr = data.address;
                     let street = addr.road || addr.pedestrian || addr.footway || "";
@@ -5143,8 +5231,8 @@ async function exportFullReport() {
             await writable.write(jsonStr);
             await writable.close();
             hasUnsavedChanges = false;
-            updateSaveStatus(`Datei gespeichert ${formatStatusTime()}`, 'saved');
-            showToast("Bericht gespeichert!", "success");
+            updateSaveStatus(`JSON-Export: Datei gespeichert ${formatStatusTime()}`, 'saved');
+            showToast('Bericht als JSON-Datei exportiert (Speicherort gewählt).', 'success');
             return;
         }
     } catch (e) { if (e.name === 'AbortError') return; }
@@ -5152,8 +5240,8 @@ async function exportFullReport() {
     const iosShareResult = await shareFileOnIOS(exportBlob, fileName);
     if (iosShareResult === true) {
         hasUnsavedChanges = false;
-        updateSaveStatus(`Datei gespeichert ${formatStatusTime()}`, 'saved');
-        showToast('Bericht zum Sichern in Dateien bereitgestellt', 'success');
+        updateSaveStatus(`JSON-Export: Teilen ${formatStatusTime()}`, 'saved');
+        showToast('JSON-Datei zum Speichern bereitgestellt (z. B. „In Dateien sichern“).', 'success');
         return;
     }
     if (iosShareResult === 'aborted') return;
@@ -5165,8 +5253,8 @@ async function exportFullReport() {
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 2000);
     hasUnsavedChanges = false;
-    updateSaveStatus(`Datei gespeichert ${formatStatusTime()}`, 'saved');
-    showToast("Bericht gespeichert!", "success");
+    updateSaveStatus(`JSON-Export: Download ${formatStatusTime()}`, 'saved');
+    showToast('Bericht als JSON-Datei heruntergeladen.', 'success');
 }
 
 function importFromStart(inp) {
@@ -5344,11 +5432,23 @@ function importCustomers(inp) {
    ========================================================= */
 function showToast(msg, type='info') {
     let c = document.getElementById('toast-container');
-    if(!c) { c = document.createElement('div'); c.id='toast-container'; document.body.appendChild(c); }
-    const t = document.createElement('div'); t.className = `toast ${type}`; t.innerText = msg;
+    if (!c) {
+        c = document.createElement('div');
+        c.id = 'toast-container';
+        c.setAttribute('aria-live', type === 'error' ? 'assertive' : 'polite');
+        document.body.appendChild(c);
+    }
+    const t = document.createElement('div');
+    t.className = `toast ${type}`;
+    t.setAttribute('role', 'status');
+    t.textContent = msg;
     c.appendChild(t);
     requestAnimationFrame(() => t.classList.add('show'));
-    setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 300); }, 3000);
+    const ms = type === 'error' ? 5200 : 3800;
+    setTimeout(() => {
+        t.classList.remove('show');
+        setTimeout(() => t.remove(), 300);
+    }, ms);
 }
 
 function openJobDataKey(id) {
@@ -5635,12 +5735,12 @@ async function refreshOpenJobsUI() {
 
 async function saveToLocal() {
     if(!currentApp) return;
-    updateSaveStatus('Entwurf wird gesichert...', 'saving');
+    updateSaveStatus('Entwurf wird lokal gesichert (Gerät)...', 'saving');
     const d = getReportData();
     hasUnsavedChanges = true;
     await idbSet(AUTOSAVE_KEY, d);
     await syncOpenConstructionState(d);
-    updateSaveStatus(`Lokal gesichert ${formatStatusTime()}`, 'saved');
+    updateSaveStatus(`Lokal im Gerät: ${formatStatusTime()}`, 'saved');
 }
 
 async function checkAutoSave() {
@@ -5803,10 +5903,9 @@ function rotatePE(degrees) {
 }
 
 function setupPWA() {
-    // PWA / Service Worker mit Network-First Strategie (löst Caching-Probleme + ermöglicht Offline)
-    if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
-        const swCode = `
-            const CACHE_NAME = 'brugger-offline-v5'; // Cache-Version erhöht
+    if (!('serviceWorker' in navigator) || !location.protocol.startsWith('http')) return;
+    const swCode = `
+            const CACHE_NAME = 'brugger-offline-v6';
             const PRECACHE_ASSETS = ['./', 'Logo.PNG'];
 
             self.addEventListener('install', e => {
@@ -5836,15 +5935,24 @@ function setupPWA() {
                             caches.open(CACHE_NAME).then(c => c.put(e.request, resClone));
                             return res;
                         })
-                        .catch(() => caches.match(e.request)) // Fallback auf Cache
+                        .catch(() => caches.match(e.request))
                 );
             });
         `;
-        const swBlob = new Blob([swCode], {type: 'application/javascript'});
-        navigator.serviceWorker.register(URL.createObjectURL(swBlob))
-            .then(() => console.log('Offline-Modus mit Pre-Caching aktiviert'))
-            .catch(e => console.error('SW Error', e));
-    }
+    const swBlob = new Blob([swCode], { type: 'application/javascript' });
+    navigator.serviceWorker.register(URL.createObjectURL(swBlob))
+        .then((reg) => {
+            reg.addEventListener('updatefound', () => {
+                const nw = reg.installing;
+                if (!nw) return;
+                nw.addEventListener('statechange', () => {
+                    if (nw.state === 'installed' && navigator.serviceWorker.controller) {
+                        showToast('Neue Offline-Version bereit – Seite neu laden.', 'info');
+                    }
+                });
+            });
+        })
+        .catch((e) => console.error('SW Error', e));
 }
 
 /* =========================================================
