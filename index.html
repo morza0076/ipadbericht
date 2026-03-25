@@ -3,9 +3,6 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="Brugger Berichte" />
     <title>Brugger Formulare 4.2</title>
     <link rel="manifest" id="manifest-placeholder">
 
@@ -295,9 +292,56 @@
 
         .footer { position: absolute; bottom: 10mm; left: 10mm; right: 10mm; font-size: 9px; display: flex; justify-content: space-between; color: var(--gray-400); border-top: 1px solid #eee; padding-top: 6px; }
 
-        #controls { position: fixed; top: 10px; right: 10px; z-index: 1000; display: flex; flex-direction: column; gap: 8px; width: 240px; }
+        .controls-shell {
+            position: sticky;
+            top: 10px;
+            z-index: 1000;
+            width: min(210mm, calc(100vw - 20px));
+            margin: 10px auto 18px auto;
+            padding: 10px;
+            background: rgba(44, 62, 80, 0.94);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            box-shadow: 0 18px 40px -12px rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(10px);
+            box-sizing: border-box;
+        }
+        .controls-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .controls-toggle {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            min-height: 46px;
+            padding: 10px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(184, 155, 30, 0.96), rgba(163, 138, 26, 0.96));
+            color: #fff;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+        .controls-status-slot {
+            flex: 1 1 auto;
+            min-width: 0;
+            display: flex;
+            justify-content: flex-end;
+        }
+        #controls {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
         .save-status {
-            padding: 10px 12px;
+            padding: 8px 12px;
             border-radius: 8px;
             border: 1px solid var(--border);
             background: color-mix(in srgb, var(--surface) 88%, #ffffff 12%);
@@ -307,20 +351,40 @@
             letter-spacing: 0.04em;
             text-transform: uppercase;
             box-shadow: var(--shadow-sm);
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         .save-status[data-state="dirty"] { color: #b45309; border-color: #f59e0b; background: #fffbeb; }
         .save-status[data-state="saving"] { color: #1d4ed8; border-color: #93c5fd; background: #eff6ff; }
         .save-status[data-state="saved"] { color: #047857; border-color: #6ee7b7; background: #ecfdf5; }
         .control-btn { 
-            padding: 12px 16px; background: linear-gradient(135deg, var(--primary), #a38a1a); color: #fff; border: none; border-radius: 8px; 
-            cursor: pointer; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
+            padding: 9px 6px; background: linear-gradient(135deg, var(--primary), #a38a1a); color: #fff; border: none; border-radius: 8px; 
+            cursor: pointer; font-weight: 700; font-size: 9px; text-transform: uppercase; letter-spacing: 0.03em;
             box-shadow: 0 4px 6px -1px rgba(184, 155, 30, 0.3); transition: all 0.2s; 
             display: flex; align-items: center; justify-content: center;
+            line-height: 1.2;
+        }
+        #controls .save-status { width: 100%; }
+        #controls .control-btn {
+            flex: 1 1 0;
+            min-width: 0;
+            min-height: 52px;
+            width: 100%;
+            white-space: normal;
+            text-align: center;
+        }
+        #controls > .control-btn[style],
+        #controls > button.control-btn[style],
+        #controls > label.control-btn[style] {
+            width: auto !important;
+            margin-bottom: 0 !important;
         }
         .control-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 10px -2px rgba(184, 155, 30, 0.4); }
         .control-btn.secondary { background: linear-gradient(135deg, #525252, #404040); box-shadow: 0 4px 6px -1px rgba(64, 64, 64, 0.3); }
         .control-btn.secondary:hover { box-shadow: 0 6px 10px -2px rgba(64, 64, 64, 0.4); }
-        .control-btn.home { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.3); margin-top: 10px; }
+        .control-btn.home { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.3); margin-top: 0; }
 
         /* CROP MODAL */
         #cropModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
@@ -335,30 +399,20 @@
            ========================================= */
         @media screen and (max-width: 1180px) {
             body { padding: 0; background: var(--bg-app); overflow-x: hidden; -webkit-text-size-adjust: 100%; }
-            #controls {
-                position: fixed;
-                top: 10px;
-                right: 10px;
-                left: auto;
-                bottom: auto;
-                z-index: 1000;
-                width: min(268px, calc(100vw - 20px));
-                max-height: calc(100dvh - 20px);
-                overflow-x: hidden;
-                overflow-y: auto;
-                -webkit-overflow-scrolling: touch;
-                display: flex;
-                flex-direction: column;
-                flex-wrap: nowrap;
-                gap: 8px;
-                padding: 12px;
-                background: rgba(44, 62, 80, 0.94);
-                border-radius: 16px;
-                border: 1px solid rgba(255, 255, 255, 0.12);
-                box-shadow: 0 18px 40px -12px rgba(0, 0, 0, 0.35);
+            .controls-shell {
+                width: min(210mm, calc(100vw - 20px));
+                padding: 10px;
             }
-            #controls .save-status { flex: 0 0 auto; min-width: 0; width: 100%; }
-            #controls .control-btn { flex: 0 0 auto; width: 100%; padding: 12px 16px; font-size: 12px; box-shadow: none; margin-top: 0; }
+            #controls {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+            .controls-toggle {
+                display: inline-flex;
+            }
+            .controls-shell.is-collapsible:not(.is-expanded) #controls {
+                display: none;
+            }
+            #controls .control-btn { width: 100%; padding: 11px 10px; font-size: 10px; box-shadow: none; margin-top: 0; }
             .page { margin: 15px auto; min-height: auto; padding-bottom: 16px; }
             .footer { position: static; left: auto; right: auto; bottom: auto; margin-top: 14px; }
             input, textarea, select { font-size: 16px; padding: 10px; }
@@ -366,6 +420,26 @@
         }
 
         @media screen and (max-width: 768px) {
+            .controls-shell {
+                top: 0;
+                width: calc(100vw - 12px);
+                margin: 0 0 12px 0;
+                border-radius: 0 0 16px 16px;
+            }
+            .controls-header {
+                align-items: stretch;
+            }
+            .controls-toggle {
+                flex: 0 0 auto;
+                min-width: 120px;
+            }
+            #controls {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            #controls .control-btn {
+                font-size: 10px;
+                padding: 12px 10px;
+            }
             .page { margin: 0 0 12px 0; border-radius: 0; padding: 12px; }
             .header-top { flex-direction: column; align-items: flex-start; gap: 8px; margin-bottom: 10px; }
             .header-right { text-align: left; font-size: 11px; }
@@ -636,164 +710,6 @@
                 display: none !important;
             }
 
-            body.ios-print-mode #app-root #mainPage,
-            body.ios-print-mode #app-root #sketchPage,
-            body.ios-print-mode #app-root #photoPagesContainer .page {
-                box-sizing: border-box !important;
-                width: 198mm !important;
-                max-width: 198mm !important;
-                height: 265mm !important;
-                min-height: 265mm !important;
-                max-height: 265mm !important;
-                margin: 0 auto !important;
-                padding: 3mm 3.5mm 4mm 3.5mm !important;
-                overflow: hidden !important;
-            }
-
-            body.ios-print-mode #app-root #mainPage {
-                padding: 2.5mm 3mm 3mm 3mm !important;
-            }
-
-            body.ios-print-mode #app-root #mainPage .header,
-            body.ios-print-mode #app-root #sketchPage .header,
-            body.ios-print-mode #app-root #photoPagesContainer .page .header {
-                margin-bottom: 4px !important;
-                padding: 6px 8px 7px 8px !important;
-            }
-
-            body.ios-print-mode #app-root #mainPage .header-top,
-            body.ios-print-mode #app-root #sketchPage .header-top,
-            body.ios-print-mode #app-root #photoPagesContainer .page .header-top {
-                margin-bottom: 5px !important;
-            }
-
-            body.ios-print-mode #app-root #mainPage .header-title,
-            body.ios-print-mode #app-root #sketchPage .header-title,
-            body.ios-print-mode #app-root #photoPagesContainer .page .header-title {
-                font-size: 13.8px !important;
-                line-height: 1.02 !important;
-            }
-
-            body.ios-print-mode #app-root #mainPage .header-right,
-            body.ios-print-mode #app-root #sketchPage .header-right,
-            body.ios-print-mode #app-root #photoPagesContainer .page .header-right {
-                font-size: 8.2px !important;
-                line-height: 1.2 !important;
-                padding: 5px 7px !important;
-            }
-
-            body.ios-print-mode #app-root #mainPage .logo,
-            body.ios-print-mode #app-root #sketchPage .logo,
-            body.ios-print-mode #app-root #photoPagesContainer .page .logo {
-                max-height: 38px !important;
-            }
-
-            body.ios-print-mode #app-root #mainPage .section {
-                margin-bottom: 3px !important;
-                padding: 4px 6px 5px 6px !important;
-                border-radius: 10px !important;
-            }
-
-            body.ios-print-mode #app-root #mainPage .section h2 {
-                font-size: 8.2px !important;
-                margin-bottom: 3px !important;
-                padding-bottom: 3px !important;
-            }
-
-            body.ios-print-mode #app-root #mainPage .label {
-                font-size: 7.6px !important;
-                margin-bottom: 2px !important;
-                line-height: 1.05 !important;
-            }
-
-            body.ios-print-mode #app-root #mainPage .grid,
-            body.ios-print-mode #app-root #mainPage .address-grid,
-            body.ios-print-mode #app-root #mainPage .grid-3,
-            body.ios-print-mode #app-root #mainPage .grid-1-2 {
-                gap: 2px 5px !important;
-                margin-top: 0 !important;
-            }
-
-            body.ios-print-mode #app-root #mainPage input:not([type="checkbox"]),
-            body.ios-print-mode #app-root #mainPage select,
-            body.ios-print-mode #app-root #mainPage .print-textarea-clone {
-                font-size: 8.6px !important;
-                line-height: 1.05 !important;
-                padding-top: 0 !important;
-                padding-bottom: 0 !important;
-            }
-
-            body.ios-print-mode #mainPage .section:first-of-type input#name,
-            body.ios-print-mode #mainPage .section:first-of-type input#datum,
-            body.ios-print-mode #mainPage .section:first-of-type input#adresse,
-            body.ios-print-mode #mainPage .section:first-of-type input#plz,
-            body.ios-print-mode #mainPage .section:first-of-type input#ort,
-            body.ios-print-mode #mainPage .section:first-of-type input#telefon,
-            body.ios-print-mode #mainPage .section:first-of-type input#auftraggeber_name,
-            body.ios-print-mode #mainPage .section:first-of-type input#auftraggeber_tel,
-            body.ios-print-mode #mainPage .section:first-of-type input#auftraggeber_adresse,
-            body.ios-print-mode #mainPage .section:first-of-type input#auftraggeber_plz,
-            body.ios-print-mode #mainPage .section:first-of-type input#auftraggeber_ort {
-                font-size: 11px !important;
-            }
-            body.ios-print-mode #befund + .print-textarea-clone {
-                font-size: 10.5px !important;
-            }
-            body.ios-print-mode[data-app-type="LO"].is-lo-ortung:not(.is-flachdach) #mainPage .section:first-of-type input:not([type="checkbox"]),
-            body.ios-print-mode[data-app-type="LO"].is-lo-ortung:not(.is-flachdach) #mainPage .section:first-of-type select {
-                font: var(--lo-print-unified-font) !important;
-                letter-spacing: normal !important;
-            }
-            body.ios-print-mode[data-app-type="LO"].is-lo-ortung:not(.is-flachdach) #befund + .print-textarea-clone {
-                font: var(--lo-print-unified-font) !important;
-                letter-spacing: normal !important;
-            }
-
-            body.ios-print-mode #app-root #mainPage .checkbox-item {
-                font-size: 8px !important;
-                gap: 1px !important;
-            }
-
-            body.ios-print-mode #app-root #mainPage .checkbox-group,
-            body.ios-print-mode #app-root #mainPage .checkbox-group-3 {
-                gap: 0 2px !important;
-                margin-bottom: 0 !important;
-            }
-
-            body.ios-print-mode #app-root #mainPage .section-header-flex {
-                margin-bottom: 2px !important;
-            }
-
-            body.ios-print-mode #app-root #sketchPage .sketch-container {
-                height: 132mm !important;
-            }
-
-            body.ios-print-mode #app-root #photoPagesContainer .photo-grid {
-                gap: 5px !important;
-                margin-top: 0 !important;
-            }
-
-            body.ios-print-mode #app-root #photoPagesContainer .photo-box {
-                padding: 3px !important;
-            }
-
-            body.ios-print-mode #app-root #photoPagesContainer .img-container {
-                height: 58mm !important;
-                height: 88mm !important;
-                margin-bottom: 5px !important;
-            }
-
-            body.ios-print-mode #app-root #photoPagesContainer .photo-desc {
-                font-size: 8.2px !important;
-                line-height: 1 !important;
-                padding: 0 !important;
-            }
-
-            body.ios-print-mode #app-root #mainPage .footer,
-            body.ios-print-mode #app-root #sketchPage .footer,
-            body.ios-print-mode #app-root #photoPagesContainer .page .footer {
-                display: none !important;
-            }
         }
 
         @supports (-webkit-touch-callout: none) {
@@ -1244,7 +1160,7 @@
             --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
             --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -1px rgb(0 0 0 / 0.06);
             --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.05);
-            background: #f3f4f6;
+            background: #ffffff;
             color: #111827;
             color-scheme: light !important;
         }
@@ -1520,18 +1436,22 @@
                 height: 38px;
             }
 
-            .save-status,
-            #controls {
+            .controls-shell,
+            .save-status {
                 backdrop-filter: blur(18px);
             }
 
-            #controls {
-                width: 250px;
-                padding: 12px;
+            .controls-shell {
+                width: min(210mm, calc(100vw - 20px));
+                padding: 10px;
                 border-radius: 24px;
                 background: rgba(255, 255, 255, 0.52);
                 border: 1px solid rgba(255, 255, 255, 0.7);
                 box-shadow: 0 30px 70px -42px rgba(26, 36, 51, 0.55);
+            }
+
+            .controls-toggle {
+                border-radius: 14px;
             }
 
             .save-status {
@@ -1570,7 +1490,7 @@
             body.dark-mode .page,
             body.dark-mode .header,
             body.dark-mode .section,
-            body.dark-mode #controls,
+            body.dark-mode .controls-shell,
             body.dark-mode .save-status,
             body.dark-mode .signature-box,
             body.dark-mode .photo-box,
@@ -1592,7 +1512,7 @@
             body.dark-mode #ueberpruefteBauteileContainer,
             body.dark-mode #poolBauteileContainer,
             body.dark-mode .header-right,
-            body.dark-mode #controls,
+            body.dark-mode .controls-shell,
             body.dark-mode .save-status {
                 background: rgba(15, 23, 42, 0.86);
             }
@@ -1605,18 +1525,16 @@
             }
 
             @media screen and (max-width: 1180px) {
-                #controls {
-                    width: min(268px, calc(100vw - 20px));
-                    max-height: calc(100dvh - 20px);
-                    overflow-y: auto;
+                .controls-shell {
+                    width: min(100%, calc(100vw - 20px));
                     border-radius: 22px;
-                    padding: 12px;
+                    padding: 10px;
                     background: rgba(255, 255, 255, 0.52);
                     border: 1px solid rgba(255, 255, 255, 0.7);
                     box-shadow: 0 30px 70px -42px rgba(26, 36, 51, 0.55);
                 }
 
-                body.dark-mode #controls {
+                body.dark-mode .controls-shell {
                     background: rgba(15, 23, 42, 0.92);
                     border-color: rgba(71, 85, 105, 0.9);
                 }
@@ -2023,39 +1941,47 @@
 <div id="app-root"></div>
 
 <template id="tpl-controls-sketch">
-    <div id="controls" class="no-print" role="toolbar" aria-label="Bericht-Aktionen">
-        <button type="button" class="control-btn" onclick="printAndSave()" aria-label="Drucken und als JSON speichern">DRUCKEN & SPEICHERN</button>
-        <input type="file" id="photoInput" multiple accept="image/*" style="display:none" onchange="handlePhotos(this)" aria-label="Fotos auswählen">
-        <button type="button" class="control-btn secondary" onclick="document.getElementById('photoInput').click()" aria-label="Fotos zum Bericht hinzufügen">FOTOS HINZUFÜGEN</button>
-        <button type="button" class="control-btn secondary" onclick="clearSketch()" aria-label="Skizze löschen">SKIZZE LÖSCHEN</button>
-        <button type="button" class="control-btn secondary" onclick="sendEmail()" aria-label="E-Mail mit Bericht senden">EMAIL SENDEN</button>
-        <button type="button" class="no-print control-btn secondary" style="margin-bottom: 10px; width: 100%; font-size: 11px; padding: 8px;" onclick="pasteFromCalendar()" aria-label="Daten aus Kalender-Termin einfügen">
-            📅 Daten aus Kalender-Termin einfügen
-        </button>
-        <button type="button" class="control-btn secondary" onclick="saveOpenConstructionNow()" aria-label="Offene Baustelle sichern">OFFENE BAUSTELLE SICHERN</button>
-        <label id="btnPhotoNumbering" class="control-btn secondary" style="display:none; gap:8px;">
-            <input type="checkbox" id="checkPhotoNumbering" onchange="togglePhotoNumbering()" style="width:14px !important; height:14px; accent-color:#fff; margin:0;">
-            <span>FOTOS NUMMERIEREN</span>
-        </label>
-        <button type="button" class="control-btn home" onclick="goHome()" aria-label="Zum Hauptmenü">🏠 ZUM HAUPTMENÜ</button>
+    <div class="controls-shell no-print" data-controls-shell>
+        <div class="controls-header">
+            <button type="button" class="controls-toggle" onclick="toggleControlsMenu()" aria-expanded="false" aria-controls="controls">Menü</button>
+            <div id="controlsStatusSlot" class="controls-status-slot"></div>
+        </div>
+        <div id="controls" role="toolbar" aria-label="Bericht-Aktionen">
+            <button type="button" class="control-btn" onclick="printAndSave()" aria-label="Drucken und als JSON speichern">Drucken</button>
+            <input type="file" id="photoInput" multiple accept="image/*" style="display:none" onchange="handlePhotos(this)" aria-label="Fotos auswählen">
+            <button type="button" class="control-btn secondary" onclick="document.getElementById('photoInput').click()" aria-label="Fotos zum Bericht hinzufügen">Fotos</button>
+            <button type="button" class="control-btn secondary" onclick="clearSketch()" aria-label="Skizze löschen">Skizze</button>
+            <button type="button" class="control-btn secondary" onclick="sendEmail()" aria-label="E-Mail mit Bericht senden">E-Mail</button>
+            <button type="button" class="no-print control-btn secondary" onclick="pasteFromCalendar()" aria-label="Daten aus Kalender-Termin einfügen">Kalender</button>
+            <button type="button" class="control-btn secondary" onclick="saveOpenConstructionNow()" aria-label="Offene Baustelle sichern">Sichern</button>
+            <label id="btnPhotoNumbering" class="control-btn secondary" style="display:none; gap:8px;">
+                <input type="checkbox" id="checkPhotoNumbering" onchange="togglePhotoNumbering()" style="width:14px !important; height:14px; accent-color:#fff; margin:0;">
+                <span>Nummern</span>
+            </label>
+            <button type="button" class="control-btn home" onclick="goHome()" aria-label="Zum Hauptmenü">Home</button>
+        </div>
     </div>
 </template>
 
 <template id="tpl-controls-basic">
-    <div id="controls" class="no-print" role="toolbar" aria-label="Bericht-Aktionen">
-        <button type="button" class="control-btn" onclick="printAndSave()" aria-label="Drucken und als JSON speichern">DRUCKEN & SPEICHERN</button>
-        <input type="file" id="photoInput" multiple accept="image/*" style="display:none" onchange="handlePhotos(this)" aria-label="Fotos auswählen">
-        <button type="button" class="control-btn secondary" onclick="document.getElementById('photoInput').click()" aria-label="Fotos zum Bericht hinzufügen">FOTOS HINZUFÜGEN</button>
-        <button type="button" class="control-btn secondary" onclick="sendEmail()" aria-label="E-Mail mit Bericht senden">EMAIL SENDEN</button>
-        <button type="button" class="no-print control-btn secondary" style="margin-bottom: 10px; width: 100%; font-size: 11px; padding: 8px;" onclick="pasteFromCalendar()" aria-label="Daten aus Kalender-Termin einfügen">
-            📅 Daten aus Kalender-Termin einfügen
-        </button>
-        <button type="button" class="control-btn secondary" onclick="saveOpenConstructionNow()" aria-label="Offene Baustelle sichern">OFFENE BAUSTELLE SICHERN</button>
-        <label id="btnPhotoNumbering" class="control-btn secondary" style="display:none; gap:8px;">
-            <input type="checkbox" id="checkPhotoNumbering" onchange="togglePhotoNumbering()" style="width:14px !important; height:14px; accent-color:#fff; margin:0;">
-            <span>FOTOS NUMMERIEREN</span>
-        </label>
-        <button type="button" class="control-btn home" onclick="goHome()" aria-label="Zum Hauptmenü">🏠 ZUM HAUPTMENÜ</button>
+    <div class="controls-shell no-print" data-controls-shell>
+        <div class="controls-header">
+            <button type="button" class="controls-toggle" onclick="toggleControlsMenu()" aria-expanded="false" aria-controls="controls">Menü</button>
+            <div id="controlsStatusSlot" class="controls-status-slot"></div>
+        </div>
+        <div id="controls" role="toolbar" aria-label="Bericht-Aktionen">
+            <button type="button" class="control-btn" onclick="printAndSave()" aria-label="Drucken und als JSON speichern">Drucken</button>
+            <input type="file" id="photoInput" multiple accept="image/*" style="display:none" onchange="handlePhotos(this)" aria-label="Fotos auswählen">
+            <button type="button" class="control-btn secondary" onclick="document.getElementById('photoInput').click()" aria-label="Fotos zum Bericht hinzufügen">Fotos</button>
+            <button type="button" class="control-btn secondary" onclick="sendEmail()" aria-label="E-Mail mit Bericht senden">E-Mail</button>
+            <button type="button" class="no-print control-btn secondary" onclick="pasteFromCalendar()" aria-label="Daten aus Kalender-Termin einfügen">Kalender</button>
+            <button type="button" class="control-btn secondary" onclick="saveOpenConstructionNow()" aria-label="Offene Baustelle sichern">Sichern</button>
+            <label id="btnPhotoNumbering" class="control-btn secondary" style="display:none; gap:8px;">
+                <input type="checkbox" id="checkPhotoNumbering" onchange="togglePhotoNumbering()" style="width:14px !important; height:14px; accent-color:#fff; margin:0;">
+                <span>Nummern</span>
+            </label>
+            <button type="button" class="control-btn home" onclick="goHome()" aria-label="Zum Hauptmenü">Home</button>
+        </div>
     </div>
 </template>
 
@@ -3167,14 +3093,14 @@ function goHome() {
 }
 
 function ensureSaveStatus() {
-    const controls = document.getElementById('controls');
-    if (!controls) return null;
+    const controlsHost = document.getElementById('controlsStatusSlot') || document.getElementById('controls');
+    if (!controlsHost) return null;
     let statusEl = document.getElementById('saveStatus');
     if (!statusEl) {
         statusEl = document.createElement('div');
         statusEl.id = 'saveStatus';
         statusEl.className = 'save-status no-print';
-        controls.prepend(statusEl);
+        controlsHost.appendChild(statusEl);
     }
     return statusEl;
 }
@@ -3259,8 +3185,8 @@ function setupPlzOrtAutoFill() {
     });
 }
 
-function isIOSLikeDevice() {
-    return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+function isAndroidDevice() {
+    return /Android/i.test(navigator.userAgent || '');
 }
 
 function supportsSpeechRecognition() {
@@ -3269,9 +3195,66 @@ function supportsSpeechRecognition() {
 
 function getPrintSupportContext() {
     return {
-        isIOS: isIOSLikeDevice(),
         supportsHasSelector: typeof CSS !== 'undefined' && typeof CSS.supports === 'function' && CSS.supports('selector(:has(*))')
     };
+}
+
+function getControlsShell() {
+    return document.querySelector('[data-controls-shell]');
+}
+
+function setControlsExpanded(expanded) {
+    const shell = getControlsShell();
+    if (!shell) return;
+    shell.dataset.expanded = expanded ? 'true' : 'false';
+    shell.classList.toggle('is-expanded', expanded);
+    const toggle = shell.querySelector('.controls-toggle');
+    if (toggle) toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+}
+
+function toggleControlsMenu(forceExpanded) {
+    const shell = getControlsShell();
+    if (!shell) return;
+    const nextExpanded = typeof forceExpanded === 'boolean'
+        ? forceExpanded
+        : shell.dataset.expanded !== 'true';
+    shell.dataset.userToggled = 'true';
+    setControlsExpanded(nextExpanded);
+}
+
+function configureControlsMenu(resetUserChoice = false) {
+    const shell = getControlsShell();
+    if (!shell) return;
+
+    const shouldCollapse = isAndroidDevice() || window.innerWidth <= 1180;
+    shell.classList.toggle('is-collapsible', shouldCollapse);
+
+    if (!shouldCollapse) {
+        shell.dataset.userToggled = 'false';
+        setControlsExpanded(true);
+        return;
+    }
+
+    if (resetUserChoice || shell.dataset.userToggled !== 'true') {
+        setControlsExpanded(false);
+        return;
+    }
+
+    setControlsExpanded(shell.dataset.expanded === 'true');
+}
+
+async function shareFileOnAndroid(blob, fileName) {
+    if (!isAndroidDevice() || typeof navigator.share !== 'function' || typeof File === 'undefined') return false;
+    try {
+        const file = new File([blob], fileName, { type: blob.type || REPORT_FILE_MIME });
+        if (typeof navigator.canShare === 'function' && !navigator.canShare({ files: [file] })) return false;
+        await navigator.share({ files: [file], title: fileName });
+        return true;
+    } catch (e) {
+        if (e?.name === 'AbortError') return 'aborted';
+        console.warn('Android share failed', e);
+        return false;
+    }
 }
 
 function clearElement(element) {
@@ -3471,6 +3454,7 @@ function startApp(type) {
         appRoot.appendChild(tpl.content.cloneNode(true));
         hydrateSharedFragments(appRoot);
         upgradeInteractiveAccessibility(appRoot);
+        configureControlsMenu(true);
         ensureSaveStatus();
         initCommon();
         if (type === 'LO') initLO();
@@ -3492,7 +3476,6 @@ function startApp(type) {
    ========================================================= */
 function preparePrintView() {
     enablePrintLightMode();
-    document.body.classList.toggle('ios-print-mode', getPrintSupportContext().isIOS);
     document.querySelectorAll('.print-page-break').forEach(el => el.classList.remove('print-page-break'));
 
     const togglePrintVisibility = (element, visible) => {
@@ -3523,7 +3506,7 @@ function preparePrintView() {
         const inputs = Array.from(group.querySelectorAll('input[type="checkbox"]'));
         const isAnyChecked = inputs.some(cb => cb.checked);
         if (!isAnyChecked) {
-            if (!printSupport.supportsHasSelector || printSupport.isIOS) {
+            if (!printSupport.supportsHasSelector) {
                 group.classList.add('no-print', 'temp-hide');
                 const previous = group.previousElementSibling;
                 if (previous && (previous.matches('h2') || previous.classList.contains('label'))) {
@@ -3650,7 +3633,6 @@ function cleanupAfterPrint() {
     document.querySelectorAll('.print-textarea-clone').forEach(el => el.remove());
     document.querySelectorAll('.no-print.temp-hide').forEach(el => el.classList.remove('no-print', 'temp-hide'));
     document.querySelectorAll('.print-page-break').forEach(el => el.classList.remove('print-page-break'));
-    document.body.classList.remove('ios-print-mode');
     disablePrintLightMode();
 }
 
@@ -3664,36 +3646,6 @@ function configureSpeechUI() {
             btn.setAttribute('aria-label', 'Diktieren wird in diesem Browser nicht unterstützt');
         }
     });
-}
-
-function maybeShowIOSExportHint(context) {
-    if (!isIOSLikeDevice()) return;
-    try {
-        const key = 'brugger_ios_hint_' + context;
-        if (sessionStorage.getItem(key)) return;
-        sessionStorage.setItem(key, '1');
-    } catch (e) { /* SessionStorage blockiert */ }
-    if (context === 'save') {
-        showToast('iPad/iPhone: Im Teilen-Dialog „In Dateien sichern“ für die JSON-Datei wählen.', 'info');
-    } else if (context === 'print') {
-        showToast('iPad/iPhone: PDF im Druckdialog mit „PDF sichern“ oder „Teilen“ speichern.', 'info');
-    } else if (context === 'email') {
-        showToast('iPad/iPhone: PDF nach dem Druck der E-Mail manuell anhängen.', 'info');
-    }
-}
-
-async function shareFileOnIOS(blob, fileName) {
-    if (!isIOSLikeDevice() || typeof navigator.share !== 'function' || typeof File === 'undefined') return false;
-    try {
-        const file = new File([blob], fileName, { type: blob.type || REPORT_FILE_MIME });
-        if (typeof navigator.canShare === 'function' && !navigator.canShare({ files: [file] })) return false;
-        await navigator.share({ files: [file], title: fileName });
-        return true;
-    } catch (e) {
-        if (e?.name === 'AbortError') return 'aborted';
-        console.warn('iOS share failed', e);
-        return false;
-    }
 }
 
 function initCommon() {
@@ -3711,9 +3663,13 @@ function initCommon() {
 
     window.addEventListener('beforeprint', preparePrintView);
     window.addEventListener('afterprint', cleanupAfterPrint);
+    window.addEventListener('resize', configureControlsMenu);
+    window.addEventListener('orientationchange', configureControlsMenu);
     registerCleanup(() => {
         window.removeEventListener('beforeprint', preparePrintView);
         window.removeEventListener('afterprint', cleanupAfterPrint);
+        window.removeEventListener('resize', configureControlsMenu);
+        window.removeEventListener('orientationchange', configureControlsMenu);
     });
 
     document.addEventListener('click', function(event) {
@@ -3727,6 +3683,7 @@ function initCommon() {
     });
 
     configureSpeechUI();
+    configureControlsMenu();
     
     setupPWA();
     setupPlzOrtAutoFill(); // <- DIESE ZEILE HINZUGEFÜGT
@@ -3906,9 +3863,7 @@ async function printAndSave() {
         const raw = document.getElementById('dl_pasted_data');
         if (raw) raw.value = '';
     }
-    maybeShowIOSExportHint('save');
     await exportFullReport();
-    maybeShowIOSExportHint('print');
     setTimeout(() => window.print(), 900);
 }
 
@@ -5204,7 +5159,6 @@ async function sendEmail() {
         const raw = document.getElementById('dl_pasted_data');
         if (raw) raw.value = '';
     }
-    maybeShowIOSExportHint('email');
     await exportFullReport();
 
         const onAfterPrintForEmail = () => {
@@ -5297,16 +5251,15 @@ async function exportFullReport() {
         }
     } catch (e) { if (e.name === 'AbortError') return; }
 
-    const iosShareResult = await shareFileOnIOS(exportBlob, fileName);
-    if (iosShareResult === true) {
+    const androidShareResult = await shareFileOnAndroid(exportBlob, fileName);
+    if (androidShareResult === true) {
         hasUnsavedChanges = false;
         updateSaveStatus(`JSON-Export: Teilen ${formatStatusTime()}`, 'saved');
-        showToast('JSON-Datei zum Speichern bereitgestellt (z. B. „In Dateien sichern“).', 'success');
+        showToast('JSON-Datei zum Teilen oder Speichern bereitgestellt.', 'success');
         return;
     }
-    if (iosShareResult === 'aborted') return;
+    if (androidShareResult === 'aborted') return;
 
-    maybeShowIOSExportHint('save');
     const url = URL.createObjectURL(exportBlob);
     const a = document.createElement('a'); a.href = url;
     a.download = fileName;
@@ -5936,7 +5889,7 @@ function openPhotoEditor(container) {
 }
 
 function savePEState() {
-    if (peHist.length > 10) peHist.shift(); // Limitiert den RAM-Verbrauch auf dem iPad
+    if (peHist.length > 10) peHist.shift(); // Limitiert den RAM-Verbrauch auf mobilen Geräten
     peHist.push(peCvs.toDataURL('image/jpeg', PDF_OPTIMIZATION.tempImageQuality)); // JPEG ist viel kleiner als PNG
 }
 
