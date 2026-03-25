@@ -3962,6 +3962,54 @@ let cropImg = new Image(), cropCvs = null, cropCtx = null, isCrop = false, cx1=0
 let sketchBackgroundSourceData = null;
 let sketchBackgroundFitMode = 'contain';
 
+const PDF_OPTIMIZATION = {
+    maxCanvasDpr: 1.5,
+    photoMaxDimension: 680,
+    photoQuality: 0.55,
+    photoEditorQuality: 0.45,
+    sketchBackgroundMaxDimension: 1400,
+    sketchBackgroundQuality: 0.7,
+    tempImageQuality: 0.8
+};
+
+function getEffectiveCanvasDpr() {
+    return Math.min(window.devicePixelRatio || 1, PDF_OPTIMIZATION.maxCanvasDpr);
+}
+
+function canvasToOptimizedDataUrl(canvas, {
+    type = 'image/jpeg',
+    quality = 0.75,
+    maxDimension = 0,
+    fill = '#ffffff'
+} = {}) {
+    if (!canvas) return '';
+
+    const width = canvas.width || 0;
+    const height = canvas.height || 0;
+    if (!width || !height) return '';
+
+    const longestEdge = Math.max(width, height);
+    const scale = maxDimension && longestEdge > maxDimension ? maxDimension / longestEdge : 1;
+    const targetWidth = Math.max(1, Math.round(width * scale));
+    const targetHeight = Math.max(1, Math.round(height * scale));
+    const targetCanvas = document.createElement('canvas');
+    targetCanvas.width = targetWidth;
+    targetCanvas.height = targetHeight;
+
+    const targetCtx = targetCanvas.getContext('2d');
+    if (!targetCtx) return canvas.toDataURL(type, quality);
+
+    if (type === 'image/jpeg') {
+        targetCtx.fillStyle = fill;
+        targetCtx.fillRect(0, 0, targetWidth, targetHeight);
+    }
+
+    targetCtx.imageSmoothingEnabled = true;
+    targetCtx.imageSmoothingQuality = 'high';
+    targetCtx.drawImage(canvas, 0, 0, targetWidth, targetHeight);
+    return targetCanvas.toDataURL(type, quality);
+}
+
 function drawImageFittedOnCanvas(canvas, source, fitMode = 'contain') {
     if (!canvas || !source) return;
     const ctx = canvas.getContext('2d');
@@ -4079,7 +4127,11 @@ function rotateCropImage(degrees) {
     tempCtx.translate(h / 2, w / 2);
     tempCtx.rotate(rad);
     tempCtx.drawImage(cropImg, -w / 2, -h / 2);
-    cropImg.src = tempCanvas.toDataURL();
+    cropImg.src = canvasToOptimizedDataUrl(tempCanvas, {
+        type: 'image/jpeg',
+        quality: PDF_OPTIMIZATION.tempImageQuality,
+        maxDimension: 2200
+    });
 }
 
 function closeCropModal() { document.getElementById('cropModal').style.display='none'; }
@@ -4087,7 +4139,11 @@ function confirmCrop() {
     let x=Math.min(cx1,cx2)*cScale, y=Math.min(cy1,cy2)*cScale, w=Math.abs(cx2-cx1)*cScale, h=Math.abs(cy2-cy1)*cScale;
     if(w<10||h<10) { x=0; y=0; w=cropImg.width; h=cropImg.height; }
     const tc = document.createElement('canvas'); tc.width=w; tc.height=h; tc.getContext('2d').drawImage(cropImg,x,y,w,h,0,0,w,h);
-    setSketchBackgroundSource(tc.toDataURL('image/png'));
+    setSketchBackgroundSource(canvasToOptimizedDataUrl(tc, {
+        type: 'image/jpeg',
+        quality: PDF_OPTIMIZATION.sketchBackgroundQuality,
+        maxDimension: PDF_OPTIMIZATION.sketchBackgroundMaxDimension
+    }));
     closeCropModal();
 }
 
@@ -4325,7 +4381,7 @@ function initDrawing(cvs) {
         if(!document.body.contains(cvs)) return; 
         const r = cvs.getBoundingClientRect(); 
         if(r.width === 0 || r.height === 0) return;
-        const dpr = window.devicePixelRatio || 1;
+        const dpr = getEffectiveCanvasDpr();
         [cvs, bgCvs].forEach(c => {
             if(!c) return;
             const snapshot = c.id === 'sketch-bg-canvas' && sketchBackgroundSourceData ? null : c.toDataURL();
@@ -4778,7 +4834,7 @@ function initRB() {
     if (sigCanvas) {
         sigCtx = sigCanvas.getContext('2d'); let draw = false;
         function rs() { 
-            if(!document.body.contains(sigCanvas)) return; const r = sigCanvas.getBoundingClientRect(); const dpr = window.devicePixelRatio||1;
+            if(!document.body.contains(sigCanvas)) return; const r = sigCanvas.getBoundingClientRect(); const dpr = getEffectiveCanvasDpr();
             const t = sigCanvas.toDataURL(); sigCanvas.width=r.width*dpr; sigCanvas.height=r.height*dpr; 
             const i=new Image(); i.onload=()=>sigCtx.drawImage(i,0,0,sigCanvas.width,sigCanvas.height); i.src=t; 
         }
@@ -4789,7 +4845,7 @@ function initRB() {
         
         function gp(e) { const r = sigCanvas.getBoundingClientRect(); const cx=e.touches?e.touches[0].clientX:e.clientX, cy=e.touches?e.touches[0].clientY:e.clientY; return {x:(cx-r.left)*(sigCanvas.width/r.width), y:(cy-r.top)*(sigCanvas.height/r.height)}; }
         sigCanvas.addEventListener('pointerdown', e => { draw=true; sigCtx.beginPath(); const p=gp(e); sigCtx.moveTo(p.x,p.y); e.preventDefault(); });
-        sigCanvas.addEventListener('pointermove', e => { if(!draw) return; const p=gp(e); sigCtx.lineWidth=2*(window.devicePixelRatio||1); sigCtx.lineCap='round'; sigCtx.strokeStyle='#000'; sigCtx.lineTo(p.x,p.y); sigCtx.stroke(); e.preventDefault(); });
+        sigCanvas.addEventListener('pointermove', e => { if(!draw) return; const p=gp(e); sigCtx.lineWidth=2*getEffectiveCanvasDpr(); sigCtx.lineCap='round'; sigCtx.strokeStyle='#000'; sigCtx.lineTo(p.x,p.y); sigCtx.stroke(); e.preventDefault(); });
         const endHandler = () => draw=false;
         ['pointerup','pointercancel'].forEach(ev => window.addEventListener(ev, endHandler));
         registerCleanup(() => ['pointerup','pointercancel'].forEach(ev => window.removeEventListener(ev, endHandler)));
@@ -5106,10 +5162,14 @@ function insertPhotoBox(src, gId=null, txt='', arr=null, skipRepack=false) {
 }
 function scaleAndInsertPhoto(url, gId=null, txt='', arr=null, cb=null) {
     const i = new Image(); i.onload = () => {
-        const max = 800; let w = i.width, h = i.height;
+        const max = PDF_OPTIMIZATION.photoMaxDimension; let w = i.width, h = i.height;
         if(w>h && w>max) { h*=max/w; w=max; } else if(h>max) { w*=max/h; h=max; }
         const c = document.createElement('canvas'); c.width=w; c.height=h; c.getContext('2d').drawImage(i,0,0,w,h);
-        insertPhotoBox(c.toDataURL('image/jpeg', 0.65), gId, txt, arr);
+        insertPhotoBox(canvasToOptimizedDataUrl(c, {
+            type: 'image/jpeg',
+            quality: PDF_OPTIMIZATION.photoQuality,
+            maxDimension: PDF_OPTIMIZATION.photoMaxDimension
+        }), gId, txt, arr);
         if(cb) cb();
     }; i.src = url;
 }
@@ -5877,7 +5937,7 @@ function openPhotoEditor(container) {
 
 function savePEState() {
     if (peHist.length > 10) peHist.shift(); // Limitiert den RAM-Verbrauch auf dem iPad
-    peHist.push(peCvs.toDataURL('image/jpeg', 0.8)); // JPEG ist viel kleiner als PNG
+    peHist.push(peCvs.toDataURL('image/jpeg', PDF_OPTIMIZATION.tempImageQuality)); // JPEG ist viel kleiner als PNG
 }
 
 function setPE_Mode(m, el) { peMode=m; document.querySelectorAll('#photoEditorModal .mode-tool').forEach(t=>t.classList.remove('active')); el.classList.add('active'); }
@@ -5885,7 +5945,11 @@ function setPE_Color(c, el) { peColor=c; document.querySelectorAll('#photoEditor
 function undoPE() { if(peHist.length>1) { peHist.pop(); const i=new Image(); i.onload=()=>peCtx.drawImage(i,0,0); i.src=peHist[peHist.length-1]; } }
 function closePhotoEditor() { document.getElementById('photoEditorModal').style.display='none'; }
 function savePhotoEditor() { 
-    if(peActiveImgEl) { peActiveImgEl.src = peCvs.toDataURL('image/jpeg', 0.5); hasUnsavedChanges = true; saveToLocal(); } 
+    if(peActiveImgEl) { peActiveImgEl.src = canvasToOptimizedDataUrl(peCvs, {
+        type: 'image/jpeg',
+        quality: PDF_OPTIMIZATION.photoEditorQuality,
+        maxDimension: PDF_OPTIMIZATION.photoMaxDimension
+    }); hasUnsavedChanges = true; saveToLocal(); } 
     closePhotoEditor(); 
 }
 
@@ -5898,7 +5962,7 @@ function rotatePE(degrees) {
     tempCanvas.getContext('2d').drawImage(peCvs, 0, 0);
     peCvs.width = h; peCvs.height = w;
     peCtx.save(); peCtx.translate(h / 2, w / 2); peCtx.rotate(rad); peCtx.drawImage(tempCanvas, -w / 2, -h / 2); peCtx.restore();
-    peHist.push(peCvs.toDataURL());
+    peHist.push(peCvs.toDataURL('image/jpeg', PDF_OPTIMIZATION.tempImageQuality));
     savePEState();
 }
 
